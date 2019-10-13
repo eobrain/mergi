@@ -9,6 +9,7 @@
   "author": "Eamonn O'Brien-Strain",
   "license": "ISC",
   "dependencies": {
-    "googleapis": "^43.0.0"
+    "googleapis": "^43.0.0",
+    "standard": "^14.3.1"
   }
 }
