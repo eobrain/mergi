@@ -1,0 +1,11 @@
+{
+  "name": "mergi",
+  "version": "1.0.0",
+  "description": "Immersive Image-Based Language Learning",
+  "main": "index.js",
+  "scripts": {
+    "test": "echo \"Error: no test specified\" && exit 1"
+  },
+  "author": "Eamonn O'Brien-Strain",
+  "license": "ISC"
+}
