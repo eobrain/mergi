@@ -1,7 +1,10 @@
-// const fs = require('fs')
+const csv = require('csv-parser')
+const fs = require('fs')
 const { google } = require('googleapis')
 
 const auth = process.env.API_KEY
+
+const locales = ['es_mx']
 
 const customsearch = google.customsearch({
   version: 'v1',
@@ -11,11 +14,11 @@ const customsearch = google.customsearch({
 const recurse = (response) => {
   for (const [key, value] of Object.entries(response)) {
     if (key === 'src' && response.width && response.height) {
-      console.log('{')
-      console.log(`  width: ${response.width},`)
-      console.log(`  height: ${response.height},`)
-      console.log(`  src: ${value},`)
-      console.log('}')
+      console.log('      {')
+      console.log(`        width: ${response.width},`)
+      console.log(`        height: ${response.height},`)
+      console.log(`        src: "${value}",`)
+      console.log('      },')
     }
     if (value && typeof value === 'object') {
       recurse(value)
@@ -23,15 +26,42 @@ const recurse = (response) => {
   }
 }
 
-customsearch.cse.list({
-  q: 'gata',
-  cr: 'mx',
-  cx: '010638580643288787684:gemilu8kqau',
-  hl: 'es',
-  lr: 'lang_es'
-})
-  .then((response) => {
-    recurse(response)
-  },
-  (err) => { console.error('Execute error', err) }
-  )
+const processCsvLine = (query, lang, country) => {
+  customsearch.cse.list({
+    q: query,
+    cr: country,
+    cx: '010638580643288787684:gemilu8kqau',
+    hl: lang,
+    lr: `lang_${lang}`
+  })
+    .then((response) => {
+      console.log('  {')
+      console.log(`    query: "${query}",`)
+      console.log(`    lang: "${lang}",`)
+      console.log(`    country: "${country}",`)
+      console.log('    images: [')
+      recurse(response)
+      console.log('    ]')
+      console.log('  },')
+    },
+    (err) => { console.error('Execute error', err) }
+    )
+}
+
+console.log('mergiWords = [')
+fs.createReadStream('data/words.csv')
+  .pipe(csv())
+  .on('data', (row) => {
+    locales.forEach((locale) => {
+      const [lang, country] = locale.split('_')
+      if (row[lang + '_word']) {
+        let query = row[lang + '_word']
+        if (row[lang + '_category']) {
+          query += ` (${row[lang + '_category']})`
+          processCsvLine(query, lang, country)
+        }
+      }
+    })
+  })
+  .on('end', () => {
+  })
