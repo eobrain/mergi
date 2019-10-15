@@ -1,19 +1,48 @@
-/* global mergiWords */
+/* global mergiWords, localStorage */
 
 const lang = 'es'
 const country = 'mx'
 
-const words = []
-mergiWords.forEach(word => {
+const images = {}
+const queries = []
+mergiWords.forEach((word) => {
   if (word.lang === lang && word.country === country) {
-    words.push(word)
+    queries.push(word.query)
+    images[word.query] = word.images
   }
 })
-const n = 2 * words.length
-let order = []
-for (let i = 0; i < n; ++i) {
-  order.push(i)
-}
+
+const order = (() => {
+  const newOrder = () => {
+    const result = []
+    let score = 0
+    for (let i = 0; i < 2; ++i) {
+      const reversed = (i === 1)
+      queries.forEach((query) => {
+        ++score
+        result.push({ query, reversed, score })
+      })
+    }
+    return result
+  }
+
+  const KEY = 'mergi-order'
+  const order = JSON.parse(localStorage.getItem(KEY)) || newOrder()
+  const sort = () => {
+    order.sort((a, b) => a.score - b.score)
+  }
+  sort()
+
+  const head = () => order[0]
+
+  const update = (dScore) => {
+    order[0].score += dScore
+    sort()
+    localStorage.setItem(KEY, JSON.stringify(order))
+  }
+
+  return { head, update }
+})()
 
 const wordEl = document.getElementById('word')
 const imagesEl = document.getElementById('images')
@@ -21,30 +50,34 @@ const correctEl = document.getElementById('correct')
 const wrongEl = document.getElementById('wrong')
 
 const ask = () => {
-  const w = order[0]
-  const word = words[Math.trunc(w / 2)]
-  const showWord = 3 % 2
+  const { query, reversed } = order.head()
 
   correctEl.style.display = 'none'
   wrongEl.style.display = 'none'
-  if (showWord) {
-    wordEl.classList.add('front')
-    imagesEl.classList.add('back')
-  } else {
+  if (reversed) {
     wordEl.classList.add('back')
     imagesEl.classList.add('front')
+  } else {
+    wordEl.classList.add('front')
+    imagesEl.classList.add('back')
   }
-  wordEl.innerHTML = word.query
+  wordEl.innerHTML = query
   while (imagesEl.firstChild) {
     imagesEl.removeChild(imagesEl.firstChild)
   }
-  word.images.forEach((image) => {
+  images[query].forEach((image) => {
     const imgEl = document.createElement('img')
     imgEl.src = image.src
     imgEl.width = image.width
     imgEl.height = image.height
     imagesEl.append(imgEl)
   })
+}
+
+imagesEl.onclick = () => {
+  wordEl.classList.remove('back')
+  correctEl.style.display = 'inline'
+  wrongEl.style.display = 'inline'
 }
 
 wordEl.onclick = () => {
@@ -54,7 +87,11 @@ wordEl.onclick = () => {
 }
 
 correctEl.onclick = () => {
-  order = [...order.slice(1), order[0]]
+  order.update(10)
+  ask()
+}
+wrongEl.onclick = () => {
+  order.update(2)
   ask()
 }
 
