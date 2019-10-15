@@ -10,6 +10,7 @@
     <link href="//fonts.googleapis.com/css?family=Raleway:400,300,600" rel="stylesheet" type="text/css">
     <link rel="stylesheet" href="css/normalize.css">
     <link rel="stylesheet" href="css/skeleton.css">
+    <link rel="stylesheet" href="css/app.css">
     <!--link rel="icon" type="image/png" href="images/favicon.png"-->
     <script src="words.js" defer></script>
     <script src="index.js" defer></script>
@@ -18,10 +19,14 @@
 <body>
     <div class="container">
         <div class="row">
-            <div class="one-half column" style="margin-top: 25%">
-                <h4 id="word">Basic Page</h4>
-                <p id="images"></p>
-            </div>
+            <h1 id="word"></h1>
+        </div>
+        <div class="row">
+            <span id="correct">✔</span>
+            <span id="wrong">✖</span>
+        </div>
+        <div class="one-half column" style="margin-top: 25%">
+            <p id="images"></p>
         </div>
     </div>
     <footer>

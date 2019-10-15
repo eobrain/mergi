@@ -1,0 +1,9 @@
+
+.back {
+    display: none;
+}
+
+#correct, #wrong {
+    font-size: 40px;
+    padding: 1em;
+}
