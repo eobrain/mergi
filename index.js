@@ -37,10 +37,12 @@ const processCsvLine = (query, lang, country) => {
   }
   customsearch.cse.list({
     q: query,
-    cr: country,
+    // cr: `country${country.toUpperCase()}`,
+    gl: country,
     cx: '010638580643288787684:gemilu8kqau',
     hl: lang,
-    lr: `lang_${lang}`
+    lr: `lang_${lang}`,
+    num: 10
   })
     .then((response) => {
       console.log('  {')

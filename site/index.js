@@ -67,12 +67,14 @@ const order = (() => {
 const wordEl = document.getElementById('word')
 const imagesEl = document.getElementById('images')
 const correctEl = document.getElementById('correct')
+const mehEl = document.getElementById('meh')
 const wrongEl = document.getElementById('wrong')
 
 const ask = () => {
   const { query, reversed } = order.head()
 
   correctEl.style.display = 'none'
+  mehEl.style.display = 'none'
   wrongEl.style.display = 'none'
   if (reversed) {
     wordEl.classList.add('back')
@@ -97,16 +99,22 @@ const ask = () => {
 imagesEl.onclick = () => {
   wordEl.classList.remove('back')
   correctEl.style.display = 'inline'
+  mehEl.style.display = 'inline'
   wrongEl.style.display = 'inline'
 }
 
 wordEl.onclick = () => {
   imagesEl.classList.remove('back')
   correctEl.style.display = 'inline'
+  mehEl.style.display = 'inline'
   wrongEl.style.display = 'inline'
 }
 
 correctEl.onclick = () => {
+  order.update(100)
+  ask()
+}
+mehEl.onclick = () => {
   order.update(10)
   ask()
 }

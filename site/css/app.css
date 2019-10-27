@@ -1,6 +1,7 @@
 body {
     font-family: 'Roboto', sans-serif;
     text-align: center;
+    background-image: url("/images/water.jpg");
 }
 
 html, body {
@@ -34,7 +35,14 @@ footer {
     display: none;
 }
 
-#correct, #wrong {
-    font-size: 40px;
+nav span {
+    font-size: 30px;
     padding: 1em;
+}
+
+nav {
+    background-color: antiquewhite
+}
+section {
+    background-color: bisque
 }
