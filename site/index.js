@@ -3,8 +3,8 @@
 const lang = 'es'
 const country = 'mx'
 
-const images = {}
-const queries = []
+const queries = [] // the phrases
+const images = {} // list of images for each phrase
 mergiWords.forEach((word) => {
   if (word.lang === lang && word.country === country) {
     queries.push(word.query)
@@ -12,26 +12,42 @@ mergiWords.forEach((word) => {
   }
 })
 
+const merge = (existing, added) => {
+  const key = (card) => `${card.query}|${card.reversed}`
+  const result = []
+  const included = {}
+  existing.forEach((card) => {
+    result.push(card)
+    included[key(card)] = true
+  })
+  added.forEach((card) => {
+    const k = key(card)
+    if (!included[k]) {
+      result.push(card)
+      included[k] = true
+    }
+  })
+  return result
+}
+
 const order = (() => {
+  // Return ordered list of cards
   const newOrder = () => {
-    const result = []
+    const cards = []
     let score = 0
     for (let i = 0; i < 2; ++i) {
       const reversed = (i === 1)
       queries.forEach((query) => {
         ++score
-        result.push({ query, reversed, score })
+        cards.push({ query, reversed, score })
       })
     }
-    return result
+    return cards
   }
 
-  const KEY = 'mergi-order'
-  const order = JSON.parse(localStorage.getItem(KEY)) || newOrder()
   const sort = () => {
     order.sort((a, b) => a.score - b.score)
   }
-  sort()
 
   const head = () => order[0]
 
@@ -40,6 +56,10 @@ const order = (() => {
     sort()
     localStorage.setItem(KEY, JSON.stringify(order))
   }
+
+  const KEY = 'mergi-order'
+  const order = merge(JSON.parse(localStorage.getItem(KEY)), newOrder())
+  sort()
 
   return { head, update }
 })()
