@@ -4,6 +4,10 @@ const { google } = require('googleapis')
 
 const auth = process.env.API_KEY
 
+if (!auth) {
+  console.log('API_KEY environment variable not set. Doing dry run.')
+}
+
 const locales = ['es_mx']
 
 const customsearch = google.customsearch({
@@ -27,6 +31,10 @@ const recurse = (response) => {
 }
 
 const processCsvLine = (query, lang, country) => {
+  if (!auth) {
+    console.log(`// ${lang}_${country} [${query}]`)
+    return
+  }
   customsearch.cse.list({
     q: query,
     cr: country,
