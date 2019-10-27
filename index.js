@@ -35,6 +35,7 @@ const processCsvLine = (query, lang, country) => {
     console.log(`// ${lang}_${country} [${query}]`)
     return
   }
+  // See https://developers.google.com/custom-search/v1/cse/list
   customsearch.cse.list({
     q: query,
     // cr: `country${country.toUpperCase()}`,

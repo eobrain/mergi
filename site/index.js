@@ -16,17 +16,22 @@ const merge = (existing, added) => {
   const key = (card) => `${card.query}|${card.reversed}`
   const result = []
   const included = {}
-  existing.forEach((card) => {
-    result.push(card)
-    included[key(card)] = true
-  })
-  added.forEach((card) => {
-    const k = key(card)
-    if (!included[k]) {
+  const hasImages = (card) => !!images[card.query]
+  if (existing) {
+    existing.filter(hasImages).forEach((card) => {
       result.push(card)
-      included[k] = true
-    }
-  })
+      included[key(card)] = true
+    })
+  }
+  if (added) {
+    added.filter(hasImages).forEach((card) => {
+      const k = key(card)
+      if (!included[k]) {
+        result.push(card)
+        included[k] = true
+      }
+    })
+  }
   return result
 }
 

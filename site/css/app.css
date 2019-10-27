@@ -46,3 +46,8 @@ nav {
 section {
     background-color: bisque
 }
+
+#images img {
+    width: 100%;
+    height: auto;
+}
