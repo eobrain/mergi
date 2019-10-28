@@ -30,7 +30,12 @@ const recurse = (response) => {
   }
 }
 
-const processCsvLine = (query, lang, country) => {
+const processCsvLine = (queryOrig, lang, country) => {
+  const query = queryOrig
+    .replace(/^(el|la) /, '')
+    .replace(/\((el|la) /, '')
+    .replace(/\/ (el|la) /, '')
+    .replace(/[()]/g, '')
   if (!auth) {
     console.log(`// ${lang}_${country} [${query}]`)
     return
@@ -47,7 +52,7 @@ const processCsvLine = (query, lang, country) => {
   })
     .then((response) => {
       console.log('  {')
-      console.log(`    query: "${query}",`)
+      console.log(`    query: "${queryOrig}",`)
       console.log(`    lang: "${lang}",`)
       console.log(`    country: "${country}",`)
       console.log('    images: [')
@@ -66,11 +71,11 @@ fs.createReadStream('data/words.csv')
     locales.forEach((locale) => {
       const [lang, country] = locale.split('_')
       if (row[lang + '_word']) {
-        let query = row[lang + '_word']
-        if (row[lang + '_category']) {
-          query += ` (${row[lang + '_category']})`
-          processCsvLine(query, lang, country)
-        }
+        const query = row[lang + '_word']
+        // if (row[lang + '_category']) {
+        // query += ` (${row[lang + '_category']})`
+        processCsvLine(query, lang, country)
+        // }
       }
     })
   })
