@@ -77,7 +77,7 @@
     ask()
   }
   wrongEl.onclick = () => {
-    order.update(0.0)
+    order.update(0.1)
     ask()
   }
 
