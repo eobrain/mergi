@@ -35,34 +35,47 @@ const merge = (existing, added) => {
   return result
 }
 
+const TAO = 1000.0 * 60 * 60 * 24
+
+const score = (responses) => {
+  if (responses.length === 0) {
+    return -1
+  }
+  const now = Date.now()
+  const weightedSum = responses
+    .map((response) => response.correctness * Math.exp((response.t - now) / TAO))
+    .reduce((sum, x) => sum + x)
+  return weightedSum / responses.length
+}
+
 const order = (() => {
   // Return ordered list of cards
   const newOrder = () => {
     const cards = []
-    let score = 0
     for (let i = 0; i < 2; ++i) {
       const reversed = (i === 1)
       queries.forEach((query) => {
-        ++score
-        cards.push({ query, reversed, score })
+        const responses = []
+        cards.push({ query, reversed, responses })
       })
     }
     return cards
   }
 
   const sort = () => {
-    order.sort((a, b) => a.score - b.score)
+    order.sort((a, b) => score(a.responses) - score(b.responses))
   }
 
   const head = () => order[0]
 
-  const update = (dScore) => {
-    order[0].score += dScore
+  const update = (correctness) => {
+    const t = Date.now()
+    order[0].responses.push({ t, correctness })
     sort()
     localStorage.setItem(KEY, JSON.stringify(order))
   }
 
-  const KEY = 'mergi-order'
+  const KEY = 'mergi-order-v3'
   const order = merge(JSON.parse(localStorage.getItem(KEY)), newOrder())
   sort()
 
@@ -116,15 +129,15 @@ wordEl.onclick = () => {
 }
 
 correctEl.onclick = () => {
-  order.update(100)
+  order.update(1.0)
   ask()
 }
 mehEl.onclick = () => {
-  order.update(10)
+  order.update(0.5)
   ask()
 }
 wrongEl.onclick = () => {
-  order.update(2)
+  order.update(0.0)
   ask()
 }
 
