@@ -48,6 +48,7 @@ section {
 }
 
 #images img {
-    width: 100%;
-    height: auto;
+    height: 150px;
+    width: auto;
+    margin: 5px;
 }
