@@ -31,8 +31,8 @@ footer {
     flex-shrink: 0;
 }
 
-.back {
-    display: none;
+p {
+    padding: 2em;
 }
 
 nav span {
@@ -43,12 +43,54 @@ nav span {
 nav {
     background-color: antiquewhite
 }
-section {
-    background-color: bisque
+#card {
+    perspective: 500px;
+    perspective-origin: 50% 100px;
 }
 
 #images img {
     height: 150px;
     width: auto;
     margin: 5px;
+}
+
+/* flip card */
+
+nav {
+    height: 3em;
+}
+
+
+.front, .back {
+    backface-visibility: hidden;
+    background-color: bisque;
+    transform-style: preserve-3d;
+    transition: transform 2s;
+    width: 100%;
+    height: 1000px;
+    margin-top: 0;
+    margin-bottom: 0;
+    position: absolute;
+  }
+
+.back {
+    transform:rotateY(180deg);
+}
+.front {
+    transform:rotateY(0deg);
+}
+
+
+  
+@keyframes offscreen {
+    0% {transform: translate(0, 0)}
+    25% {transform: translate(1000px, 200px)}
+    50% {transform: translate(0, 1000px)}
+    75% {transform: translate(-1000px, 200px)}
+    100% {transform: translate(0, 0)}
+}
+
+.offscreen {
+    animation-duration: 2s;
+    animation-name: offscreen;
 }

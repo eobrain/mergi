@@ -22,6 +22,7 @@
     return { head, update }
   })()
 
+  const cardEl = document.getElementById('card')
   const wordEl = document.getElementById('word')
   const imagesEl = document.getElementById('images')
   const correctEl = document.getElementById('correct')
@@ -30,6 +31,7 @@
 
   const ask = () => {
     const { query, reversed } = order.head()
+    cardEl.classList.add('offscreen')
 
     correctEl.style.display = 'none'
     mehEl.style.display = 'none'
@@ -54,30 +56,46 @@
     })
   }
 
+  const flip = () => {
+    const backs = Array.from(document.getElementsByClassName('back'))
+    const fronts = Array.from(document.getElementsByClassName('front'))
+    backs.forEach((e) => e.classList.replace('back', 'front'))
+    fronts.forEach((e) => e.classList.replace('front', 'back'))
+    cardEl.classList.remove('offscreen')
+  }
+
   imagesEl.onclick = () => {
-    wordEl.classList.remove('back')
+    // cardEl.classList.add('flip')
+    flip()
     correctEl.style.display = 'inline'
     mehEl.style.display = 'inline'
     wrongEl.style.display = 'inline'
   }
 
   wordEl.onclick = () => {
-    imagesEl.classList.remove('back')
+    // cardEl.classList.add('flip')
+    flip()
     correctEl.style.display = 'inline'
     mehEl.style.display = 'inline'
     wrongEl.style.display = 'inline'
   }
 
   correctEl.onclick = () => {
+    cardEl.classList.add('offscreen')
     order.update(1.0)
+    flip()
     ask()
   }
   mehEl.onclick = () => {
+    cardEl.classList.add('offscreen')
     order.update(0.5)
+    flip()
     ask()
   }
   wrongEl.onclick = () => {
+    cardEl.classList.add('offscreen')
     order.update(0.1)
+    flip()
     ask()
   }
 
