@@ -25,6 +25,8 @@
   const cardEl = document.getElementById('card')
   const wordEl = document.getElementById('word')
   const imagesEl = document.getElementById('images')
+  const lookEl = document.getElementById('look')
+  const questionEl = document.getElementById('question')
   const correctEl = document.getElementById('correct')
   const mehEl = document.getElementById('meh')
   const wrongEl = document.getElementById('wrong')
@@ -33,14 +35,17 @@
     const { query, reversed } = order.head()
     cardEl.classList.add('offscreen')
 
-    correctEl.style.display = 'none'
-    mehEl.style.display = 'none'
-    wrongEl.style.display = 'none'
+    navIconsActive(true, false, false)
+
     if (reversed) {
+      wordEl.classList.add('initial-back')
       wordEl.classList.add('back')
+      imagesEl.classList.add('initial-front')
       imagesEl.classList.add('front')
     } else {
+      wordEl.classList.add('initial-front')
       wordEl.classList.add('front')
+      imagesEl.classList.add('initial-back')
       imagesEl.classList.add('back')
     }
     wordEl.innerHTML = query
@@ -64,39 +69,40 @@
     cardEl.classList.remove('offscreen')
   }
 
-  imagesEl.onclick = () => {
-    // cardEl.classList.add('flip')
-    flip()
-    correctEl.style.display = 'inline'
-    mehEl.style.display = 'inline'
-    wrongEl.style.display = 'inline'
+  const think = () => {
+    navIconsActive(false, true, false)
   }
 
-  wordEl.onclick = () => {
-    // cardEl.classList.add('flip')
+  const cardReveal = () => {
     flip()
-    correctEl.style.display = 'inline'
-    mehEl.style.display = 'inline'
-    wrongEl.style.display = 'inline'
+    navIconsActive(false, false, true)
   }
 
-  correctEl.onclick = () => {
+  const answerFn = (correctness) => () => {
     cardEl.classList.add('offscreen')
-    order.update(1.0)
+    order.update(correctness)
     flip()
     ask()
   }
-  mehEl.onclick = () => {
-    cardEl.classList.add('offscreen')
-    order.update(0.5)
-    flip()
-    ask()
+
+  const correct = answerFn(1.0)
+  const meh = answerFn(0.5)
+  const wrong = answerFn(0.1)
+
+  const activeIf = (el, active, onclick) => {
+    if (active) {
+      el.classList.add('active')
+      el.onclick = onclick
+    } else {
+      el.classList.remove('active')
+    }
   }
-  wrongEl.onclick = () => {
-    cardEl.classList.add('offscreen')
-    order.update(0.1)
-    flip()
-    ask()
+  const navIconsActive = (lookActive, questionActive, answersActive) => {
+    activeIf(lookEl, lookActive, think)
+    activeIf(questionEl, questionActive, cardReveal)
+    activeIf(correctEl, answersActive, correct)
+    activeIf(mehEl, answersActive, meh)
+    activeIf(wrongEl, answersActive, wrong)
   }
 
   document.body.onload = ask
