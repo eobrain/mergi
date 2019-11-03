@@ -1,7 +1,15 @@
+/* Palette https://hookagency.com/website-color-schemes/ 7
+#acb7ae Barely Green
+#92a094 Slightly darker than Barely Green
+#82716e The Brown-shirts
+#e4decd Tan Blonde
+#c2b490 Blondey
+*/
+
 body {
     font-family: 'Roboto', sans-serif;
     text-align: center;
-    background-image: url("/images/water.jpg");
+    background-color: #e4decd/* Tan Blonde */
 }
 
 html, body {
@@ -20,19 +28,17 @@ main {
 header {
     text-align: left;
 }
+
 header img {
     vertical-align: middle
 }
+
 header, footer {
-    padding:1em;
+    padding: 1em;
 }
 
 footer {
     flex-shrink: 0;
-}
-
-p {
-    padding: 2em;
 }
 
 nav span {
@@ -41,8 +47,9 @@ nav span {
 }
 
 nav {
-    background-color: antiquewhite
+    background-color: #acb7ae/* Barely Green */
 }
+
 #card {
     perspective: 500px;
     perspective-origin: 50% 100px;
@@ -54,43 +61,93 @@ nav {
     margin: 5px;
 }
 
-/* flip card */
-
-nav {
-    height: 3em;
+#word {
+    padding: 200px 5%;
+    height: 100px;
 }
 
+#images {
+    overflow: hidden;
+    padding: 10px 5%;
+    height: 480px;
+}
+
+.initial-front {
+    background-color: #c2b490/* Blondey */
+}
+
+.initial-back {
+    background-color: #82716e/* The Brown-shirts */
+}
+
+nav {
+    height: 60px;
+    padding: 5px 5%;
+    overflow: hidden;
+}
+
+#look.active, #question.active {
+    fill: #82716e/* The Brown-shirts */
+}
+
+#correct.active {
+    fill: green
+}
+
+#meh.active {
+    fill: orange
+}
+
+#wrong.active {
+    fill: red
+}
+
+nav svg {
+    width: 15%;
+    height: auto;
+    fill: #92a094/* Slightly darker than Barely Green */
+}
+
+.front, .back, nav {
+    width: 80%;
+    margin: 5%;
+    border-radius: 10px;
+}
 
 .front, .back {
     backface-visibility: hidden;
-    background-color: bisque;
     transform-style: preserve-3d;
-    transition: transform 2s;
-    width: 100%;
-    height: 1000px;
-    margin-top: 0;
-    margin-bottom: 0;
+    transition: transform 1s;
     position: absolute;
-  }
+}
 
 .back {
-    transform:rotateY(180deg);
+    transform: rotateY(180deg);
 }
+
 .front {
-    transform:rotateY(0deg);
+    transform: rotateY(0deg);
 }
 
-
-  
 @keyframes offscreen {
-    0% {transform: translate(0, 0)}
-    25% {transform: translate(1000px, 200px)}
-    50% {transform: translate(0, 1000px)}
-    75% {transform: translate(-1000px, 200px)}
-    100% {transform: translate(0, 0)}
+    0% {
+        transform: translate(0, 0)
+    }
+    25% {
+        transform: translate(1000px, 200px)
+    }
+    50% {
+        transform: translate(0, 1000px)
+    }
+    75% {
+        transform: translate(-1000px, 200px)
+    }
+    100% {
+        transform: translate(0, 0)
+    }
 }
 
 .offscreen {
-    animation-duration: 2s;
+    animation-duration: 1s;
     animation-name: offscreen;
 }
