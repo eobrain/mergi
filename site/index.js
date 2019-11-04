@@ -98,6 +98,7 @@
       el.onclick = onclick
     } else {
       el.classList.remove('active')
+      el.onclick = undefined
     }
   }
   const navIconsActive = (lookActive, questionActive, answersActive) => {
