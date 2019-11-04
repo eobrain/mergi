@@ -36,12 +36,7 @@ const recurse = (response) => {
   }
 }
 
-const processCsvLine = (queryOrig, lang, country) => {
-  const query = queryOrig
-    .replace(/^(el|la) /, '')
-    .replace(/\((el|la) /, '')
-    .replace(/\/ (el|la) /, '')
-    .replace(/[()]/g, '')
+const processCsvLine = (query, lang, country) => {
   if (!auth) {
     console.log(`// ${lang}_${country} [${query}]`)
     return
@@ -58,7 +53,7 @@ const processCsvLine = (queryOrig, lang, country) => {
   })
     .then((response) => {
       console.log('  {')
-      console.log(`    query: "${queryOrig}",`)
+      console.log(`    query: "${query}",`)
       console.log(`    lang: "${lang}",`)
       console.log(`    country: "${country}",`)
       console.log('    images: [')
