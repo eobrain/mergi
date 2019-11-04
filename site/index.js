@@ -36,6 +36,9 @@
     cardEl.classList.add('offscreen')
 
     navIconsActive(true, false, false)
+    setTimeout(() => {
+      navIconsActive(false, true, false)
+    }, 5000)
 
     if (reversed) {
       wordEl.classList.add('initial-back')
