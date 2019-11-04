@@ -1,3 +1,9 @@
+// Copyright (c) 2019 Eamonn O'Brien-Strain All rights reserved. This
+// program and the accompanying materials are made available under the
+// terms of the Eclipse Public License v1.0 which accompanies this
+// distribution, and is available at
+// http://www.eclipse.org/legal/epl-v10.html
+
 /* global localStorage */
 
 (() => {
@@ -27,7 +33,7 @@
       const query = card.reversed ? card.query : `<strong>${card.query}</strong>`
       const responsesString = JSON.stringify(card.responses.map((r) => `${r.correctness}`))
       tableEl.insertAdjacentHTML('beforeend',
-            `<tr><td>${score(card.responses)}</td><td>${responsesString}</td><td>${query}</td><td>${imgHtml}</td></tr>`
+        `<tr><td>${score(card.responses)}</td><td>${responsesString}</td><td>${query}</td><td>${imgHtml}</td></tr>`
       )
     })
   }
