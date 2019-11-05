@@ -1,5 +1,7 @@
 # Kartoj: Immersive language vocabulary learning flashcards
 
+[![Netlify Status][3]][4]
+
 This is the source code of the http://kartoj.com web app.
 
 I am building this primarily for myself to
@@ -67,3 +69,5 @@ http://www.eclipse.org/legal/epl-v10.html
 
 [1]: https://books.google.com/books/about/Fluent_Forever.html?id=gs1vDwAAQBAJ
 [2]: https://developers.google.com/custom-search/v1/cse/list
+[3]: https://api.netlify.com/api/v1/badges/a5cb7d45-7151-42dc-9a5d-9cc3f64bd40b/deploy-status
+[4]: https://app.netlify.com/sites/hungry-rosalind-0028da/deploys
