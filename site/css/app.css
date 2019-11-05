@@ -29,10 +29,6 @@ body {
     flex-direction: column;
 }
 
-main {
-    flex: 1 0 auto;
-}
-
 header {
     text-align: left;
 }
@@ -46,7 +42,7 @@ header, footer {
 }
 
 footer {
-    flex-shrink: 0;
+    flex: none;
 }
 
 nav span {
@@ -55,12 +51,15 @@ nav span {
 }
 
 nav {
-    background-color: #acb7ae/* Barely Green */
+    background-color: #acb7ae;
+    /* Barely Green */
+    flex: none;
 }
 
 #card {
     perspective: 500px;
     perspective-origin: 50% 100px;
+    flex: auto;
 }
 
 #images img {
@@ -70,14 +69,15 @@ nav {
 }
 
 #word {
-    padding: 200px 5%;
-    height: 100px;
+    padding: 5% 5%;
+    height: 100%;
+    font-size: 40px;
 }
 
 #images {
     overflow: hidden;
-    padding: 10px 5%;
-    height: 480px;
+    padding: 5% 5%;
+    height: 100%;
 }
 
 .initial-front {
@@ -116,9 +116,16 @@ nav svg {
     fill: #92a094/* Slightly darker than Barely Green */
 }
 
-.front, .back, nav {
-    width: 80%;
+nav, #card, footer {
     margin: 5%;
+    width: 80%;
+}
+
+section {
+    width: 100%;
+}
+
+.front, .back, nav {
     border-radius: 10px;
 }
 
