@@ -74,4 +74,4 @@ export const writeCards = (cards) => {
   window.localStorage.setItem(KEY, JSON.stringify(cards))
 }
 
-export const readCards = () => JSON.parse(window.localStorage.getItem(KEY) || '')
+export const readCards = () => JSON.parse(window.localStorage.getItem(KEY) || '[]')
