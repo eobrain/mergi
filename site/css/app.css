@@ -17,7 +17,11 @@
 body {
     font-family: 'Roboto', sans-serif;
     text-align: center;
-    background-color: #e4decd/* Tan Blonde */
+    /* Tan Blonde */
+    background-color: #e4decd;
+    /* Designed for a phone. Not responsive to bigger screen sizes. */
+    max-width: 500px;
+    max-height: 900px;
 }
 
 html, body {
