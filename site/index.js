@@ -29,7 +29,6 @@ const order = (() => {
 const cardEl = document.getElementById('card')
 const wordEl = document.getElementById('word')
 const imagesEl = document.getElementById('images')
-const lookEl = document.getElementById('look')
 const questionEl = document.getElementById('question')
 const correctEl = document.getElementById('correct')
 const mehEl = document.getElementById('meh')
@@ -39,10 +38,7 @@ const ask = () => {
   const { query, reversed } = order.head()
   cardEl.classList.add('offscreen')
 
-  navIconsActive(true, false, false)
-  setTimeout(() => {
-    navIconsActive(false, true, false)
-  }, 5000)
+  navIconsActive(true, false)
 
   if (reversed) {
     wordEl.classList.add('initial-back')
@@ -76,13 +72,9 @@ const flip = () => {
   cardEl.classList.remove('offscreen')
 }
 
-const think = () => {
-  navIconsActive(false, true, false)
-}
-
 const cardReveal = () => {
   flip()
-  navIconsActive(false, false, true)
+  navIconsActive(false, true)
 }
 
 const answerFn = (correctness) => () => {
@@ -105,8 +97,7 @@ const activeIf = (el, active, onclick) => {
     el.onclick = undefined
   }
 }
-const navIconsActive = (lookActive, questionActive, answersActive) => {
-  activeIf(lookEl, lookActive, think)
+const navIconsActive = (questionActive, answersActive) => {
   activeIf(questionEl, questionActive, cardReveal)
   activeIf(correctEl, answersActive, correct)
   activeIf(mehEl, answersActive, meh)
