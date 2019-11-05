@@ -65,7 +65,7 @@ const processCsvLine = (query, lang, country) => {
     )
 }
 
-console.log('mergiWords = [')
+console.log('export const mergiWords = [')
 fs.createReadStream('data/words.csv')
   .pipe(csv())
   .on('data', (row) => {
