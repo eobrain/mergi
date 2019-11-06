@@ -1,0 +1,8 @@
+ol {padding: 1em;}
+
+li {
+    list-style: none;
+    margin: 1em;
+    padding: 1em;
+    background-color: white;
+}
