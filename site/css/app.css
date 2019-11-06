@@ -98,7 +98,7 @@ nav {
     overflow: hidden;
 }
 
-#look.active, #question.active {
+#info, #question.active {
     fill: #82716e/* The Brown-shirts */
 }
 
