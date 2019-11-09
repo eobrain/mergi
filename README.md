@@ -39,10 +39,19 @@ As of early November 2019 I have not yet added any JavaScript/CSS/HTML bundling 
 
 ## Build Instructions
 
-To generate the `words.js` file (which is not committed to this repo) you will need an API key for [Google Custom Search API][2], which you can use in the following command:
+The build does two things:
+
+1. It generates the `words.js` file (which is not committed to this repo) by
+   calling Google Image search to find images corresponding to the vocabulary
+   words. Note this is deliberately throttled to avoid spamming the Google
+   servers, so it can take 10 minutes or more.
+2. It uses the closure compiler to transpile the source JavaScript into the
+   optimized, portable JavaScript that we distribute.
+
+To build do
 
 ```sh
-API_KEY=ReplaceThisWithARealApiKey make
+make
 ```
 
 You can then preview the site by doing
@@ -68,6 +77,5 @@ distribution, and is available at
 http://www.eclipse.org/legal/epl-v10.html
 
 [1]: https://books.google.com/books/about/Fluent_Forever.html?id=gs1vDwAAQBAJ
-[2]: https://developers.google.com/custom-search/v1/cse/list
 [3]: https://api.netlify.com/api/v1/badges/a5cb7d45-7151-42dc-9a5d-9cc3f64bd40b/deploy-status
 [4]: https://app.netlify.com/sites/hungry-rosalind-0028da/deploys

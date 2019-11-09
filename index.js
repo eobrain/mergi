@@ -6,76 +6,44 @@
 
 const csv = require('csv-parser')
 const fs = require('fs')
-const { google } = require('googleapis')
-
-const auth = process.env.API_KEY
-
-if (!auth) {
-  console.log('API_KEY environment variable not set. Doing dry run.')
-}
+const { search } = require('./scrape.js')
 
 const locales = ['es_mx']
 
-const customsearch = google.customsearch({
-  version: 'v1',
-  auth
-})
-
-const recurse = (response) => {
-  for (const [key, value] of Object.entries(response)) {
-    if (key === 'src' && response.width && response.height) {
-      console.log('      {')
-      console.log(`        width: ${response.width},`)
-      console.log(`        height: ${response.height},`)
-      console.log(`        src: "${value}",`)
-      console.log('      },')
-    }
-    if (value && typeof value === 'object') {
-      recurse(value)
-    }
-  }
-}
-
-const processCsvLine = (query, lang, country) => {
-  if (!auth) {
-    console.log(`// ${lang}_${country} [${query}]`)
-    return
-  }
-  // See https://developers.google.com/custom-search/v1/cse/list
-  customsearch.cse.list({
-    q: query,
-    // cr: `country${country.toUpperCase()}`,
-    gl: country,
-    cx: '010638580643288787684:gemilu8kqau',
-    hl: lang,
-    lr: `lang_${lang}`,
-    num: 10
-  })
-    .then((response) => {
+const processCsvLine = (query, lang, country) =>
+  search(query, lang, country)
+    .then((images) => {
       console.log('  {')
       console.log(`    query: "${query}",`)
       console.log(`    lang: "${lang}",`)
       console.log(`    country: "${country}",`)
-      console.log('    images: [')
-      recurse(response)
-      console.log('    ]')
+      console.log(`    images: ${JSON.stringify(images)}`)
       console.log('  },')
     },
     (err) => { console.error('Execute error', err) }
     )
-}
 
 console.log('export const mergiWords = [')
+const promises = []
+const startTime = Date.now()
 fs.createReadStream('data/words.csv')
   .pipe(csv())
   .on('data', (row) => {
     locales.forEach((locale) => {
+      // if (promises.length > 3) {
+      //  return
+      // }
       const [lang, country] = locale.split('_')
       if (row[lang + '_word']) {
-        const query = `${row[lang + '_category']}: ${row[lang + '_word']}`
-        processCsvLine(query, lang, country)
+        // const query = `${row[lang + '_category']}: ${row[lang + '_word']}`
+        const query = row[lang + '_word']
+        promises.push(processCsvLine(query, lang, country))
       }
     })
   })
   .on('end', () => {
+    Promise.all(promises).then(() => {
+      const dt = Date.now() - startTime
+      console.log(`] // ${60 * 1000 * promises.length / dt} requests per minute`)
+    })
   })

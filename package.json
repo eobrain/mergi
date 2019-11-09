@@ -11,6 +11,7 @@
   "dependencies": {
     "csv-parser": "^2.3.1",
     "googleapis": "^43.0.0",
+    "htmlparser2": "^4.0.0",
     "standard": "^14.3.1"
   }
 }
