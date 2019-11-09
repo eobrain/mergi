@@ -72,11 +72,8 @@ fs.createReadStream('data/words.csv')
     locales.forEach((locale) => {
       const [lang, country] = locale.split('_')
       if (row[lang + '_word']) {
-        const query = row[lang + '_word']
-        // if (row[lang + '_category']) {
-        // query += ` (${row[lang + '_category']})`
+        const query = `${row[lang + '_category']}: ${row[lang + '_word']}`
         processCsvLine(query, lang, country)
-        // }
       }
     })
   })
