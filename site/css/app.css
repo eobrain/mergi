@@ -14,6 +14,10 @@
 #c2b490 Blondey
 */
 
+html, body {
+    height: 100%;
+}
+
 body {
     font-family: 'Roboto', sans-serif;
     text-align: center;
@@ -22,13 +26,6 @@ body {
     /* Designed for a phone. Not responsive to bigger screen sizes. */
     max-width: 500px;
     max-height: 900px;
-}
-
-html, body {
-    height: 100%;
-}
-
-body {
     display: flex;
     flex-direction: column;
 }
@@ -45,10 +42,6 @@ header, footer {
     padding: 1em;
 }
 
-footer {
-    flex: none;
-}
-
 nav span {
     font-size: 30px;
     padding: 1em;
@@ -58,41 +51,6 @@ nav {
     background-color: #acb7ae;
     /* Barely Green */
     flex: none;
-}
-
-#card {
-    perspective: 500px;
-    perspective-origin: 50% 100px;
-    flex: auto;
-}
-
-#images img {
-    height: 100px;
-    width: auto;
-    margin: 5px;
-}
-
-#word {
-    padding: 5% 5%;
-    height: 100%;
-    font-size: 40px;
-}
-
-#images {
-    overflow: hidden;
-    padding: 5% 5%;
-    height: 100%;
-}
-
-.initial-front {
-    background-color: #c2b490/* Blondey */
-}
-
-.initial-back {
-    background-color: #82716e/* The Brown-shirts */
-}
-
-nav {
     height: 60px;
     padding: 5px 5%;
     overflow: hidden;
@@ -120,13 +78,45 @@ nav svg {
     fill: #92a094/* Slightly darker than Barely Green */
 }
 
-nav, #card, footer {
+nav, article, footer {
     margin: 5%;
     width: 80%;
 }
 
+#card {
+    perspective: 500px;
+    perspective-origin: 50% 100px;
+    flex: auto;
+}
+
 section {
     width: 100%;
+}
+
+#images {
+    overflow: hidden;
+    padding: 5% 5%;
+    height: 100%;
+}
+
+#images img {
+    height: 100px;
+    width: auto;
+    margin: 5px;
+}
+
+#word {
+    padding: 5% 5%;
+    height: 100%;
+    font-size: 40px;
+}
+
+.initial-front {
+    background-color: #c2b490/* Blondey */
+}
+
+.initial-back {
+    background-color: #82716e/* The Brown-shirts */
 }
 
 .front, .back, nav {
@@ -146,6 +136,10 @@ section {
 
 .front {
     transform: rotateY(0deg);
+}
+
+footer {
+    flex: none;
 }
 
 @keyframes offscreen {
