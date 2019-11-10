@@ -10,7 +10,7 @@ const { search } = require('./scrape.js')
 
 const locales = ['es_mx']
 
-const MAX = 107
+const MAX = 160
 // const MAX = 3
 
 const processCsvLine = (query, lang, country) =>
