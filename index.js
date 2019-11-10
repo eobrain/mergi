@@ -10,8 +10,11 @@ const { search } = require('./scrape.js')
 
 const locales = ['es_mx']
 
+const MAX = 107
+// const MAX = 3
+
 const processCsvLine = (query, lang, country) =>
-  search(query, lang, country)
+  search(query, lang, country, MAX)
     .then((images) => {
       console.log('  {')
       console.log(`    query: "${query}",`)
@@ -30,9 +33,9 @@ fs.createReadStream('data/words.csv')
   .pipe(csv())
   .on('data', (row) => {
     locales.forEach((locale) => {
-      // if (promises.length > 3) {
-      //  return
-      // }
+      if (promises.length > MAX) {
+        return
+      }
       const [lang, country] = locale.split('_')
       if (row[lang + '_word']) {
         // const query = `${row[lang + '_category']}: ${row[lang + '_word']}`

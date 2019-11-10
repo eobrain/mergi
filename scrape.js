@@ -1,14 +1,15 @@
 const htmlparser2 = require('htmlparser2')
 const fetch = require('node-fetch')
 
-const SPREAD_OVER_MINUTES = 10
-const SPREAD_OVER_MS = 60000 * SPREAD_OVER_MINUTES
+const QUERIES_PER_MINUTE = 10
 
 // Returns promise of list of { width, height, src } objects
-const search = (query, language, country) => {
+const search = (query, language, country, ofTotalQueries) => {
   const images = []
-  const queryEnc = encodeURI(query)
-  const url = `https://www.google.com/search?q=${queryEnc}+site:${country}&hl=${language}&tbm=isch`
+  const q = `q=${encodeURI(query)}`
+  const cr = `cr=country${country.toUpperCase}`
+  const hl = `hl=${language}`
+  const url = `https://www.google.com/search?${q}&${hl}&${cr}&tbm=isch`
   const parser = new htmlparser2.Parser(
     {
       onopentag (name, attribs) {
@@ -21,6 +22,7 @@ const search = (query, language, country) => {
       }
     }
   )
+  const spreadOverMinutes = ofTotalQueries / QUERIES_PER_MINUTE
   return new Promise((resolve) => {
     setTimeout(() => {
       fetch(url).then((response) => response.text()).then((data) => {
@@ -28,7 +30,7 @@ const search = (query, language, country) => {
         parser.end()
         resolve(images)
       })
-    }, SPREAD_OVER_MS * Math.random())
+    }, spreadOverMinutes * 60000.0 * Math.random())
   })
 }
 
