@@ -94,15 +94,19 @@ section {
 }
 
 #images {
+    display: flex;
+    flex-wrap: wrap;
+    flex-direction: column;
+    align-items: center;
     overflow: hidden;
     padding: 5% 5%;
     height: 100%;
 }
 
 #images img {
-    height: 100px;
-    width: auto;
-    margin: 5px;
+    margin: 2%;
+    width: 31%;
+    height: auto;
 }
 
 #word {
