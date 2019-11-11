@@ -8,45 +8,56 @@ const csv = require('csv-parser')
 const fs = require('fs')
 const { search } = require('./scrape.js')
 
-const locales = ['es_mx']
+// TODO(eob) refactor this into someplace shared with other index.js
+const MAX_IMAGE_COUNT_PER_QUERY = 15
 
-const MAX = 160
-// const MAX = 3
+const LOCALES = ['es_mx']
 
-const processCsvLine = (query, lang, country) =>
-  search(query, lang, country, MAX)
-    .then((images) => {
-      console.log('  {')
-      console.log(`    query: "${query}",`)
-      console.log(`    lang: "${lang}",`)
-      console.log(`    country: "${country}",`)
-      console.log(`    images: ${JSON.stringify(images)}`)
-      console.log('  },')
-    },
-    (err) => { console.error('Execute error', err) }
-    )
+const MAX_QUERY_COUNT = 700
+// const MAX_QUERY_COUNT = 3
 
-console.log('export const mergiWords = [')
-const promises = []
-const startTime = Date.now()
-fs.createReadStream('data/words.csv')
-  .pipe(csv())
-  .on('data', (row) => {
-    locales.forEach((locale) => {
-      if (promises.length > MAX) {
-        return
-      }
-      const [lang, country] = locale.split('_')
-      if (row[lang + '_word']) {
+// Return promise of number of queries made
+const processCsv = (processCsvLine) => new Promise((resolve, reject) => {
+  const promises = []
+  fs.createReadStream('data/words.csv')
+    .pipe(csv())
+    .on('data', (row) => {
+      LOCALES.forEach((locale) => {
+        if (promises.length > MAX_QUERY_COUNT) {
+          return
+        }
+        const [lang, country] = locale.split('_')
+        if (row[lang + '_word']) {
         // const query = `${row[lang + '_category']}: ${row[lang + '_word']}`
-        const query = row[lang + '_word']
-        promises.push(processCsvLine(query, lang, country))
-      }
+          const query = row[lang + '_word']
+          promises.push(processCsvLine(query, lang, country))
+        }
+      })
     })
-  })
-  .on('end', () => {
-    Promise.all(promises).then(() => {
-      const dt = Date.now() - startTime
-      console.log(`] // ${60 * 1000 * promises.length / dt} requests per minute`)
+    .on('end', () => {
+      Promise.all(promises).then(() => resolve(promises.length))
     })
+})
+
+processCsv(() => {})
+  .then((queryCount) => {
+    console.log(`// ${new Date()} ${queryCount} queries:`)
+    console.log('export const mergiWords = [')
+    const startTime = Date.now()
+    processCsv((query, lang, country) =>
+      search(query, lang, country, queryCount, MAX_IMAGE_COUNT_PER_QUERY)
+        .then((images) => {
+          console.log('  {')
+          console.log(`    query: "${query}",`)
+          console.log(`    lang: "${lang}",`)
+          console.log(`    country: "${country}",`)
+          console.log(`    images: ${JSON.stringify(images)}`)
+          console.log('  },')
+        },
+        (err) => { console.error('Execute error', err) }
+        ))
+      .then((count) => {
+        const dt = Date.now() - startTime
+        console.log(`] // ${new Date()} ${count}==${queryCount} ${60 * 1000 * count / dt} requests per minute`)
+      })
   })

@@ -6,6 +6,9 @@
 
 import { newCards, readCards, writeCards, images, merge, score } from './common.js'
 
+// TODO(eob) refactor this into someplace shared with other index.js
+const MAX_IMAGE_COUNT_PER_QUERY = 15
+
 const order = (() => {
   const sort = () => {
     cards.sort((a, b) => score(a.responses) - score(b.responses))
@@ -55,7 +58,12 @@ const ask = () => {
   while (imagesEl.firstChild) {
     imagesEl.removeChild(imagesEl.firstChild)
   }
+  let imageCount = 0
   images[query].forEach((image) => {
+    ++imageCount
+    if (imageCount > MAX_IMAGE_COUNT_PER_QUERY) {
+      return
+    }
     const imgEl = document.createElement('img')
     imgEl.src = image.src
     imgEl.width = image.width
