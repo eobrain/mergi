@@ -7,7 +7,7 @@ const QUERIES_PER_MINUTE = 20.0
 const search = (query, language, country, ofTotalQueries) => {
   const images = []
   const q = `q=${encodeURI(query)}`
-  const cr = `cr=country${country.toUpperCase}`
+  const cr = `cr=country${country.toUpperCase()}`
   const hl = `hl=${language}`
   const url = `https://www.google.com/search?${q}&${hl}&${cr}&tbm=isch`
   const parser = new htmlparser2.Parser(

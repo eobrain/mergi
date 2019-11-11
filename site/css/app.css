@@ -94,9 +94,9 @@ section {
 }
 
 #images {
-    display: flex;
-    flex-wrap: wrap;
-    flex-direction: column;
+    display: grid;
+    grid-template-rows: 1fr 1fr 1fr 1fr 1fr;
+    grid-template-columns: 1fr 1fr 1fr;
     align-items: center;
     overflow: hidden;
     padding: 5% 5%;
@@ -104,8 +104,7 @@ section {
 }
 
 #images img {
-    margin: 2%;
-    width: 31%;
+    width: 100%;
     height: auto;
 }
 
