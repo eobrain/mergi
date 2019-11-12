@@ -49,15 +49,22 @@ export const merge = (existing, added) => {
 
 const TAO = 1000.0 * 60 * 60 * 24
 
-export const score = (responses) => {
-  if (responses.length === 0) {
-    return -1
+// https://stackoverflow.com/questions/7616461/generate-a-hash-from-string-in-javascript
+const hashCode = (s) =>
+  s.split('')
+    .reduce((a, b) => (((a << 5) - a) + b.charCodeAt(0)) | 0, 0)
+
+const randomized = (s) => 0.5 + hashCode(s) / ((1 << 31) * 2.0)
+
+export const score = (card) => {
+  if (card.responses.length === 0) {
+    return randomized(card.phrase)
   }
   const now = Date.now()
-  const weightedSum = responses
+  const weightedSum = card.responses
     .map((response) => response.correctness * Math.exp((response.t - now) / TAO))
     .reduce((sum, x) => sum + x)
-  return weightedSum / responses.length
+  return weightedSum / card.responses.length
 }
 
 // Return ordered list of cards

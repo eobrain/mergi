@@ -10,7 +10,7 @@ document.body.onload = () => {
   const tableEl = document.getElementById('table')
 
   const sort = () => {
-    cards.sort((a, b) => a.score - b.score)
+    cards.sort((a, b) => score(a) - score(b))
   }
 
   const cards = merge(readCards(), newCards())
@@ -30,7 +30,7 @@ document.body.onload = () => {
     const phrase = card.reversed ? card.phrase : `<strong>${card.phrase}</strong>`
     const responsesString = JSON.stringify(card.responses.map((r) => `${r.correctness}`))
     tableEl.insertAdjacentHTML('beforeend',
-        `<tr><td>${score(card.responses)}</td><td>${responsesString}</td><td>${phrase}</td><td>${imgHtml}</td></tr>`
+        `<tr><td>${score(card)}</td><td>${responsesString}</td><td>${phrase}</td><td>${imgHtml}</td></tr>`
     )
   })
 }

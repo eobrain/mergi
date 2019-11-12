@@ -11,7 +11,7 @@ const MAX_IMAGE_COUNT_PER_QUERY = 15
 
 const order = (() => {
   const sort = () => {
-    cards.sort((a, b) => score(a.responses) - score(b.responses))
+    cards.sort((a, b) => score(a) - score(b))
   }
 
   const head = () => cards[0]
