@@ -18,19 +18,19 @@ document.body.onload = () => {
 
   cards.forEach((card) => {
     let imgHtml = ''
-    const imagesOfQuery = images[card.query]
-    if (imagesOfQuery) {
-      imagesOfQuery.forEach((image) => {
+    const imagesOfPhrase = images[card.phrase]
+    if (imagesOfPhrase) {
+      imagesOfPhrase.forEach((image) => {
         imgHtml += `<img src="${image.src}" width="${image.width}" height="${image.height}"/>`
       })
     } else {
       imgHtml = '(No images)'
     }
 
-    const query = card.reversed ? card.query : `<strong>${card.query}</strong>`
+    const phrase = card.reversed ? card.phrase : `<strong>${card.phrase}</strong>`
     const responsesString = JSON.stringify(card.responses.map((r) => `${r.correctness}`))
     tableEl.insertAdjacentHTML('beforeend',
-        `<tr><td>${score(card.responses)}</td><td>${responsesString}</td><td>${query}</td><td>${imgHtml}</td></tr>`
+        `<tr><td>${score(card.responses)}</td><td>${responsesString}</td><td>${phrase}</td><td>${imgHtml}</td></tr>`
     )
   })
 }

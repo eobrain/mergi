@@ -9,21 +9,26 @@ import { mergiWords } from './words.js'
 const lang = 'es'
 const country = 'mx'
 
-const queries = [] // the phrases
+const phrases = []
+
+export const toPhrase = (word) => word.prefix
+  ? `(${word.prefix}) ${word.query}`
+  : word.query
 
 export const images = {} // list of images for each phrase
 mergiWords.forEach((word) => {
   if (word.lang === lang && word.country === country) {
-    queries.push(word.query)
-    images[word.query] = word.images
+    const phrase = toPhrase(word)
+    phrases.push(phrase)
+    images[phrase] = word.images
   }
 })
 
 export const merge = (existing, added) => {
-  const key = (card) => `${card.query}|${card.reversed}`
+  const key = (card) => `${card.phrase}|${card.reversed}`
   const result = []
   const included = {}
-  const hasImages = (card) => !!images[card.query]
+  const hasImages = (card) => !!images[card.phrase]
   if (existing) {
     existing.filter(hasImages).forEach((card) => {
       result.push(card)
@@ -60,15 +65,15 @@ export const newCards = () => {
   const cards = []
   for (let i = 0; i < 2; ++i) {
     const reversed = (i === 1)
-    queries.forEach((query) => {
+    phrases.forEach((phrase) => {
       const responses = []
-      cards.push({ query, reversed, responses })
+      cards.push({ phrase, reversed, responses })
     })
   }
   return cards
 }
 
-const KEY = 'mergi-order-v3'
+const KEY = 'mergi-order-v4'
 
 export const writeCards = (cards) => {
   window.localStorage.setItem(KEY, JSON.stringify(cards))

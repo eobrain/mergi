@@ -29,8 +29,9 @@ const processCsv = (processCsvLine) => new Promise((resolve, reject) => {
         const [lang, country] = locale.split('_')
         if (row[lang + '_word']) {
         // const query = `${row[lang + '_category']}: ${row[lang + '_word']}`
+          const prefix = row[lang + '_prefix']
           const query = row[lang + '_word']
-          promises.push(processCsvLine(query, lang, country))
+          promises.push(processCsvLine(prefix, query, lang, country))
         }
       })
     })
@@ -44,10 +45,11 @@ processCsv(() => {})
     console.log(`// ${new Date()} ${queryCount} queries:`)
     console.log('export const mergiWords = [')
     const startTime = Date.now()
-    processCsv((query, lang, country) =>
+    processCsv((prefix, query, lang, country) =>
       search(query, lang, country, queryCount, MAX_IMAGE_COUNT_PER_QUERY)
         .then((images) => {
           console.log('  {')
+          console.log(`    prefix: "${prefix}",`)
           console.log(`    query: "${query}",`)
           console.log(`    lang: "${lang}",`)
           console.log(`    country: "${country}",`)

@@ -1,4 +1,5 @@
 /node_modules
 /site/words.js
 /site/words.js-20*
+/site/*.map
 *_compiled.js

@@ -38,7 +38,7 @@ const mehEl = document.getElementById('meh')
 const wrongEl = document.getElementById('wrong')
 
 const ask = () => {
-  const { query, reversed } = order.head()
+  const { phrase, reversed } = order.head()
   cardEl.classList.add('offscreen')
 
   navIconsActive(true, false)
@@ -54,12 +54,12 @@ const ask = () => {
     imagesEl.classList.add('initial-back')
     imagesEl.classList.add('back')
   }
-  wordEl.innerHTML = query
+  wordEl.innerHTML = phrase
   while (imagesEl.firstChild) {
     imagesEl.removeChild(imagesEl.firstChild)
   }
   let imageCount = 0
-  images[query].forEach((image) => {
+  images[phrase].forEach((image) => {
     ++imageCount
     if (imageCount > MAX_IMAGE_COUNT_PER_QUERY) {
       return
