@@ -24,8 +24,9 @@ mergiWords.forEach((word) => {
   }
 })
 
+const key = (card) => `${card.phrase}|${card.reversed}`
+
 export const merge = (existing, added) => {
-  const key = (card) => `${card.phrase}|${card.reversed}`
   const result = []
   const included = {}
   const hasImages = (card) => !!images[card.phrase]
@@ -58,7 +59,7 @@ const randomized = (s) => 0.5 + hashCode(s) / ((1 << 31) * 2.0)
 
 export const score = (card) => {
   if (card.responses.length === 0) {
-    return randomized(card.phrase)
+    return randomized(key(card))
   }
   const now = Date.now()
   const weightedSum = card.responses
