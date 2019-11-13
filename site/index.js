@@ -11,7 +11,7 @@ const MAX_IMAGE_COUNT_PER_QUERY = 15
 
 const order = (() => {
   const sort = () => {
-    cards.sort((a, b) => score(a.responses) - score(b.responses))
+    cards.sort((a, b) => score(a) - score(b))
   }
 
   const head = () => cards[0]
@@ -30,8 +30,8 @@ const order = (() => {
 })()
 
 const cardEl = document.getElementById('card')
-const wordEl = document.getElementById('word')
-const imagesEl = document.getElementById('images')
+const frontEl = document.getElementById('front')
+const backEl = document.getElementById('back')
 const questionEl = document.getElementById('question')
 const correctEl = document.getElementById('correct')
 const mehEl = document.getElementById('meh')
@@ -43,40 +43,48 @@ const ask = () => {
 
   navIconsActive(true, false)
 
-  if (reversed) {
-    wordEl.classList.add('initial-back')
-    wordEl.classList.add('back')
-    imagesEl.classList.add('initial-front')
-    imagesEl.classList.add('front')
-  } else {
-    wordEl.classList.add('initial-front')
-    wordEl.classList.add('front')
-    imagesEl.classList.add('initial-back')
-    imagesEl.classList.add('back')
-  }
-  wordEl.innerHTML = phrase
-  while (imagesEl.firstChild) {
-    imagesEl.removeChild(imagesEl.firstChild)
-  }
-  let imageCount = 0
-  images[phrase].forEach((image) => {
-    ++imageCount
-    if (imageCount > MAX_IMAGE_COUNT_PER_QUERY) {
-      return
+  const makeEmpty = (el) => {
+    while (el.firstChild) {
+      el.removeChild(el.firstChild)
     }
-    const imgEl = document.createElement('img')
-    imgEl.src = image.src
-    imgEl.width = image.width
-    imgEl.height = image.height
-    imagesEl.append(imgEl)
-  })
+  }
+
+  const addImages = (imagesEl) => {
+    let imageCount = 0
+    images[phrase].forEach((image) => {
+      ++imageCount
+      if (imageCount > MAX_IMAGE_COUNT_PER_QUERY) {
+        return
+      }
+      const imgEl = document.createElement('img')
+      imgEl.src = image.src
+      imgEl.width = image.width
+      imgEl.height = image.height
+      imagesEl.append(imgEl)
+    })
+  }
+  makeEmpty(frontEl)
+  makeEmpty(backEl)
+  backEl.className = 'unflipped'
+  frontEl.className = 'unflipped'
+  if (reversed) {
+    addImages(frontEl)
+    frontEl.classList.add('images')
+    backEl.innerHTML = phrase
+    backEl.classList.add('word')
+  } else {
+    frontEl.innerHTML = phrase
+    frontEl.classList.add('word')
+    addImages(backEl)
+    backEl.classList.add('images')
+  }
 }
 
 const flip = () => {
-  const backs = Array.from(document.getElementsByClassName('back'))
-  const fronts = Array.from(document.getElementsByClassName('front'))
-  backs.forEach((e) => e.classList.replace('back', 'front'))
-  fronts.forEach((e) => e.classList.replace('front', 'back'))
+  backEl.classList.add('flipped')
+  frontEl.classList.add('flipped')
+  backEl.classList.remove('unflipped')
+  frontEl.classList.remove('unflipped')
   cardEl.classList.remove('offscreen')
 }
 

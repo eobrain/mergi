@@ -93,7 +93,7 @@ section {
     width: 100%;
 }
 
-#images {
+.images {
     display: grid;
     grid-template-rows: 1fr 1fr 1fr 1fr 1fr;
     grid-template-columns: 1fr 1fr 1fr;
@@ -103,42 +103,41 @@ section {
     height: 100%;
 }
 
-#images img {
+.images img {
     width: 100%;
     height: auto;
 }
 
-#word {
+.word {
     padding: 5% 5%;
     height: 100%;
     font-size: 40px;
 }
 
-.initial-front {
+#front {
     background-color: #c2b490/* Blondey */
 }
 
-.initial-back {
-    background-color: #82716e/* The Brown-shirts */
+#back {
+    background-color: #82716e; /* The Brown-shirts */
 }
 
-.front, .back, nav {
+#front.flipped, #back.unflipped {
+    transform: rotateY(180deg);
+}
+#front.unflipped, #back.flipped {
+    transform: rotateY(0deg);
+}
+
+#front, #back, nav {
     border-radius: 10px;
 }
 
-.front, .back {
+#front, #back {
     backface-visibility: hidden;
     transform-style: preserve-3d;
     transition: transform 1s;
     position: absolute;
-}
-
-.back {
-    transform: rotateY(180deg);
-}
-
-.front {
-    transform: rotateY(0deg);
 }
 
 footer {
