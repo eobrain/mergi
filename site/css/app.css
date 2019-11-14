@@ -78,7 +78,7 @@ nav svg {
     fill: #92a094/* Slightly darker than Barely Green */
 }
 
-nav, article, footer {
+nav, main, footer {
     margin: 5%;
     width: 80%;
 }

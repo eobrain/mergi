@@ -60,6 +60,7 @@ const ask = () => {
       imgEl.src = image.src
       imgEl.width = image.width
       imgEl.height = image.height
+      imgEl.alt = `image search result ${imageCount}`
       imagesEl.append(imgEl)
     })
   }
