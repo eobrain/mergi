@@ -57,13 +57,16 @@ const hashCode = (s) =>
 
 const randomized = (s) => 0.5 + hashCode(s) / ((1 << 31) * 2.0)
 
+const now = Date.now()
+
+export const decay = (t) => Math.exp((t - now) / TAO)
+
 export const score = (card) => {
   if (card.responses.length === 0) {
     return randomized(key(card))
   }
-  const now = Date.now()
   const weightedSum = card.responses
-    .map((response) => response.correctness * Math.exp((response.t - now) / TAO))
+    .map((response) => response.correctness * decay(response.t))
     .reduce((sum, x) => sum + x)
   return weightedSum / card.responses.length
 }
