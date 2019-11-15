@@ -48,7 +48,7 @@ export const merge = (existing, added) => {
   return result
 }
 
-const TAO = 1000.0 * 60 * 60 * 24
+const TAO = 1000.0 * 60 * 60 * 12
 
 // https://stackoverflow.com/questions/7616461/generate-a-hash-from-string-in-javascript
 const hashCode = (s) =>
