@@ -27,6 +27,7 @@ document.body.onload = () => {
       rEl.style.background = color
       cardEl.append(rEl)
     })
+    cardEl.title = score(card)
     deckEl.append(cardEl)
   })
 }
