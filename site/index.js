@@ -39,7 +39,7 @@ const wrongEl = document.getElementById('wrong')
 
 /* global SpeechSynthesisUtterance */
 
-let say = () => {}
+let revealSay = () => {}
 
 const ask = () => {
   const { phrase, reversed } = order.head()
@@ -47,6 +47,7 @@ const ask = () => {
 
   navIconsActive(true, false)
 
+  let say = () => {}
   if (window.speechSynthesis) {
     const textToSay = phrase.split(')').slice(-1)[0].trim()
     const utterance = new SpeechSynthesisUtterance(textToSay)
@@ -86,11 +87,14 @@ const ask = () => {
     frontEl.classList.add('images')
     backEl.innerHTML = phrase
     backEl.classList.add('word')
+    revealSay = say
   } else {
+    say()
     frontEl.innerHTML = phrase
     frontEl.classList.add('word')
     addImages(backEl)
     backEl.classList.add('images')
+    revealSay = () => {}
   }
 }
 
@@ -103,7 +107,7 @@ const flip = () => {
 }
 
 const cardReveal = () => {
-  say()
+  revealSay()
   flip()
   navIconsActive(false, true)
 }
