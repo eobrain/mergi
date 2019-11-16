@@ -39,11 +39,22 @@ const wrongEl = document.getElementById('wrong')
 
 /* global SpeechSynthesisUtterance */
 
+let say = () => {}
+
 const ask = () => {
   const { phrase, reversed } = order.head()
   cardEl.classList.add('offscreen')
 
   navIconsActive(true, false)
+
+  if (window.speechSynthesis) {
+    const textToSay = phrase.split(')').slice(-1)[0].trim()
+    const utterance = new SpeechSynthesisUtterance(textToSay)
+    utterance.lang = 'es-mx'
+    say = () => {
+      window.speechSynthesis.speak(utterance)
+    }
+  }
 
   const makeEmpty = (el) => {
     while (el.firstChild) {
@@ -66,7 +77,6 @@ const ask = () => {
       imagesEl.append(imgEl)
     })
   }
-  const phraseHtml = `<p>${phrase}</p><p id="say">🔊</p>`
   makeEmpty(frontEl)
   makeEmpty(backEl)
   backEl.className = 'unflipped'
@@ -74,19 +84,13 @@ const ask = () => {
   if (reversed) {
     addImages(frontEl)
     frontEl.classList.add('images')
-    backEl.innerHTML = phraseHtml
+    backEl.innerHTML = phrase
     backEl.classList.add('word')
   } else {
-    frontEl.innerHTML = phraseHtml
+    frontEl.innerHTML = phrase
     frontEl.classList.add('word')
     addImages(backEl)
     backEl.classList.add('images')
-  }
-  const textToSay = phrase.split(')').slice(-1)[0].trim()
-  const utterance = new SpeechSynthesisUtterance(textToSay)
-  utterance.lang = 'es-mx'
-  document.getElementById('say').onclick = () => {
-    window.speechSynthesis.speak(utterance)
   }
 }
 
@@ -99,6 +103,7 @@ const flip = () => {
 }
 
 const cardReveal = () => {
+  say()
   flip()
   navIconsActive(false, true)
 }
