@@ -37,11 +37,25 @@ const correctEl = document.getElementById('correct')
 const mehEl = document.getElementById('meh')
 const wrongEl = document.getElementById('wrong')
 
+/* global SpeechSynthesisUtterance */
+
+let revealSay = () => {}
+
 const ask = () => {
   const { phrase, reversed } = order.head()
   cardEl.classList.add('offscreen')
 
   navIconsActive(true, false)
+
+  let say = () => {}
+  if (window.speechSynthesis) {
+    const textToSay = phrase.split(')').slice(-1)[0].trim()
+    const utterance = new SpeechSynthesisUtterance(textToSay)
+    utterance.lang = 'es-mx'
+    say = () => {
+      window.speechSynthesis.speak(utterance)
+    }
+  }
 
   const makeEmpty = (el) => {
     while (el.firstChild) {
@@ -73,11 +87,14 @@ const ask = () => {
     frontEl.classList.add('images')
     backEl.innerHTML = phrase
     backEl.classList.add('word')
+    revealSay = say
   } else {
+    say()
     frontEl.innerHTML = phrase
     frontEl.classList.add('word')
     addImages(backEl)
     backEl.classList.add('images')
+    revealSay = () => {}
   }
 }
 
@@ -90,6 +107,7 @@ const flip = () => {
 }
 
 const cardReveal = () => {
+  revealSay()
   flip()
   navIconsActive(false, true)
 }
