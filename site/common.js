@@ -55,7 +55,7 @@ const hashCode = (s) =>
   s.split('')
     .reduce((a, b) => (((a << 5) - a) + b.charCodeAt(0)) | 0, 0)
 
-const randomized = (s) => 0.5 + hashCode(s) / ((1 << 31) * 2.0)
+const randomized = (s) => hashCode(s) / ((1 << 31) * 2.0)
 
 const now = Date.now()
 
@@ -65,10 +65,9 @@ export const score = (card) => {
   if (card.responses.length === 0) {
     return randomized(key(card))
   }
-  const weightedSum = card.responses
-    .map((response) => response.correctness * decay(response.t))
+  return card.responses
+    .map((response) => (response.correctness - 0.5) * decay(response.t))
     .reduce((sum, x) => sum + x)
-  return weightedSum / card.responses.length
 }
 
 // Return ordered list of cards
