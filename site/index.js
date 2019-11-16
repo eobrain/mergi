@@ -37,6 +37,8 @@ const correctEl = document.getElementById('correct')
 const mehEl = document.getElementById('meh')
 const wrongEl = document.getElementById('wrong')
 
+/* global SpeechSynthesisUtterance */
+
 const ask = () => {
   const { phrase, reversed } = order.head()
   cardEl.classList.add('offscreen')
@@ -64,6 +66,7 @@ const ask = () => {
       imagesEl.append(imgEl)
     })
   }
+  const phraseHtml = `<p>${phrase}</p><p id="say">🔊</p>`
   makeEmpty(frontEl)
   makeEmpty(backEl)
   backEl.className = 'unflipped'
@@ -71,13 +74,19 @@ const ask = () => {
   if (reversed) {
     addImages(frontEl)
     frontEl.classList.add('images')
-    backEl.innerHTML = phrase
+    backEl.innerHTML = phraseHtml
     backEl.classList.add('word')
   } else {
-    frontEl.innerHTML = phrase
+    frontEl.innerHTML = phraseHtml
     frontEl.classList.add('word')
     addImages(backEl)
     backEl.classList.add('images')
+  }
+  const textToSay = phrase.split(')').slice(-1)[0].trim()
+  const utterance = new SpeechSynthesisUtterance(textToSay)
+  utterance.lang = 'es-mx'
+  document.getElementById('say').onclick = () => {
+    window.speechSynthesis.speak(utterance)
   }
 }
 
