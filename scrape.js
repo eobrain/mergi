@@ -1,15 +1,13 @@
 const htmlparser2 = require('htmlparser2')
 const fetch = require('node-fetch')
+const { imageSearchUrl } = require('./searchurl.js')
 
 const QUERIES_PER_MINUTE = 20.0
 
 // Returns promise of list of { width, height, src } objects
 const search = (query, language, country, ofTotalQueries) => {
   const images = []
-  const q = `q=${encodeURI(query)}`
-  const cr = `cr=country${country.toUpperCase()}`
-  const hl = `hl=${language}`
-  const url = `https://www.google.com/search?${q}&${hl}&${cr}&tbm=isch`
+  const url = imageSearchUrl(query, language, country)
   const parser = new htmlparser2.Parser(
     {
       onopentag (name, attribs) {

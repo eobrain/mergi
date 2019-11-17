@@ -5,9 +5,13 @@
 // http://www.eclipse.org/legal/epl-v10.html
 
 import { newCards, readCards, writeCards, images, merge, score } from './common.js'
+import { imageSearchUrl } from './searchurl.js'
 
 // TODO(eob) refactor this into someplace shared with other index.js
 const MAX_IMAGE_COUNT_PER_QUERY = 15
+
+const LANGUAGE = 'es'
+const COUNTRY = 'mx'
 
 const order = (() => {
   const cards = merge(readCards(), newCards())
@@ -45,12 +49,12 @@ const ask = () => {
   cardEl.classList.add('offscreen')
 
   navIconsActive(true, false)
+  const queryText = phrase.split(')').slice(-1)[0].trim()
 
   let say = () => {}
   if (window.speechSynthesis) {
-    const textToSay = phrase.split(')').slice(-1)[0].trim()
-    const utterance = new SpeechSynthesisUtterance(textToSay)
-    utterance.lang = 'es-mx'
+    const utterance = new SpeechSynthesisUtterance(queryText)
+    utterance.lang = `${LANGUAGE}-${COUNTRY}`
     say = () => {
       window.speechSynthesis.speak(utterance)
     }
@@ -76,6 +80,9 @@ const ask = () => {
       imgEl.alt = `image search result ${imageCount}`
       imagesEl.append(imgEl)
     })
+    imagesEl.onclick = () => {
+      window.location = imageSearchUrl(queryText, LANGUAGE, COUNTRY)
+    }
   }
   makeEmpty(frontEl)
   makeEmpty(backEl)
