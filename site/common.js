@@ -48,7 +48,8 @@ export const merge = (existing, added) => {
   return result
 }
 
-const TAO = 1000.0 * 60 * 60 * 6
+export const SIX_HOURS = 1000.0 * 60 * 60 * 6
+const FIVE_MINUTES = 1000.0 * 60 * 5
 
 // https://stackoverflow.com/questions/7616461/generate-a-hash-from-string-in-javascript
 const hashCode = (s) =>
@@ -59,14 +60,16 @@ const randomized = (s) => hashCode(s) / ((1 << 31) * 2.0)
 
 const now = Date.now()
 
-export const decay = (t) => Math.exp((t - now) / TAO)
+export const decay = (t, tao) => Math.exp((t - now) / tao)
 
 export const score = (card) => {
-  if (card.responses.length === 0) {
+  const responseCount = card.responses.length
+  if (responseCount === 0) {
     return randomized(key(card))
   }
-  return card.responses
-    .map((response) => (response.correctness - 0.5) * decay(response.t))
+  const tLatest = card.responses[responseCount - 1].t
+  return decay(tLatest, FIVE_MINUTES) + card.responses
+    .map((response) => (response.correctness - 0.5) * decay(response.t, SIX_HOURS))
     .reduce((sum, x) => sum + x)
 }
 

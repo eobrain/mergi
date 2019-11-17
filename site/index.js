@@ -14,9 +14,11 @@ const LANGUAGE = 'es'
 const COUNTRY = 'mx'
 
 const order = (() => {
+  const cards = merge(readCards(), newCards())
   const sort = () => {
     cards.sort((a, b) => score(a) - score(b))
   }
+  sort()
 
   const head = () => cards[0]
 
@@ -26,9 +28,6 @@ const order = (() => {
     sort()
     writeCards(cards)
   }
-
-  const cards = merge(readCards(), newCards())
-  sort()
 
   return { head, update }
 })()
