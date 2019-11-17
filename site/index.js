@@ -10,9 +10,11 @@ import { newCards, readCards, writeCards, images, merge, score } from './common.
 const MAX_IMAGE_COUNT_PER_QUERY = 15
 
 const order = (() => {
+  const cards = merge(readCards(), newCards())
   const sort = () => {
     cards.sort((a, b) => score(a) - score(b))
   }
+  sort()
 
   const head = () => cards[0]
 
@@ -22,9 +24,6 @@ const order = (() => {
     sort()
     writeCards(cards)
   }
-
-  const cards = merge(readCards(), newCards())
-  sort()
 
   return { head, update }
 })()

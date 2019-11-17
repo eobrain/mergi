@@ -4,7 +4,7 @@
 // distribution, and is available at
 // http://www.eclipse.org/legal/epl-v10.html
 
-import { newCards, readCards, merge, score, decay } from './common.js'
+import { newCards, readCards, merge, score, decay, SIX_HOURS } from './common.js'
 
 document.body.onload = () => {
   const deckEl = document.getElementById('deck')
@@ -23,7 +23,7 @@ document.body.onload = () => {
     }
     card.responses.forEach((r) => {
       const rEl = document.createElement('div')
-      const color = `hsl(${120 * r.correctness}, ${100 * decay(r.t)}%, 50%)`
+      const color = `hsl(${120 * r.correctness}, ${100 * decay(r.t, SIX_HOURS)}%, 50%)`
       rEl.style.background = color
       cardEl.append(rEl)
     })
