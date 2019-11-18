@@ -2,7 +2,7 @@ const htmlparser2 = require('htmlparser2')
 const fetch = require('node-fetch')
 const { imageSearchUrl } = require('./searchurl.js')
 
-const QUERIES_PER_MINUTE = 20.0
+const QUERIES_PER_MINUTE = 60.0
 
 // Returns promise of list of { width, height, src } objects
 const search = (query, language, country, ofTotalQueries) => {
