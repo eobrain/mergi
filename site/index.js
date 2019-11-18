@@ -40,9 +40,19 @@ const correctEl = document.getElementById('correct')
 const mehEl = document.getElementById('meh')
 const wrongEl = document.getElementById('wrong')
 
-/* global SpeechSynthesisUtterance */
+/* global SpeechSynthesisUtterance, gtag */
 
 let revealSay = () => {}
+
+const logScreenView = (screen) => {
+  gtag('event', 'screen_view', { screen_name: screen })
+}
+const logViewItem = (items) => {
+  gtag('event', 'view_item', { items })
+}
+const logResponse = (correctness) => {
+  gtag('event', 'response', { correctness })
+}
 
 const ask = () => {
   const { phrase, reversed } = order.head()
@@ -94,6 +104,8 @@ const ask = () => {
     backEl.innerHTML = phrase
     backEl.classList.add('word')
     revealSay = say
+    logScreenView('ask-image')
+    logViewItem(`${phrase} [ask-image]`)
   } else {
     say()
     frontEl.innerHTML = phrase
@@ -101,6 +113,8 @@ const ask = () => {
     addImages(backEl)
     backEl.classList.add('images')
     revealSay = () => {}
+    logScreenView('ask-text')
+    logViewItem(`${phrase} [ask-text]`)
   }
 }
 
@@ -110,6 +124,7 @@ const flip = () => {
   backEl.classList.remove('unflipped')
   frontEl.classList.remove('unflipped')
   cardEl.classList.remove('offscreen')
+  logScreenView('reveal')
 }
 
 const cardReveal = () => {
@@ -119,6 +134,7 @@ const cardReveal = () => {
 }
 
 const answerFn = (correctness) => () => {
+  logResponse(correctness)
   cardEl.classList.add('offscreen')
   order.update(correctness)
   flip()
