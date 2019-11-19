@@ -8,7 +8,7 @@ import { newCards, readCards, writeCards, images, merge, score } from './common.
 import { imageSearchUrl } from './searchurl.js'
 
 // TODO(eob) refactor this into someplace shared with other index.js
-const MAX_IMAGE_COUNT_PER_QUERY = 15
+const MAX_IMAGE_COUNT_PER_QUERY = 6
 
 const LANGUAGE = 'es'
 const COUNTRY = 'mx'

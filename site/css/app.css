@@ -95,8 +95,8 @@ section {
 
 .images {
     display: grid;
-    grid-template-rows: 1fr 1fr 1fr 1fr 1fr;
-    grid-template-columns: 1fr 1fr 1fr;
+    grid-template-rows: 1fr 1fr 1fr;
+    grid-template-columns: 1fr 1fr;
     align-items: center;
     overflow: hidden;
     padding: 5% 5%;
