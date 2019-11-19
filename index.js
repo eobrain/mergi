@@ -9,7 +9,7 @@ const fs = require('fs')
 const { search } = require('./scrape.js')
 
 // TODO(eob) refactor this into someplace shared with other index.js
-const MAX_IMAGE_COUNT_PER_QUERY = 15
+const MAX_IMAGE_COUNT_PER_QUERY = 6
 
 const LOCALES = ['es_mx']
 
