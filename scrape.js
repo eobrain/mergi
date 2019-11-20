@@ -4,8 +4,10 @@ const { imageSearchUrl } = require('./searchurl.js')
 
 const QUERIES_PER_MINUTE = 60.0
 
+const sleep = (ms) => new Promise((resolve) => setTimeout(resolve, ms))
+
 // Returns promise of list of { width, height, src } objects
-const search = (query, language, country, ofTotalQueries) => {
+const search = async (query, language, country, ofTotalQueries) => {
   const images = []
   const url = imageSearchUrl(query, language, country)
   const parser = new htmlparser2.Parser(
@@ -21,15 +23,12 @@ const search = (query, language, country, ofTotalQueries) => {
     }
   )
   const spreadOverMinutes = ofTotalQueries / QUERIES_PER_MINUTE
-  return new Promise((resolve) => {
-    setTimeout(() => {
-      fetch(url).then((response) => response.text()).then((data) => {
-        parser.write(data)
-        parser.end()
-        resolve(images)
-      })
-    }, spreadOverMinutes * 60000.0 * Math.random())
-  })
+  await sleep(spreadOverMinutes * 60000.0 * Math.random())
+  const response = await fetch(url)
+  const data = await response.text()
+  parser.write(data)
+  parser.end()
+  return images
 }
 
 module.exports = { search }

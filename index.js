@@ -11,6 +11,14 @@ const { search } = require('./scrape.js')
 // TODO(eob) refactor this into someplace shared with other index.js
 const MAX_IMAGE_COUNT_PER_QUERY = 6
 
+const filterImage = (images) => {
+  const result = []
+  for (let i = 0; i < images.length && result.length < MAX_IMAGE_COUNT_PER_QUERY; ++i) {
+    result.push(images[i])
+  }
+  return result
+}
+
 const LOCALES = ['es_mx']
 
 const MAX_QUERY_COUNT = 700
@@ -40,26 +48,27 @@ const processCsv = (processCsvLine) => new Promise((resolve, reject) => {
     })
 })
 
-processCsv(() => {})
-  .then((queryCount) => {
-    console.log(`// ${new Date()} ${queryCount} queries:`)
-    console.log('export const mergiWords = [')
-    const startTime = Date.now()
-    processCsv((prefix, query, lang, country) =>
-      search(query, lang, country, queryCount, MAX_IMAGE_COUNT_PER_QUERY)
-        .then((images) => {
-          console.log('  {')
-          console.log(`    prefix: "${prefix}",`)
-          console.log(`    query: "${query}",`)
-          console.log(`    lang: "${lang}",`)
-          console.log(`    country: "${country}",`)
-          console.log(`    images: ${JSON.stringify(images)}`)
-          console.log('  },')
-        },
-        (err) => { console.error('Execute error', err) }
-        ))
-      .then((count) => {
-        const dt = Date.now() - startTime
-        console.log(`] // ${new Date()} ${count}==${queryCount} ${60 * 1000 * count / dt} requests per minute`)
-      })
-  })
+const main = async () => {
+  const queryCount = await processCsv(() => {})
+  console.log(`// ${new Date()} ${queryCount} queries:`)
+  console.log('export const mergiWords = [')
+  const startTime = Date.now()
+
+  const count = await processCsv((prefix, query, lang, country) =>
+    search(query, lang, country, queryCount, MAX_QUERY_COUNT)
+      .then((images) => {
+        console.log('  {')
+        console.log(`    prefix: "${prefix}",`)
+        console.log(`    query: "${query}",`)
+        console.log(`    lang: "${lang}",`)
+        console.log(`    country: "${country}",`)
+        console.log(`    images: ${JSON.stringify(filterImage(images))}`)
+        console.log('  },')
+      },
+      (err) => { console.error('Execute error', err) }
+      ))
+  const dt = Date.now() - startTime
+  console.log(`] // ${new Date()} ${count}==${queryCount} ${60 * 1000 * count / dt} requests per minute`)
+}
+
+main()
