@@ -25,8 +25,8 @@ const MAX_IMAGE_COUNT_PER_QUERY = 6
 
 const LOCALES = ['es_mx']
 
-// const MAX_QUERY_COUNT = 700
-const MAX_QUERY_COUNT = 20
+const MAX_QUERY_COUNT = 700
+// const MAX_QUERY_COUNT = 20
 
 // Return promise of number of queries made
 const processCsv = (processCsvLine) => new Promise((resolve, reject) => {
