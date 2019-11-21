@@ -48,6 +48,11 @@ The build does two things:
 2. It uses the closure compiler to transpile the source JavaScript into the
    optimized, portable JavaScript that we distribute.
 
+Prerequisites:
+
+#  Node
+#  `sudo apt-get install tesseract-ocr`
+
 To build do
 
 ```sh

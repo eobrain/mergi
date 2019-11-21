@@ -63,7 +63,7 @@ const main = async () => {
     for (let i = 0; i < images.length && result.length < MAX_IMAGE_COUNT_PER_QUERY; ++i) {
       try {
         const tempName = temp.path()
-        download(images[i].src, tempName)
+        await download(images[i].src, tempName)
         const text = (await tesseract.recognize(tempName, config)).trim()
         fs.unlink(tempName, (e) => {
           if (e) {
