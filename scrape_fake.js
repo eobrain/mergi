@@ -3,7 +3,7 @@
 const QUERIES_PER_MINUTE = 20.0
 
 // Returns promise of list of { width, height, src } objects
-const search = (query, language, country, queryCount) => {
+export const search = (query, language, country, queryCount) => {
   const q = `q=${encodeURI(query)}`
   const cr = `cr=country${country.toUpperCase()}`
   const hl = `hl=${language}`
@@ -21,5 +21,3 @@ const search = (query, language, country, queryCount) => {
     }, delay)
   })
 }
-
-module.exports = { search }

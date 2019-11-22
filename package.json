@@ -13,5 +13,6 @@
     "googleapis": "^43.0.0",
     "htmlparser2": "^4.0.0",
     "standard": "^14.3.1"
-  }
+  },
+  "type": "module"
 }
