@@ -6,19 +6,7 @@
 
 const csv = require('csv-parser')
 const fs = require('fs')
-const tesseract = require('node-tesseract-ocr')
 const { search } = require('./scrape.js')
-const temp = require('temp')
-const util = require('util')
-const streamPipeline = util.promisify(require('stream').pipeline)
-
-const fetch = require('node-fetch')
-
-const download = async (url, fileName) => {
-  const response = await fetch(url)
-  if (!response.ok) throw new Error(`unexpected response ${response.statusText}`)
-  await streamPipeline(response.body, fs.createWriteStream(fileName))
-}
 
 // TODO(eob) refactor this into someplace shared with other index.js
 const MAX_IMAGE_COUNT_PER_QUERY = 6
@@ -52,32 +40,11 @@ const processCsv = (processCsvLine) => new Promise((resolve, reject) => {
     })
 })
 
-// See https://github.com/tesseract-ocr/tesseract/blob/master/doc/tesseract.1.asc
-const config = {
-  lang: 'eng'
-}
-
 const main = async () => {
   const filterImage = async (images) => {
     const result = []
     for (let i = 0; i < images.length && result.length < MAX_IMAGE_COUNT_PER_QUERY; ++i) {
-      try {
-        const tempName = temp.path()
-        await download(images[i].src, tempName)
-        const text = (await tesseract.recognize(tempName, config)).trim()
-        fs.unlink(tempName, (e) => {
-          if (e) {
-            console.log('/* unlink:', e, '*/')
-          }
-        })
-        if (!text) { // don't use images with text
-          result.push(images[i])
-        }
-      } catch (e) {
-        if (e) {
-          console.log(`/* "${e}"*/`)
-        }
-      }
+      result.push(images[i])
     }
     return result
   }
