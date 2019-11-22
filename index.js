@@ -4,9 +4,9 @@
 // distribution, and is available at
 // http://www.eclipse.org/legal/epl-v10.html
 
-const csv = require('csv-parser')
-const fs = require('fs')
-const { search } = require('./scrape.js')
+import csv from 'csv-parser'
+import fs from 'fs'
+import { search } from './scrape.js'
 
 // TODO(eob) refactor this into someplace shared with other index.js
 const MAX_IMAGE_COUNT_PER_QUERY = 6

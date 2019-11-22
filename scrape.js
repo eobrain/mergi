@@ -1,13 +1,13 @@
-const htmlparser2 = require('htmlparser2')
-const fetch = require('node-fetch')
-const { imageSearchUrl } = require('./searchurl.js')
+import { imageSearchUrl } from './site/searchurl.js'
+import htmlparser2 from 'htmlparser2'
+import fetch from 'node-fetch'
 
 const QUERIES_PER_MINUTE = 60.0
 
 const sleep = (ms) => new Promise((resolve) => setTimeout(resolve, ms))
 
 // Returns promise of list of { width, height, src } objects
-const search = async (query, language, country, ofTotalQueries) => {
+export const search = async (query, language, country, ofTotalQueries) => {
   const images = []
   const url = imageSearchUrl(query, language, country)
   const parser = new htmlparser2.Parser(
@@ -30,5 +30,3 @@ const search = async (query, language, country, ofTotalQueries) => {
   parser.end()
   return images
 }
-
-module.exports = { search }
