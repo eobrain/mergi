@@ -17,3 +17,9 @@ words: data/words.csv index.js scrape.js
 
 dry-run:
 	node index.js
+
+ocr-test: site/ocr.html
+
+site/ocr.html: site/words.js ocr.js ocr_test.js
+	node ocr_test.js > $@
+
