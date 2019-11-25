@@ -3,7 +3,7 @@ import fetch from 'node-fetch'
 import util from 'util'
 import { pipeline } from 'stream'
 import temp from 'temp'
-import tesseract from 'node-tesseract-ocr'
+import recognize from 'tesseractocr'
 import { sleep } from './eob-util.js'
 
 const streamPipeline = util.promisify(pipeline)
@@ -27,15 +27,15 @@ const download = async (url, fileName) => {
 // See https://github.com/tesseract-ocr/tesseract/blob/master/doc/tesseract.1.asc
 const config = {
   // lang: 'eng'
-  lang: 'spa',
-  oem: 2,
+  language: 'spa',
+  // oem: 2,
   psm: 6
 }
 
 export const hasText = async (src) => {
   const tempName = temp.path()
   await download(src, tempName)
-  const text = (await tesseract.recognize(tempName, config)).trim()
+  const text = (await recognize(tempName, config)).trim()
   unlink(tempName, (e) => {
     if (e) {
       console.log('/* unlink:', e, '*/')
