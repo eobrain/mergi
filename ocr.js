@@ -24,11 +24,11 @@ const download = async (url, fileName) => {
   await streamPipeline(response.body, createWriteStream(fileName))
 }
 
-export const initOcr = async () => {
+export const Ocr = async () => {
   const worker = tesseract.createWorker({
     // langPath: '/usr/share/tesseract-ocr/tessdata',
     logger: m => {
-      if (m.progress > 0.999) {
+      if (m.status !== 'recognizing text' && m.progress > 0.999) {
         console.error('FINISHED: ', m.status)
       }
     }
@@ -40,28 +40,29 @@ export const initOcr = async () => {
     tessedit_pageseg_mode: tesseract.PSM.PSM_SPARSE_TEXT_OSD,
     tessedit_ocr_engine_mode: tesseract.OEM.OEM_TESSERACT_LSTM_COMBINED
   })
-  return worker
-}
 
-let count = 0
-export const hasText = async (worker, src) => {
-  const tempName = temp.path()
-  await download(src, tempName)
-  const { data: { text } } = await worker.recognize(tempName)
-  const filtered = text.replace(/[^\p{Letter}]/g, '')
-  unlink(tempName, (e) => {
-    if (e) {
-      console.log('/* unlink:', e, '*/')
+  let count = 0
+  const hasText = async (src) => {
+    const tempName = temp.path()
+    await download(src, tempName)
+    const { data: { text } } = await worker.recognize(tempName)
+    const filtered = text.replace(/[^\p{Letter}]/g, '')
+    unlink(tempName, (e) => {
+      if (e) {
+        console.log('/* unlink:', e, '*/')
+      }
+    })
+    const has = filtered.trim().length > 1
+    count++
+    if (has) {
+      console.error(count, 'filtered=', filtered)
     }
-  })
-  const has = filtered.trim().length > 1
-  count++
-  if (has) {
-    console.error(count, 'filtered=', filtered)
+    return has
   }
-  return [has, src]
-}
 
-export const finishOcr = async (worker) => {
-  await worker.terminate()
+  const cleanup = async (worker) => {
+    await worker.terminate()
+  }
+
+  return { hasText, cleanup }
 }

@@ -1,4 +1,4 @@
-import { initOcr, hasText, finishOcr } from './ocr.js'
+import { Ocr } from './ocr.js'
 import { mergiWords } from './site/words.js'
 
 const lang = 'es'
@@ -9,8 +9,7 @@ const handleWord = async (ocr, word) => {
   const nos = []
   for (let i = 0; i < word.images.length; ++i) {
     const src = word.images[i].src
-    const [has, _] = await hasText(ocr, src)
-    if (has) {
+    if (await ocr.hasText(src)) {
       yesses.push(src)
     } else {
       nos.push(src)
@@ -28,7 +27,7 @@ const handleWord = async (ocr, word) => {
 }
 
 const main = async () => {
-  const ocr = await initOcr()
+  const ocr = await Ocr()
   console.log('<html><body><table>')
   for (let i = 0; i < mergiWords.length; ++i) {
     const word = mergiWords[i]
@@ -37,7 +36,7 @@ const main = async () => {
     }
   }
   console.log('</table></body></table>')
-  await finishOcr()
+  await ocr.cleanup()
 }
 
 main()
