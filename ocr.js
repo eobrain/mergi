@@ -37,7 +37,7 @@ export const Ocr = async () => {
   await worker.loadLanguage('spa')
   await worker.initialize('spa')
   await worker.setParameters({
-    tessedit_pageseg_mode: tesseract.PSM.PSM_SPARSE_TEXT_OSD,
+    tessedit_pageseg_mode: tesseract.PSM.PSM_AUTO_OSD,
     tessedit_ocr_engine_mode: tesseract.OEM.OEM_TESSERACT_LSTM_COMBINED
   })
 
@@ -60,7 +60,7 @@ export const Ocr = async () => {
     return has
   }
 
-  const cleanup = async (worker) => {
+  const cleanup = async () => {
     await worker.terminate()
   }
 
