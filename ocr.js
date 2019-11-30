@@ -1,9 +1,9 @@
-import tesseract from 'tesseract.js'
 import { unlink, createWriteStream } from 'fs'
 import fetch from 'node-fetch'
 import util from 'util'
 import { pipeline } from 'stream'
 import temp from 'temp'
+import tesseract from 'tesseractocr'
 import { sleep } from './eob-util.js'
 
 const streamPipeline = util.promisify(pipeline)
@@ -24,29 +24,27 @@ const download = async (url, fileName) => {
   await streamPipeline(response.body, createWriteStream(fileName))
 }
 
-export const Ocr = async () => {
-  const worker = tesseract.createWorker({
-    // langPath: '/usr/share/tesseract-ocr/tessdata',
-    logger: m => {
-      if (m.status !== 'recognizing text' && m.progress > 0.999) {
-        console.error('FINISHED: ', m.status)
-      }
-    }
-  })
-  await worker.load()
-  await worker.loadLanguage('spa')
-  await worker.initialize('spa')
-  await worker.setParameters({
-    tessedit_pageseg_mode: tesseract.PSM.PSM_AUTO_OSD,
-    tessedit_ocr_engine_mode: tesseract.OEM.OEM_TESSERACT_LSTM_COMBINED
-  })
+// See https://github.com/tesseract-ocr/tesseract/blob/master/doc/tesseract.1.asc
+/* const config = {
+  // lang: 'eng'
+  language: 'spa',
+  // oem: 2,
+  psm: 0,
+  debug: true
+} */
 
+const recognize = tesseract.withOptions({
+  psm: 0,
+  language: ['spa']
+})
+
+export const Ocr = async () => {
   let count = 0
   const hasText = async (src) => {
     const tempName = temp.path()
     await download(src, tempName)
-    const { data: { text } } = await worker.recognize(tempName)
-    const filtered = text.replace(/[^\p{Letter}]/g, '')
+    const text = (await recognize(tempName)).trim()
+    const filtered = text // .replace(/[^\p{Letter}]/g, '')
     unlink(tempName, (e) => {
       if (e) {
         console.log('/* unlink:', e, '*/')
@@ -61,7 +59,6 @@ export const Ocr = async () => {
   }
 
   const cleanup = async () => {
-    await worker.terminate()
   }
 
   return { hasText, cleanup }

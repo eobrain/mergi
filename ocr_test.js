@@ -5,6 +5,7 @@ const lang = 'es'
 const country = 'mx'
 
 const handleWord = async (ocr, word) => {
+  console.error('>>>>>', word.query)
   const yesses = []
   const nos = []
   for (let i = 0; i < word.images.length; ++i) {
