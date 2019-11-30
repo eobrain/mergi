@@ -10,8 +10,10 @@
   "license": "EPL-1.0",
   "dependencies": {
     "csv-parser": "^2.3.1",
+    "gm": "^1.23.1",
     "googleapis": "^43.0.0",
     "htmlparser2": "^4.0.0",
+    "request": "^2.88.0",
     "standard": "^14.3.1",
     "temp": "^0.9.1",
     "tesseractocr": "^1.2.1"
