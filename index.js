@@ -7,6 +7,7 @@
 import csv from 'csv-parser'
 import fs from 'fs'
 import { search } from './scrape.js'
+import { Ocr } from './ocr.js'
 
 // TODO(eob) refactor this into someplace shared with other index.js
 const MAX_IMAGE_COUNT_PER_QUERY = 6
@@ -41,10 +42,14 @@ const processCsv = (processCsvLine) => new Promise((resolve, reject) => {
 })
 
 const main = async () => {
+  const ocr = await Ocr()
   const filterImage = async (images) => {
     const result = []
     for (let i = 0; i < images.length && result.length < MAX_IMAGE_COUNT_PER_QUERY; ++i) {
-      result.push(images[i])
+      const image = images[i]
+      if (!(await ocr.hasText(image.src))) {
+        result.push(image)
+      }
     }
     return result
   }
@@ -54,9 +59,11 @@ const main = async () => {
   console.log('export const mergiWords = [')
   const startTime = Date.now()
 
+  let j = 0
   const count = await processCsv(async (prefix, query, lang, country) => {
     const images = await search(query, lang, country, queryCount, MAX_QUERY_COUNT)
     const filteredImages = await filterImage(images)
+    console.error(`Word# ${++j} ${query}`)
     console.log('  {')
     console.log(`    prefix: "${prefix}",`)
     console.log(`    query: "${query}",`)
@@ -67,6 +74,7 @@ const main = async () => {
   })
   const dt = Date.now() - startTime
   console.log(`] // ${new Date()} ${count}==${queryCount} ${60 * 1000 * count / dt} requests per minute`)
+  ocr.cleanup()
 }
 
 main()

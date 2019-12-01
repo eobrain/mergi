@@ -1,10 +1,9 @@
 import { imageSearchUrl } from './site/searchurl.js'
 import htmlparser2 from 'htmlparser2'
 import fetch from 'node-fetch'
+import { sleep } from './eob-util.js'
 
 const QUERIES_PER_MINUTE = 60.0
-
-const sleep = (ms) => new Promise((resolve) => setTimeout(resolve, ms))
 
 // Returns promise of list of { width, height, src } objects
 export const search = async (query, language, country, ofTotalQueries) => {
