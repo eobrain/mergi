@@ -40,7 +40,6 @@ const downloadAndTransform = (src, topath) => new Promise((resolve, reject) =>
       if (err) {
         reject(err)
       } else if (count < 4000) {
-        console.error(`${count} colors`)
         resolve(true)
       }
     })
@@ -56,7 +55,6 @@ const downloadAndTransform = (src, topath) => new Promise((resolve, reject) =>
 )
 
 export const Ocr = async () => {
-  let count = 0
   const hasText = async (src) => {
     const tempName = temp.path()
     const tooFewColors = await downloadAndTransform(src, tempName)
@@ -64,17 +62,14 @@ export const Ocr = async () => {
       return true
     }
     const text = (await recognize(tempName)).trim()
-    const filtered = text // .replace(/[^\p{Letter}]/g, '')
-    // console.error(tempName)
     unlink(tempName, (e) => {
       if (e) {
         console.log('/* unlink:', e, '*/')
       }
     })
-    const has = filtered.trim().length > 1
-    count++
+    const has = text.trim().length > 1
     if (has) {
-      console.error(count, 'filtered=', filtered)
+      console.error(`"${text}"`)
     }
     return has
   }

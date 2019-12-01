@@ -59,9 +59,11 @@ const main = async () => {
   console.log('export const mergiWords = [')
   const startTime = Date.now()
 
+  let j = 0
   const count = await processCsv(async (prefix, query, lang, country) => {
     const images = await search(query, lang, country, queryCount, MAX_QUERY_COUNT)
     const filteredImages = await filterImage(images)
+    console.error(`Word# ${++j} ${query}`)
     console.log('  {')
     console.log(`    prefix: "${prefix}",`)
     console.log(`    query: "${query}",`)
