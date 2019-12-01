@@ -1,20 +1,16 @@
-import { unlink, createWriteStream } from 'fs'
-import fetch from 'node-fetch'
-import util from 'util'
-import { pipeline } from 'stream'
+import { unlink } from 'fs'
 import temp from 'temp'
 import tesseract from 'tesseractocr'
 import { sleep } from './eob-util.js'
 import gm from 'gm'
 import request from 'request'
-
-const streamPipeline = util.promisify(pipeline)
+import semaphore from 'await-semaphore'
 
 const retryWithExponentialBackoff = async (f, delayMs = 1) => {
   try {
     return f()
   } catch (e) {
-    console(f, 'failed. Retrying after', delayMs, 'ms')
+    console.error(f, 'failed. Retrying after', delayMs, 'ms')
     sleep(delayMs)
     return retryWithExponentialBackoff(f, delayMs * 2)
   }
@@ -35,7 +31,7 @@ const recognize = tesseract.withOptions({
 })
 
 const downloadAndTransform = (src, topath) => new Promise((resolve, reject) =>
-  gm(request(src))
+  gm(request(src, (err) => { if (err) { reject(err) } }))
     .color((err, count) => {
       if (err) {
         reject(err)
@@ -54,14 +50,25 @@ const downloadAndTransform = (src, topath) => new Promise((resolve, reject) =>
 
 )
 
+const tesseractSemaphore = new semaphore.Semaphore(5)
+const recognizeLimited = async (path) => {
+  const release = await tesseractSemaphore.acquire()
+  try {
+    return await recognize(path)
+  } finally {
+    release()
+  }
+}
+
 export const Ocr = async () => {
   const hasText = async (src) => {
     const tempName = temp.path()
-    const tooFewColors = await downloadAndTransform(src, tempName)
+    const tooFewColors = await retryWithExponentialBackoff(
+      async () => downloadAndTransform(src, tempName))
     if (tooFewColors) {
       return true
     }
-    const text = (await recognize(tempName)).trim()
+    const text = (await recognizeLimited(tempName)).trim()
     unlink(tempName, (e) => {
       if (e) {
         console.log('/* unlink:', e, '*/')
