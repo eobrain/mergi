@@ -30,26 +30,39 @@ const retryWithExponentialBackoff = async (f, delayMs = 1) => {
 
 // See https://github.com/tesseract-ocr/tesseract/blob/master/doc/tesseract.1.asc
 const recognize = tesseract.withOptions({
-  psm: 1,
+  psm: 2,
   language: ['spa']
 })
 
 const downloadAndTransform = (src, topath) => new Promise((resolve, reject) =>
   gm(request(src))
+    .color((err, count) => {
+      if (err) {
+        reject(err)
+      } else if (count < 4000) {
+        console.error(`${count} colors`)
+        resolve(true)
+      }
+    })
     .modulate(100, 0)
     .write(topath, (err) => {
       if (err) {
         reject(err)
       } else {
-        resolve()
+        resolve(false)
       }
-    }))
+    })
+
+)
 
 export const Ocr = async () => {
   let count = 0
   const hasText = async (src) => {
     const tempName = temp.path()
-    await downloadAndTransform(src, tempName)
+    const tooFewColors = await downloadAndTransform(src, tempName)
+    if (tooFewColors) {
+      return true
+    }
     const text = (await recognize(tempName)).trim()
     const filtered = text // .replace(/[^\p{Letter}]/g, '')
     // console.error(tempName)
