@@ -35,14 +35,14 @@ const order = (() => {
 const cardEl = document.getElementById('card')
 const frontEl = document.getElementById('front')
 const backEl = document.getElementById('back')
-const questionEl = document.getElementById('question')
 const correctEl = document.getElementById('correct')
 const mehEl = document.getElementById('meh')
 const wrongEl = document.getElementById('wrong')
 
 /* global SpeechSynthesisUtterance, gtag */
 
-let revealSay = () => {}
+let revealSay = () => { }
+const flipSay = () => { }
 
 const logScreenView = (screen) => {
   gtag('event', 'screen_view', { screen_name: screen })
@@ -58,10 +58,10 @@ const ask = () => {
   const { phrase, reversed } = order.head()
   cardEl.classList.add('offscreen')
 
-  navIconsActive(true, false)
+  navIconsActive(false)
   const queryText = phrase.split(')').slice(-1)[0].trim()
 
-  let say = () => {}
+  let say = () => { }
   if (window.speechSynthesis) {
     const utterance = new SpeechSynthesisUtterance(queryText)
     utterance.lang = `${LANGUAGE}-${COUNTRY}`
@@ -70,10 +70,8 @@ const ask = () => {
     }
   }
 
-  const makeEmpty = (el) => {
-    while (el.firstChild) {
-      el.removeChild(el.firstChild)
-    }
+  const removeContent = (element) => {
+    element.querySelectorAll('.content').forEach(el => el.remove())
   }
 
   const addImages = (imagesEl) => {
@@ -84,35 +82,44 @@ const ask = () => {
         return
       }
       const imgEl = document.createElement('img')
+      imgEl.className = 'content'
       imgEl.src = image.src
       imgEl.width = image.width
       imgEl.height = image.height
       imgEl.alt = `image search result ${imageCount}`
       imagesEl.append(imgEl)
     })
-    imagesEl.onclick = () => {
-      window.location = imageSearchUrl(queryText, LANGUAGE, COUNTRY)
-    }
   }
-  makeEmpty(frontEl)
-  makeEmpty(backEl)
+  const addPhrase = (textCardEl) => {
+    const pEl = document.createElement('a')
+    pEl.className = 'content'
+    pEl.href = imageSearchUrl(queryText, LANGUAGE, COUNTRY)
+    pEl.innerHTML = phrase
+    textCardEl.append(pEl)
+  }
+  removeContent(frontEl)
+  removeContent(backEl)
   backEl.className = 'unflipped'
+  backEl.onclick = unflip
   frontEl.className = 'unflipped'
+  frontEl.onclick = cardReveal
   if (reversed) {
     addImages(frontEl)
     frontEl.classList.add('images')
-    backEl.innerHTML = phrase
+    addPhrase(backEl)
     backEl.classList.add('word')
     revealSay = say
+    unflipSay = () => { }
     logScreenView('ask-image')
     logViewItem(`${phrase} [ask-image]`)
   } else {
     say()
-    frontEl.innerHTML = phrase
+    addPhrase(frontEl)
     frontEl.classList.add('word')
     addImages(backEl)
     backEl.classList.add('images')
-    revealSay = () => {}
+    revealSay = () => { }
+    unflipSay = say
     logScreenView('ask-text')
     logViewItem(`${phrase} [ask-text]`)
   }
@@ -127,10 +134,19 @@ const flip = () => {
   logScreenView('reveal')
 }
 
+const unflip = () => {
+  flipSay()
+  backEl.classList.add('unflipped')
+  frontEl.classList.add('unflipped')
+  backEl.classList.remove('flipped')
+  frontEl.classList.remove('flipped')
+  logScreenView('unflip')
+}
+
 const cardReveal = () => {
   revealSay()
   flip()
-  navIconsActive(false, true)
+  navIconsActive(true)
 }
 
 const answerFn = (correctness) => () => {
@@ -154,8 +170,7 @@ const activeIf = (el, active, onclick) => {
     el.onclick = undefined
   }
 }
-const navIconsActive = (questionActive, answersActive) => {
-  activeIf(questionEl, questionActive, cardReveal)
+const navIconsActive = (answersActive) => {
   activeIf(correctEl, answersActive, correct)
   activeIf(mehEl, answersActive, meh)
   activeIf(wrongEl, answersActive, wrong)
