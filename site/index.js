@@ -42,7 +42,7 @@ const wrongEl = document.getElementById('wrong')
 /* global SpeechSynthesisUtterance, gtag */
 
 let revealSay = () => { }
-const flipSay = () => { }
+let unflipSay = () => { }
 
 const logScreenView = (screen) => {
   gtag('event', 'screen_view', { screen_name: screen })
@@ -113,7 +113,6 @@ const ask = () => {
     logScreenView('ask-image')
     logViewItem(`${phrase} [ask-image]`)
   } else {
-    say()
     addPhrase(frontEl)
     frontEl.classList.add('word')
     addImages(backEl)
@@ -135,7 +134,7 @@ const flip = () => {
 }
 
 const unflip = () => {
-  flipSay()
+  unflipSay()
   backEl.classList.add('unflipped')
   frontEl.classList.add('unflipped')
   backEl.classList.remove('flipped')
