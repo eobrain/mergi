@@ -58,7 +58,7 @@ const ask = () => {
   const { phrase, reversed } = order.head()
   cardEl.classList.add('offscreen')
 
-  navIconsActive(true, false)
+  navIconsActive(false)
   const queryText = phrase.split(')').slice(-1)[0].trim()
 
   let say = () => { }
@@ -146,7 +146,7 @@ const unflip = () => {
 const cardReveal = () => {
   revealSay()
   flip()
-  navIconsActive(false, true)
+  navIconsActive(true)
 }
 
 const answerFn = (correctness) => () => {
@@ -170,7 +170,7 @@ const activeIf = (el, active, onclick) => {
     el.onclick = undefined
   }
 }
-const navIconsActive = (questionActive, answersActive) => {
+const navIconsActive = (answersActive) => {
   activeIf(correctEl, answersActive, correct)
   activeIf(mehEl, answersActive, meh)
   activeIf(wrongEl, answersActive, wrong)
