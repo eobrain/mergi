@@ -35,34 +35,38 @@ This is a static single-page web app with no backend. The only user state is Jav
 
 The app uses images fetched from Google Search and stored in the file `words.js`. A small Node utility program calls the Google Search API at build time to create `words.js`.
 
-As of early November 2019 I have not yet added any JavaScript/CSS/HTML bundling or transpiling step to the build, and the deployed code is the same as the source code. That, hopefully, will change so that I can add support for older browsers.
-
 ## Build Instructions
 
-The build does two things:
+If you have modified `data/words.csv` you can run
 
-1. It generates the `words.js` file (which is not committed to this repo) by
-   calling Google Image search to find images corresponding to the vocabulary
-   words. Note this is deliberately throttled to avoid spamming the Google
-   servers, so it can take 10 minutes or more.
-2. It uses the closure compiler to transpile the source JavaScript into the
-   optimized, portable JavaScript that we distribute.
+```sh
+make words
+```
 
-To build do
+to regenerate the `words.js` file by calling Google Image search and text
+recognition to find images corresponding to the vocabulary words. Note this is
+deliberately throttled to avoid spamming the Google servers, so it can take 10
+minutes or more.
+
+If you have changed any JavaScript you can run
 
 ```sh
 make
 ```
 
+to use the closure compiler to transpile the source JavaScript into the
+optimized, portable JavaScript that we distribute.
+
 You can then preview the site by doing
 
 ```sh
-cd site python -m SimpleHTTPServer 8888
+cd site && python -m SimpleHTTPServer 8888
 ```
 
-and viewing http://localhost:8888/credit.html (preferably using dev-tools to turn on mobile emulation).
+and viewing http://localhost:8888/ (preferably using dev-tools to turn on mobile emulation).
 
-To deploy just copy the `site` subdirectory to somewhere accessible on the web. This could for example be:
+To deploy just copy the `site` subdirectory to somewhere accessible on the web.
+This could for example be:
 
 1. A storage bucket (e.g. Google Cloud Storage or Amazon S3)
 2. Firebase Hosting
