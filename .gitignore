@@ -1,3 +1,4 @@
 /node_modules
 /site/*.map
-*_compiled.js
+/site/*.js
+
