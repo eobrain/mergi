@@ -154,7 +154,7 @@ img:nth-child(7) { grid-area: 4 / 2 / 5 / 3; }
 #front, #back {
     backface-visibility: hidden;
     transform-style: preserve-3d;
-    transition: transform 100s;
+    transition: transform 1s;
     position: absolute;
 }
 
@@ -181,6 +181,6 @@ footer {
 }
 
 .offscreen {
-    animation-duration: 2s;
+    animation-duration: 1s;
     animation-name: offscreen;
 }
