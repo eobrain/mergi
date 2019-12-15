@@ -144,8 +144,11 @@ img:nth-child(7) { grid-area: 4 / 2 / 5 / 3; }
     display: none;
 }
 
-#front.flipped, #back.unflipped {
+#front.flipped {
     transform: rotateY(180deg);
+}
+#back.unflipped {
+    transform: rotateY(-180deg);
 }
 #front.unflipped, #back.flipped {
     transform: rotateY(0deg);
