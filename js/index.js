@@ -175,4 +175,12 @@ const navIconsActive = (answersActive) => {
   activeIf(wrongEl, answersActive, wrong)
 }
 
-document.body.onload = ask
+// Should be same as animation-duration in .offscreen CSS
+const OFFSCREEN_TIME_MS = 2000
+
+document.body.onload = () => {
+  ask()
+  setTimeout(() => {
+    cardEl.classList.remove('initial')
+  }, OFFSCREEN_TIME_MS)
+}

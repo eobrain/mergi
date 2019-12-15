@@ -140,6 +140,10 @@ img:nth-child(7) { grid-area: 4 / 2 / 5 / 3; }
     background-color: #82716e; /* The Brown-shirts */
 }
 
+.initial #front.flipped, .initial #back.unflipped {
+    display: none;
+}
+
 #front.flipped, #back.unflipped {
     transform: rotateY(180deg);
 }
@@ -154,7 +158,7 @@ img:nth-child(7) { grid-area: 4 / 2 / 5 / 3; }
 #front, #back {
     backface-visibility: hidden;
     transform-style: preserve-3d;
-    transition: transform 1s;
+    transition: transform 2s;
     position: absolute;
 }
 
@@ -181,6 +185,10 @@ footer {
 }
 
 .offscreen {
-    animation-duration: 1s;
+    animation-duration: 2s;  /* Should be same as OFFSCREEN_TIME in index.js */
+    animation-name: offscreen;
+}
+.initial.offscreen {
+    animation-duration: 0s;
     animation-name: offscreen;
 }
