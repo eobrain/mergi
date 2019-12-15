@@ -1,6 +1,6 @@
 COMPILEJS=java -jar ../tools/closure/closure-compiler-v20190929.jar
 
-compiled: site/index_compiled.js site/debug_compiled.js site/deck_compiled.js modules
+compiled: modules site/index_compiled.js site/debug_compiled.js site/deck_compiled.js 
 
 site/index_compiled.js: js/words.js js/common.js js/searchurl.js js/index.js
 	cd site && $(COMPILEJS) --create_source_map app.map --js_output_file index_compiled.js ../js/words.js ../js/common.js ../js/searchurl.js ../js/index.js
