@@ -29,6 +29,8 @@ The principles include:
    just aggregated visit statistics gathered by Google Analytics.
 4. It assumes the primary users are on phones, not desktop.
 
+[![IMAGE ALT TEXT HERE](https://img.youtube.com/vi/aOPjr2JHLyM/0.jpg)](https://www.youtube.com/watch?v=aOPjr2JHLyM)
+
 ## Architecture
 
 This is a static single-page web app with no backend. The only user state is JavaScript local storage in the user's browser.
