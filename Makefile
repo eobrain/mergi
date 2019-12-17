@@ -1,6 +1,16 @@
 COMPILEJS=java -jar ../tools/closure/closure-compiler-v20190929.jar
 
-compiled: modules site/index_compiled.js site/debug_compiled.js site/deck_compiled.js 
+compiled: html modules site/index_compiled.js site/debug_compiled.js site/deck_compiled.js 
+
+MUSTACHE=cd template && npx mustache -p footer.mustache -p head.mustache
+
+html: site/index.html site/index-mod.html
+
+site/index.html: template/index.html template/head.mustache template/index.json template/footer.mustache
+	$(MUSTACHE) index.json index.html >../$@
+site/index-mod.html: template/index.html template/head.mustache template/index-mod.json template/footer.mustache
+	$(MUSTACHE) index-mod.json index.html >../$@
+
 
 site/index_compiled.js: js/words.js js/common.js js/searchurl.js js/index.js
 	cd site && $(COMPILEJS) --create_source_map app.map --js_output_file index_compiled.js ../js/words.js ../js/common.js ../js/searchurl.js ../js/index.js
