@@ -1,0 +1,7 @@
+{
+    "title": "Superrigardo",
+    "stylesheets": ["app", "deck"],
+    "scripts": [
+        {"src": "deck_compiled.js", "type": "defer"}
+    ]
+}

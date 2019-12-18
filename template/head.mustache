@@ -16,15 +16,19 @@
     </script>
     <meta charset="utf-8">
     <meta http-equiv="x-ua-compatible" content="ie=edge">
-    <title>Kartoj</title>
+    <title>{{title}}</title>
     <meta name="description" content="Immersive Image-Based Language Learning">
     <meta name="author" content="@eob">
     <meta name="viewport" content="width=device-width, initial-scale=1">
     <link href="//fonts.googleapis.com/css?family=Roboto&display=swap" rel="stylesheet">
     <link rel="stylesheet" href="css/normalize.css">
-    <link rel="stylesheet" href="css/app.css">
+    {{#stylesheets}}
+      <link rel="stylesheet" href="css/{{.}}.css">
+    {{/stylesheets}}
     <!-- Icon attribution: Man by Adrien Coquet from the Noun Project -->
     <link rel="icon" type="image/png" href="/images/noun_Man_1912182_32x32.png">
     <link rel="apple-touch-icon" href="/images/noun_Man_1912182_180x180.png">
-    <script src="{{mainScript}}" {{{mainScriptType}}}></script>
+    {{#scripts}}
+      <script src="{{src}}" {{{type}}}></script>
+    {{/scripts}}
 </head>

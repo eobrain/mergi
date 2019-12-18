@@ -1,4 +1,7 @@
 {
-    "mainScript": "index.js",
-    "mainScriptType": "type=\"module\""
+    "title": "Kartoj",
+    "stylesheets": ["app"],
+    "scripts": [
+        {"src": "index.js", "type": "type=\"module\""}
+    ]
 }

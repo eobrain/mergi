@@ -1,0 +1,7 @@
+{
+    "title": "Helpi",
+    "stylesheets": ["app", "info"],
+    "scripts": [
+        {"src": "info_compiled.js", "type": "defer"}
+    ]
+}
