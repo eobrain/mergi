@@ -1,6 +1,31 @@
 COMPILEJS=java -jar ../tools/closure/closure-compiler-v20190929.jar
 
-compiled: modules site/index_compiled.js site/debug_compiled.js site/deck_compiled.js 
+compiled: html modules site/index_compiled.js site/debug_compiled.js site/deck_compiled.js 
+
+MUSTACHE=cd template && npx mustache -p footer.mustache -p head.mustache -p header.mustache
+PARTIALS=template/head.mustache template/footer.mustache template/header.mustache
+
+html:\
+ site/credit.html\
+ site/deck.html\
+ site/index.html\
+ site/index-mod.html\
+ site/info.html\
+ site/privacy.html
+
+site/credit.html: template/credit.html template/credit.json $(PARTIALS)
+	$(MUSTACHE) credit.json credit.html >../$@
+site/deck.html: template/deck.html template/deck.json $(PARTIALS)
+	$(MUSTACHE) deck.json deck.html >../$@
+site/index.html: template/index.html template/index.json $(PARTIALS)
+	$(MUSTACHE) index.json index.html >../$@
+site/index-mod.html: template/index.html  template/index-mod.json $(PARTIALS)
+	$(MUSTACHE) index-mod.json index.html >../$@
+site/info.html: template/info.html template/info.json $(PARTIALS)
+	$(MUSTACHE) info.json info.html >../$@
+site/privacy.html: template/privacy.html template/privacy.json $(PARTIALS)
+	$(MUSTACHE) privacy.json privacy.html >../$@
+
 
 site/index_compiled.js: js/words.js js/common.js js/searchurl.js js/index.js
 	cd site && $(COMPILEJS) --create_source_map app.map --js_output_file index_compiled.js ../js/words.js ../js/common.js ../js/searchurl.js ../js/index.js
