@@ -1,6 +1,6 @@
 {
     "title": "Kartoj",
-    "mainScriptType": "defer",
+    "modulepreloads": [],
     "stylesheets": ["app"],
     "scripts": [
         {"src": "index_compiled.js", "type": "defer"}

@@ -1,5 +1,11 @@
 {
     "title": "Kartoj",
+    "modulepreloads": [
+        "words.js",
+        "searchurl.js",
+        "common.js",
+        "index.js"
+    ],
     "stylesheets": ["app"],
     "scripts": [
         {"src": "index.js", "type": "type=\"module\""}

@@ -1,5 +1,6 @@
 {
     "title": "Superrigardo",
+    "modulepreloads": [],
     "stylesheets": ["app", "deck"],
     "scripts": [
         {"src": "deck_compiled.js", "type": "defer"}
