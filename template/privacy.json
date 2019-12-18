@@ -1,5 +1,6 @@
 {
     "title": "Privateco",
-    "scripts": [],
-    "stylesheets": ["app"]
+    "modulepreloads": [],
+    "stylesheets": ["app"],
+    "scripts": []
 }
