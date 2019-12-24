@@ -9,7 +9,6 @@ html:\
  site/credit.html\
  site/deck.html\
  site/index.html\
- site/index-mod.html\
  site/info.html\
  site/privacy.html
 
@@ -19,8 +18,6 @@ site/deck.html: template/deck.html template/deck.json $(PARTIALS)
 	$(MUSTACHE) deck.json deck.html >../$@
 site/index.html: template/index.html template/index.json $(PARTIALS)
 	$(MUSTACHE) index.json index.html >../$@
-site/index-mod.html: template/index.html  template/index-mod.json $(PARTIALS)
-	$(MUSTACHE) index-mod.json index.html >../$@
 site/info.html: template/info.html template/info.json $(PARTIALS)
 	$(MUSTACHE) info.json info.html >../$@
 site/privacy.html: template/privacy.html template/privacy.json $(PARTIALS)
