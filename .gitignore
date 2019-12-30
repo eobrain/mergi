@@ -3,7 +3,6 @@
 /site/*.js
 /site/credit.html
 /site/deck.html
-/site/index-mod.html
-/site/index.html
+/site/index*.html
 /site/info.html
 /site/privacy.html

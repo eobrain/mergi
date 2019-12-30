@@ -1,0 +1,7 @@
+{
+    "title": "Kartoj",
+    "stylesheets": ["app"],
+    "scripts": [
+        {"src": "src/index.js", "type": "type=\"module\""}
+    ]
+}
