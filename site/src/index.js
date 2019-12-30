@@ -5,14 +5,19 @@
 // http://www.eclipse.org/legal/epl-v10.html
 
 import { newCards, readCards, writeCards, images, merge, score } from './common.js'
+import { MAX_IMAGE_COUNT_PER_QUERY } from './shared.js'
 import { imageSearchUrl } from './searchurl.js'
-
-// TODO(eob) refactor this into someplace shared with other index.js
-const MAX_IMAGE_COUNT_PER_QUERY = 6
 
 const LANGUAGE = 'es'
 const COUNTRY = 'mx'
 
+/**
+ * An ordered list of cards.
+ * @type {{
+ * head: function(): Card,
+ * updateHeadAndSort: function(number),
+ * }}
+ */
 const order = (() => {
   const cards = merge(readCards(), newCards())
   const sort = () => {
@@ -22,38 +27,64 @@ const order = (() => {
 
   const head = () => cards[0]
 
-  const update = (correctness) => {
+  const updateHeadAndSort = (correctness) => {
     const t = Date.now()
     cards[0].responses.push({ t, correctness })
     sort()
     writeCards(cards)
   }
 
-  return { head, update }
+  return { head, updateHeadAndSort }
 })()
 
-const cardEl = document.getElementById('card')
-const frontEl = document.getElementById('front')
-const backEl = document.getElementById('back')
-const correctEl = document.getElementById('correct')
-const mehEl = document.getElementById('meh')
-const wrongEl = document.getElementById('wrong')
+/**
+ * Return element with given ID or throw error if it does not exist.
+ * @param {string} id
+ * @return {!Element} DOM element with given ID
+ */
+const getElement = (id) => {
+  const element = document.getElementById(id)
+  if (!element) {
+    throw new Error(`Bad page. No element with id="${id}"`)
+  }
+  return element
+}
+
+const cardEl = getElement('card')
+const frontEl = getElement('front')
+const backEl = getElement('back')
+const correctEl = getElement('correct')
+const mehEl = getElement('meh')
+const wrongEl = getElement('wrong')
 
 /* global SpeechSynthesisUtterance, gtag */
 
 let revealSay = () => { }
 let unflipSay = () => { }
 
+/**
+ * Log that user has viewed this screen
+ * @param {string} screen
+ */
 const logScreenView = (screen) => {
   gtag('event', 'screen_view', { screen_name: screen })
 }
+/**
+ * Log that user has viewed these items.
+ * @param {string} items
+ */
 const logViewItem = (items) => {
   gtag('event', 'view_item', { items })
 }
+/**
+ * Log that user has responded with this correctness.
+ * @param {number} correctness
+ */
 const logResponse = (correctness) => {
   gtag('event', 'response', { correctness })
 }
 
+/** Present the front of the card to the user. */
 const ask = () => {
   const { phrase, reversed } = order.head()
   cardEl.classList.add('offscreen')
@@ -70,10 +101,18 @@ const ask = () => {
     }
   }
 
+  /**
+   * Remove all current children from a DOM elements.
+   * @param {!Element} element
+   */
   const removeContent = (element) => {
     element.querySelectorAll('.content').forEach(el => el.remove())
   }
 
+  /**
+   * Add the images to one side of the card.
+   * @param {!Element} imagesEl
+   */
   const addImages = (imagesEl) => {
     let imageCount = 0
     images[phrase].forEach((image) => {
@@ -90,6 +129,10 @@ const ask = () => {
       imagesEl.append(imgEl)
     })
   }
+  /**
+   * Add the phrase to the other side of the card.
+   * @param {!Element} textCardEl
+   */
   const addPhrase = (textCardEl) => {
     const pEl = document.createElement('a')
     pEl.className = 'content'
@@ -124,6 +167,7 @@ const ask = () => {
   }
 }
 
+/** Set the CSS classes that will trigger an animation to flip the card to show the answer side. */
 const flip = () => {
   backEl.classList.add('flipped')
   frontEl.classList.add('flipped')
@@ -133,6 +177,7 @@ const flip = () => {
   logScreenView('reveal')
 }
 
+/** Set the CSS classes that will trigger an animation to unflip the card to show the question side. */
 const unflip = () => {
   unflipSay()
   backEl.classList.add('unflipped')
@@ -142,33 +187,55 @@ const unflip = () => {
   logScreenView('unflip')
 }
 
+/** Reveal the answer. */
 const cardReveal = () => {
   revealSay()
   flip()
   navIconsActive(true)
 }
 
+/**
+ * Generate a function that updates the card deck with the user response.
+ * @param {number} correctness
+ * @return {function()}
+ */
 const answerFn = (correctness) => () => {
   logResponse(correctness)
   cardEl.classList.add('offscreen')
-  order.update(correctness)
+  order.updateHeadAndSort(correctness)
   flip()
   ask()
 }
 
+/** @type {function()} */
 const correct = answerFn(1.0)
+
+/** @type {function()} */
 const meh = answerFn(0.5)
+
+/** @type {function()} */
 const wrong = answerFn(0.1)
 
+/**
+ * Change element to be active or not.
+ * @param {!Element} el
+ * @param {boolean} active
+ * @param {function()} onclick applied if active
+ */
 const activeIf = (el, active, onclick) => {
   if (active) {
     el.classList.add('active')
     el.onclick = onclick
   } else {
     el.classList.remove('active')
-    el.onclick = undefined
+    el.onclick = null
   }
 }
+
+/**
+ * Update active (or not) status of the controls.
+ * @param {boolean} answersActive
+ */
 const navIconsActive = (answersActive) => {
   activeIf(correctEl, answersActive, correct)
   activeIf(mehEl, answersActive, meh)
@@ -180,6 +247,9 @@ const OFFSCREEN_TIME_MS = 2000
 
 document.body.onload = () => {
   ask()
+
+  // Hack to prevent animation on forst card shown.
+  // TODO(eob) see if this can be dine in pure CSS without JS
   setTimeout(() => {
     cardEl.classList.remove('initial')
   }, OFFSCREEN_TIME_MS)
