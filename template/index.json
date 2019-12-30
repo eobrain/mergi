@@ -2,6 +2,7 @@
     "title": "Kartoj",
     "modulepreloads": [
         "words.js",
+        "shared.js",
         "searchurl.js",
         "common.js",
         "index.js"
