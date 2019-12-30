@@ -8,9 +8,7 @@ import csv from 'csv-parser'
 import fs from 'fs'
 import { search } from './scrape.js'
 import { Ocr } from './ocr.js'
-
-// TODO(eob) refactor this into someplace shared with other index.js
-const MAX_IMAGE_COUNT_PER_QUERY = 6
+import { MAX_IMAGE_COUNT_PER_QUERY } from './site/src/shared.js'
 
 const LOCALES = ['es_mx']
 
@@ -56,6 +54,7 @@ const main = async () => {
 
   const queryCount = await processCsv(() => {})
   console.log(`// ${new Date()} ${queryCount} queries:`)
+  console.log('/** @type {!Array<Word>} */')
   console.log('export const mergiWords = [')
   const startTime = Date.now()
 
