@@ -17,6 +17,7 @@
     "request": "^2.88.0",
     "standard": "^14.3.1",
     "temp": "^0.9.1",
+    "terser": "^4.4.3",
     "tesseractocr": "^1.2.1"
   },
   "repository": {
