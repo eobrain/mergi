@@ -4,9 +4,11 @@
 // distribution, and is available at
 // http://www.eclipse.org/legal/epl-v10.html
 
+// @ts-check
+
 import { newCards, readCards, writeCards, images, merge, score } from './common.js'
 import { MAX_IMAGE_COUNT_PER_QUERY } from './shared.js'
-import { imageSearchUrl } from './searchurl.js'
+import imageSearchUrl from './search_url.js'
 
 const LANGUAGE = 'es'
 const COUNTRY = 'mx'
@@ -248,7 +250,7 @@ const OFFSCREEN_TIME_MS = 2000
 document.body.onload = () => {
   ask()
 
-  // Hack to prevent animation on forst card shown.
+  // Hack to prevent animation on first card shown.
   // TODO(eob) see if this can be dine in pure CSS without JS
   setTimeout(() => {
     cardEl.classList.remove('initial')

@@ -4,6 +4,8 @@
 // distribution, and is available at
 // http://www.eclipse.org/legal/epl-v10.html
 
+// @ts-check
+
 import { newCards, readCards, merge, score, decay, SIX_HOURS } from './common.js'
 
 document.body.onload = () => {

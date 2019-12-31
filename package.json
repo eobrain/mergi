@@ -15,7 +15,6 @@
     "googleapis": "^43.0.0",
     "htmlparser2": "^4.0.0",
     "request": "^2.88.0",
-    "standard": "^14.3.1",
     "temp": "^0.9.1",
     "terser": "^4.4.3",
     "tesseractocr": "^1.2.1"
@@ -26,6 +25,7 @@
   },
   "type": "module",
   "devDependencies": {
-    "mustache": "^3.1.0"
+    "mustache": "^3.1.0",
+    "standard": "^14.3.1"
   }
 }
