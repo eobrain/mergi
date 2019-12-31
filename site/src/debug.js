@@ -4,6 +4,8 @@
 // distribution, and is available at
 // http://www.eclipse.org/legal/epl-v10.html
 
+// @ts-check
+
 import { newCards, readCards, images, merge, score } from './common.js'
 
 document.body.onload = () => {
@@ -30,7 +32,7 @@ document.body.onload = () => {
     const phrase = card.reversed ? card.phrase : `<strong>${card.phrase}</strong>`
     const responsesString = JSON.stringify(card.responses.map((r) => `${r.correctness}`))
     tableEl.insertAdjacentHTML('beforeend',
-        `<tr><td>${score(card)}</td><td>${responsesString}</td><td>${phrase}</td><td>${imgHtml}</td></tr>`
+      `<tr><td>${score(card)}</td><td>${responsesString}</td><td>${phrase}</td><td>${imgHtml}</td></tr>`
     )
   })
 }

@@ -3,7 +3,7 @@
     "modulepreloads": [
         "words.js",
         "shared.js",
-        "searchurl.js",
+        "search_url.js",
         "common.js",
         "index.js"
     ],

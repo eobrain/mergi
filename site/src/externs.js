@@ -1,8 +1,9 @@
-
 /**
  * @fileoverview Declarations for the closure compiler. Not part of the production code.
  * @externs
  */
+
+// @ts-check
 
 /** Represents a flashcard presented to the user and the history of
  * user interactions with it. A card has two sides, one showing a phrase
@@ -19,7 +20,7 @@
      correctness: number,
    }>,
 }} */
-let Card
+let Card // eslint-disable-line no-unused-vars
 
 /** Attributes of an image to be displayed on one side of the flashcard.
 @typedef {{
@@ -27,7 +28,7 @@ let Card
    height: number,
    src: string,
 }} */
-let Img
+let Img // eslint-disable-line no-unused-vars
 
 /** Data for one flashcard, scraped from the response to an image search query.
  * It includes the locale (language code and country code), the search query,
@@ -41,7 +42,7 @@ let Img
    prefix: string,
    images: !Array<Img>,
 }} */
-let Word
+let Word // eslint-disable-line no-unused-vars
 
 /** Google Analytics call. */
-let gtag
+let gtag // eslint-disable-line no-unused-vars

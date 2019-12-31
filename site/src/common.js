@@ -4,6 +4,8 @@
 // distribution, and is available at
 // http://www.eclipse.org/legal/epl-v10.html
 
+// @ts-check
+
 import { mergiWords } from './words.js'
 
 const lang = 'es'
@@ -86,7 +88,7 @@ export const SIX_HOURS = 1000.0 * 60 * 60 * 6
 const FIVE_MINUTES = 1000.0 * 60 * 5
 
 /**
- * Emulate Java's hashcode.
+ * Emulate Java's hash code.
  * https://stackoverflow.com/questions/7616461/generate-a-hash-from-string-in-javascript
  *
  * @param {string} s
