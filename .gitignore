@@ -1,8 +1,9 @@
+# Local nodejs modules recreated by `npm install`
 /node_modules
-/site/*.map
+
+# Transpiled JavaScript generated from /site/src/*.js
 /site/*.js
-/site/credit.html
-/site/deck.html
-/site/index*.html
-/site/info.html
-/site/privacy.html
+/site/*.map
+
+# HTML files generated from /template/*
+/site/*.html

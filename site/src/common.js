@@ -6,11 +6,6 @@
 
 // @ts-check
 
-import { mergiWords } from './words.js'
-
-const lang = 'es'
-const country = 'mx'
-
 /**
  * The text displayed on each flashcard.
  * @type {!Array<string>}
@@ -32,14 +27,21 @@ export const toPhrase = (word) => word.prefix
   ? `(${word.prefix}) ${word.query}`
   : word.query
 
-// Initialize phrases and images.
-mergiWords.forEach((word) => {
-  if (word.lang === lang && word.country === country) {
-    const phrase = toPhrase(word)
-    phrases.push(phrase)
-    images[phrase] = word.images
-  }
-})
+/**
+ * @param {string} lang
+ * @param {string} country
+ * @param {!Array<Word>} mergiWords
+ */
+export const init = (lang, country, mergiWords) => {
+  // Initialize phrases and images.
+  mergiWords.forEach((word) => {
+    if (word.lang === lang && word.country === country) {
+      const phrase = toPhrase(word)
+      phrases.push(phrase)
+      images[phrase] = word.images
+    }
+  })
+}
 
 /**
  * The string to use as a key for a card.

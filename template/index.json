@@ -1,15 +1,7 @@
 {
     "title": "Kartoj",
-    "modulepreloads": [
-        "words.js",
-        "shared.js",
-        "search_url.js",
-        "common.js",
-        "index.js"
-    ],
-    "stylesheets": ["app"],
-    "scripts": [
-        {"src": "index_compiled.js", "type": "nomodule defer"},
-        {"src": "index.js", "type": "type=\"module\""}
+    "stylesheets": ["app", "index"],
+    "locales": [
+        {"lang":"es", "country": "mx", "langName": "Español"}
     ]
 }
