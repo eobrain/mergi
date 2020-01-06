@@ -16,7 +16,7 @@ but others may find either the app or the code useful.
 ## Product Description
 
 The Kartoj app is inspired the book [Fluent Forever: How to Learn Any Language
-Fast and Never Forget it ][1] by Gabriel Wyner, which advocates for using
+Fast and Never Forget it][1] by Gabriel Wyner, which advocates for using
 spaced-repetition flash-cards with the word in the foreign language on one side
 and an image from Google search on the other side.
 
@@ -39,6 +39,33 @@ The app uses images fetched from Google Search and stored in the file `words.js`
 
 ## Build Instructions
 
+### First Time
+
+As a prerequisite you need nvm and nodejs installed. If you are using [nvm][5] (recommended), run teh follwoing to use the same version used by the maintainers of this project:
+
+```sh
+nvm use
+```
+
+(If the required version is not installed, the above will give you an error message with an `nvm install ...` command you must run before retrying the `nvm use`)
+
+Then run
+
+```sh
+npm install
+```
+
+Also if you will be doing `make words` below you will need to do
+
+```sh
+sudo apt-get install graphicsmagick tesseract-ocr tesseract-ocr-eng tesseract-ocr-spa
+```
+
+An ubuntu and other Debian flavors of Linux (including Chrome OS), or the equicvalent on other platforms.
+
+### Fetching images
+
+
 If you have modified `data/words.csv` you can run
 
 ```sh
@@ -50,14 +77,17 @@ recognition to find images corresponding to the vocabulary words. Note this is
 deliberately throttled to avoid spamming the Google servers, so it can take 10
 minutes or more.
 
-If you have changed any JavaScript you can run
+### After changes
+
+
+If you have changed any JavaScript or templates you can run
 
 ```sh
 make
 ```
 
-to use the closure compiler to transpile the source JavaScript into the
-optimized, portable JavaScript that we distribute.
+to use the closure compiler to transpile the `site/src` JavaScript into the
+optimized, portable JavaScript that we distribute, and to generate the HTML from the templates.
 
 You can then preview the site by doing
 
@@ -85,3 +115,4 @@ http://www.eclipse.org/legal/epl-v10.html
 [1]: https://books.google.com/books/about/Fluent_Forever.html?id=gs1vDwAAQBAJ
 [3]: https://api.netlify.com/api/v1/badges/a5cb7d45-7151-42dc-9a5d-9cc3f64bd40b/deploy-status
 [4]: https://app.netlify.com/sites/hungry-rosalind-0028da/deploys
+[5]: https://github.com/nvm-sh/nvm
