@@ -2,7 +2,7 @@
 
 import { unlink } from 'fs'
 import temp from 'temp'
-import tesseract from 'tesseractocr'
+import tesseract from 'node-tesseract-ocr'
 import sleep from './sleep.js'
 import gm from 'gm' // GraphicsMagick
 import request from 'request'
@@ -22,16 +22,18 @@ const retryWithExponentialBackOff = async (f, delayMs = 1) => {
   }
 }
 
+const config = {
+  lang: 'spa',
+  psm: 11
+}
+
 /**
  * Run OCR to extract string from image.
  * See https://github.com/tesseract-ocr/tesseract/blob/master/doc/tesseract.1.asc
  * @param {string} path of image
  * @return {Promise<string>}
  */
-const recognize = tesseract.withOptions({
-  psm: 2,
-  language: ['spa']
-})
+const recognize = (s) => tesseract.recognize(s, config)
 
 /**
  * Download image to given path and count the number of colors in it.
@@ -40,19 +42,28 @@ const recognize = tesseract.withOptions({
  * @return {Promise<boolean>} whether there are too few colors.
  */
 const downloadAndTransform = (src, toPath) => new Promise((resolve, reject) =>
-  gm(request(src, (err) => { if (err) { reject(err) } }))
+  gm(request(src, (err) => {
+    if (err) {
+      console.error(`problem fetching "${src}"`)
+      reject(err)
+    }
+  }))
     .color((err, count) => {
       if (err) {
+        console.error(`${src} PROBLEM COUNTING COLORS (${err})`)
         reject(err)
       } else if (count < 4000) {
+        // console.debug(`${src} TOO FEW COLORS (${count})`)
         resolve(true)
       }
     })
     .modulate(100, 0)
     .write(toPath, (err) => {
       if (err) {
+        console.error(`${src} COULD NOT WRITE TO ${toPath} (${err})`)
         reject(err)
       } else {
+        // console.debug(`${src} GOOD IMAGE WRITTEN TO ${toPath}`)
         resolve(false)
       }
     })
@@ -70,7 +81,10 @@ const tesseractSemaphore = new semaphore.Semaphore(5)
 const recognizeLimited = async (path) => {
   const release = await tesseractSemaphore.acquire()
   try {
-    return await recognize(path)
+    return (await recognize(path)) || ''
+  } catch (e) {
+    console.error(`Problem in recognizeLimited: ${JSON.stringify(e)}`)
+    return ''
   } finally {
     release()
   }
@@ -89,24 +103,29 @@ export const Ocr = async () => {
    * @return {Promise<boolean>}
    */
   const hasText = async (src) => {
-    const tempName = temp.path()
+    const tempName = temp.path('mergi_')
     const tooFewColors = await retryWithExponentialBackOff(
       async () => downloadAndTransform(src, tempName))
     if (tooFewColors) {
       return true
     }
 
-    const text = (await recognizeLimited(tempName)).trim()
-    unlink(tempName, (e) => {
-      if (e) {
-        console.log('/* unlink:', e, '*/')
+    try {
+      const text = await recognizeLimited(tempName)
+      const has = text.trim().length > 1
+      if (has) {
+        console.error(`"${text}"`)
       }
-    })
-    const has = text.trim().length > 1
-    if (has) {
-      console.error(`"${text}"`)
+      return has
+    } catch (e) {
+      console.error(`Problem running OCR on ${src} (${e})`)
+    } finally {
+      unlink(tempName, (e) => {
+        if (e) {
+          console.log('/* unlink:', e, '*/')
+        }
+      })
     }
-    return has
   }
 
   const cleanup = async () => {

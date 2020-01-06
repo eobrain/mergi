@@ -23,10 +23,12 @@ export default async (query, language, country, ofTotalQueries) => {
     {
       onopentag (name, attribs) {
         if (name === 'img') {
-          const width = Number(attribs.width)
-          const height = Number(attribs.height)
           const src = attribs.src
-          images.push({ width, height, src })
+          if (src && src.startsWith('http')) {
+            const width = Number(attribs.width)
+            const height = Number(attribs.height)
+            images.push({ width, height, src })
+          }
         }
       }
     }
