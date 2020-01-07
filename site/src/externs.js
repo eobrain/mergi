@@ -11,7 +11,8 @@
  * image-side is shown first, otherwise the phrase-side is shown.
  * The history of user interaction is stored as an array of responses,
  * each of which is a timestamp of the interaction and a degree of correctness
- * of the response.
+ * of the response. Also contains the locale to be used as part of
+ * the local storage key.
 @typedef {{
    phrase: string,
    reversed: boolean,
@@ -19,6 +20,7 @@
      t: number,
      correctness: number,
    }>,
+   locale: string,
 }} */
 let Card // eslint-disable-line no-unused-vars
 

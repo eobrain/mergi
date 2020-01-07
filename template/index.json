@@ -2,6 +2,7 @@
     "title": "Kartoj",
     "stylesheets": ["app", "index"],
     "locales": [
-        {"lang":"es", "country": "mx", "langName": "Español"}
+        {"lang":"es", "country": "mx", "langName": "Español en mexico", "flagHeightPx": 57},
+        {"lang":"es", "country": "es", "langName": "Español en españa", "flagHeightPx": 67}
     ]
 }

@@ -1,0 +1,18 @@
+{
+    "title": "Kartoj",
+    "modulepreloads": [
+        "words_es_es.js",
+        "shared.js",
+        "search_url.js",
+        "common.js",
+        "main.js",
+        "card_es_es.js"
+    ],
+    "stylesheets": ["app"],
+    "scripts": [
+        {"src": "card_es_es_compiled.js", "type": "nomodule defer"},
+        {"src": "card_es_es.js", "type": "type=\"module\""}
+    ],
+    "lang": "es",
+    "country": "es"
+}
