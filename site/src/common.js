@@ -27,9 +27,6 @@ export const toPhrase = (word) => word.prefix
   ? `(${word.prefix}) ${word.query}`
   : word.query
 
-/** @type {string} */
-let locale
-
 /**
  * @param {string} lang
  * @param {string} country
@@ -37,7 +34,6 @@ let locale
  */
 export const init = (lang, country, mergiWords) => {
   // Initialize phrases and images.
-  locale = `${lang}_${country}`
   mergiWords.forEach((word) => {
     if (word.lang === lang && word.country === country) {
       const phrase = toPhrase(word)
@@ -52,7 +48,7 @@ export const init = (lang, country, mergiWords) => {
  * @param {Card} card
  * @return {string} lookup key for card
  */
-const key = (card) => `${card.phrase}|${card.reversed}|${card.locale}`
+const key = (card) => `${card.phrase}|${card.reversed}`
 
 /**
  * Merge two arrays of cards
@@ -151,7 +147,7 @@ export const newCards = () => {
     const reversed = (i === 1)
     phrases.forEach((phrase) => {
       const responses = []
-      cards.push({ phrase, reversed, responses, locale })
+      cards.push({ phrase, reversed, responses })
     })
   }
   return cards

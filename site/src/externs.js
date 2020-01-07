@@ -20,7 +20,6 @@
      t: number,
      correctness: number,
    }>,
-   locale: string,
 }} */
 let Card // eslint-disable-line no-unused-vars
 
