@@ -1,20 +1,17 @@
 COMPILEJS=java -jar ../tools/closure/closure-compiler-v20191111.jar -O ADVANCED --externs src/externs.js
+LOCALES=en_ie en_us es_es es_mx
 
 compiled: lint html modules\
- site/card_es_mx_compiled.js\
- site/card_es_es_compiled.js\
- site/deck_es_mx_compiled.js\
- site/deck_es_es_compiled.js\
+ $(LOCALES:%=site/card_%_compiled.js)\
+ $(LOCALES:%=site/deck_%_compiled.js)\
  site/debug_compiled.js
 
 MUSTACHE=cd template && npx mustache -p footer.mustache -p head.mustache -p header.mustache
 PARTIALS=template/head.mustache template/footer.mustache template/header.mustache
 
 html:\
- site/card_es_mx.html\
- site/card_es_es.html\
- site/deck_es_mx.html\
- site/deck_es_es.html\
+ $(LOCALES:%=site/card_%.html)\
+ $(LOCALES:%=site/deck_%.html)\
  site/credit.html\
  site/index.html\
  site/card_dev.html\
@@ -23,14 +20,19 @@ html:\
  site/debug.html\
  site/privacy.html
 
-site/card_es_mx.html: template/card.html template/card_es_mx.json $(PARTIALS)
-	$(MUSTACHE) card_es_mx.json card.html >../$@
+site/card_%.html: template/card.html template/card_%.json $(PARTIALS)
+	$(MUSTACHE) card_$*.json card.html >../$@
+site/deck_%.html: template/deck.html template/deck_%.json $(PARTIALS)
+	$(MUSTACHE) deck_$*.json deck.html >../$@
+
+site/card_en_ie.html: template/card.html template/card_en_ie.json $(PARTIALS)
+site/card_en_us.html: template/card.html template/card_en_us.json $(PARTIALS)
 site/card_es_es.html: template/card.html template/card_es_es.json $(PARTIALS)
-	$(MUSTACHE) card_es_es.json card.html >../$@
-site/deck_es_mx.html: template/deck.html template/deck_es_mx.json $(PARTIALS)
-	$(MUSTACHE) deck_es_mx.json deck.html >../$@
+site/card_es_mx.html: template/card.html template/card_es_mx.json $(PARTIALS)
+site/deck_en_ie.html: template/deck.html template/deck_en_ie.json $(PARTIALS)
+site/deck_en_us.html: template/deck.html template/deck_en_us.json $(PARTIALS)
 site/deck_es_es.html: template/deck.html template/deck_es_es.json $(PARTIALS)
-	$(MUSTACHE) deck_es_es.json deck.html >../$@
+site/deck_es_mx.html: template/deck.html template/deck_es_mx.json $(PARTIALS)
 site/credit.html: template/credit.html template/credit.json $(PARTIALS)
 	$(MUSTACHE) credit.json credit.html >../$@
 site/index.html: template/index.html template/index.json $(PARTIALS)
@@ -46,30 +48,32 @@ site/debug.html: template/debug.html template/debug.json $(PARTIALS)
 site/privacy.html: template/privacy.html template/privacy.json $(PARTIALS)
 	$(MUSTACHE) privacy.json privacy.html >../$@
 
+site/card_%_compiled.js: site/src/words_%.js site/src/common.js site/src/search_url.js site/src/card_%.js site/src/main.js site/src/shared.js site/src/externs.js
+	cd site && $(COMPILEJS) --create_source_map app_$*.map --js_output_file card_$*_compiled.js src/words_$*.js src/common.js src/search_url.js src/card_$*.js src/main.js src/shared.js
+	echo '//# sourceMappingURL=/app_$*.map' >> $@
+site/deck_%_compiled.js: site/src/words_%.js site/src/deck_%.js site/src/common.js site/src/deck.js
+	cd site && $(COMPILEJS) --create_source_map deck_$*.map --js_output_file deck_$*_compiled.js src/deck_$*.js src/words_$*.js src/common.js src/deck.js
+	echo '//# sourceMappingURL=/deck_$*.map' >> $@
+
+
+site/card_en_ie_compiled.js: site/src/words_en_ie.js site/src/common.js site/src/search_url.js site/src/card_en_ie.js site/src/main.js site/src/shared.js site/src/externs.js
+site/card_en_us_compiled.js: site/src/words_en_us.js site/src/common.js site/src/search_url.js site/src/card_en_us.js site/src/main.js site/src/shared.js site/src/externs.js
+site/card_es_es_compiled.js: site/src/words_es_es.js site/src/common.js site/src/search_url.js site/src/card_es_es.js site/src/main.js site/src/shared.js site/src/externs.js
 site/card_es_mx_compiled.js: site/src/words_es_mx.js site/src/common.js site/src/search_url.js site/src/card_es_mx.js site/src/main.js site/src/shared.js site/src/externs.js
-	cd site && $(COMPILEJS) --create_source_map app.map --js_output_file card_es_mx_compiled.js src/words_es_mx.js src/common.js src/search_url.js src/card_es_mx.js src/main.js src/shared.js
-	echo '//# sourceMappingURL=/app.map' >> $@
-site/card_es_es_compiled.js: site/src/words_es_es.js site/src/common.js site/src/search_url.js site/src/card_es_mx.js site/src/main.js site/src/shared.js site/src/externs.js
-	cd site && $(COMPILEJS) --create_source_map app.map --js_output_file card_es_es_compiled.js src/words_es_mx.js src/common.js src/search_url.js src/card_es_mx.js src/main.js src/shared.js
-	echo '//# sourceMappingURL=/app.map' >> $@
+site/deck_en_ie_compiled.js: site/src/words_en_ie.js site/src/deck_en_ie.js site/src/common.js site/src/deck.js
+site/deck_en_us_compiled.js: site/src/words_en_us.js site/src/deck_en_us.js site/src/common.js site/src/deck.js
+site/deck_es_es_compiled.js: site/src/words_es_es.js site/src/deck_es_es.js site/src/common.js site/src/deck.js
+site/deck_es_mx_compiled.js: site/src/words_es_mx.js site/src/deck_es_mx.js site/src/common.js site/src/deck.js
 site/debug_compiled.js: site/src/words_es_mx.js site/src/common.js site/src/debug.js
 	cd site && $(COMPILEJS) --create_source_map debug.map --js_output_file debug_compiled.js src/words_es_mx.js src/common.js src/debug.js
 	echo '//# sourceMappingURL=/debug.map' >> $@
-site/deck_es_mx_compiled.js: site/src/words_es_mx.js site/src/deck_es_mx.js site/src/common.js site/src/deck.js
-	cd site && $(COMPILEJS) --create_source_map deck_es_mx.map --js_output_file deck_es_mx_compiled.js src/deck_es_mx.js src/words_es_mx.js src/common.js src/deck.js
-	echo '//# sourceMappingURL=/deck_es_mx.map' >> $@
-site/deck_es_es_compiled.js: site/src/words_es_es.js site/src/deck_es_es.js site/src/common.js site/src/deck.js
-	cd site && $(COMPILEJS) --create_source_map deck_es_es.map --js_output_file deck_es_es_compiled.js src/deck_es_es.js src/words_es_es.js src/common.js src/deck.js
-	echo '//# sourceMappingURL=/deck_es_es.map' >> $@
 
 site/%.js: site/src/%.js
 	npx terser --module --ecma 6 --compress --mangle --source-map "base='site',url='$(notdir $@).map'" --output $@ -- $< 
 
 modules:\
- site/card_es_mx.js\
- site/card_es_es.js\
- site/words_es_mx.js\
- site/words_es_es.js\
+ $(LOCALES:%=site/card_%.js)\
+ $(LOCALES:%=site/words_%.js)\
  site/common.js\
  site/debug.js\
  site/deck.js\

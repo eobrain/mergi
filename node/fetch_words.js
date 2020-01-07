@@ -12,11 +12,16 @@ import search from './scrape.js'
 import { Ocr } from './ocr.js'
 import { MAX_IMAGE_COUNT_PER_QUERY } from '../site/src/shared.js'
 
-const LOCALES = ['es_mx', 'es_es']
+const LOCALES = [
+  'es_mx',
+  'es_es',
+  'en_ie',
+  'en_us'
+]
 const SRC = 'site/src'
 
-const MAX_QUERY_COUNT = 1400
-// const MAX_QUERY_COUNT = 5
+// const MAX_QUERY_COUNT = 700 * 4
+const MAX_QUERY_COUNT = 5 * 4
 
 /**
  * Process the CSV files.
@@ -52,13 +57,14 @@ const main = async () => {
   /**
    * Filter out images with text, and limit the number of images.
    * @param {!Array<Img>} images
+   * @param {string} lang
    * @return {Promise<Array<Img>>} subset of the images
    */
-  const filterImage = async (images) => {
+  const filterImage = async (images, lang) => {
     const result = []
     for (let i = 0; i < images.length && result.length < MAX_IMAGE_COUNT_PER_QUERY; ++i) {
       const image = images[i]
-      if (!(await ocr.hasText(image.src))) {
+      if (!(await ocr.hasText(image.src, lang))) {
         result.push(image)
       }
     }
@@ -79,13 +85,15 @@ const main = async () => {
   let j = 0
   await processCsv(async (prefix, query, lang, country) => {
     const images = await search(query, lang, country, Math.min(queryCount, MAX_QUERY_COUNT))
-    const filteredImages = await filterImage(images)
+    const filteredImages = await filterImage(images, lang)
     console.error(`Word# ${++j} ${query}`)
 
     const locale = `${lang}_${country}`
     const out = outs[locale]
     out.write('  {\n')
-    out.write(`    prefix: "${prefix}",\n`)
+    if (prefix) {
+      out.write(`    prefix: "${prefix}",\n`)
+    }
     out.write(`    query: "${query}",\n`)
     out.write(`    lang: "${lang}",\n`)
     out.write(`    country: "${country}",\n`)

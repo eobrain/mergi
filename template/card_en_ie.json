@@ -1,0 +1,18 @@
+{
+    "title": "Kartoj",
+    "modulepreloads": [
+        "words_en_ie.js",
+        "shared.js",
+        "search_url.js",
+        "common.js",
+        "main.js",
+        "card_en_ie.js"
+    ],
+    "stylesheets": ["app"],
+    "scripts": [
+        {"src": "card_en_ie_compiled.js", "type": "nomodule defer"},
+        {"src": "card_en_ie.js", "type": "type=\"module\""}
+    ],
+    "lang": "en",
+    "country": "ie"
+}

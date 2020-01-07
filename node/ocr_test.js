@@ -12,7 +12,7 @@ const handleWord = async (ocr, word) => {
   const nos = []
   for (let i = 0; i < word.images.length; ++i) {
     const src = word.images[i].src
-    if (await ocr.hasText(src)) {
+    if (await ocr.hasText(src, 'eng')) {
       yesses.push(src)
     } else {
       nos.push(src)
