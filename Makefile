@@ -1,6 +1,11 @@
 COMPILEJS=java -jar ../tools/closure/closure-compiler-v20191111.jar -O ADVANCED --externs src/externs.js
 
-compiled: lint html modules site/card_es_mx_compiled.js site/debug_compiled.js site/deck_compiled.js 
+compiled: lint html modules\
+ site/card_es_mx_compiled.js\
+ site/card_es_es_compiled.js\
+ site/deck_es_mx_compiled.js\
+ site/deck_es_es_compiled.js\
+ site/debug_compiled.js
 
 MUSTACHE=cd template && npx mustache -p footer.mustache -p head.mustache -p header.mustache
 PARTIALS=template/head.mustache template/footer.mustache template/header.mustache
@@ -50,9 +55,12 @@ site/card_es_es_compiled.js: site/src/words_es_es.js site/src/common.js site/src
 site/debug_compiled.js: site/src/words_es_mx.js site/src/common.js site/src/debug.js
 	cd site && $(COMPILEJS) --create_source_map debug.map --js_output_file debug_compiled.js src/words_es_mx.js src/common.js src/debug.js
 	echo '//# sourceMappingURL=/debug.map' >> $@
-site/deck_compiled.js: site/src/words_es_mx.js site/src/common.js site/src/deck_es_mx.js site/src/deck.js
-	cd site && $(COMPILEJS) --create_source_map deck_es_mx.map --js_output_file deck_compiled.js src/words_es_mx.js src/common.js src/deck_es_mx.js src/deck.js
+site/deck_es_mx_compiled.js: site/src/words_es_mx.js site/src/deck_es_mx.js site/src/common.js site/src/deck.js
+	cd site && $(COMPILEJS) --create_source_map deck_es_mx.map --js_output_file deck_es_mx_compiled.js src/deck_es_mx.js src/words_es_mx.js src/common.js src/deck.js
 	echo '//# sourceMappingURL=/deck_es_mx.map' >> $@
+site/deck_es_es_compiled.js: site/src/words_es_es.js site/src/deck_es_es.js site/src/common.js site/src/deck.js
+	cd site && $(COMPILEJS) --create_source_map deck_es_es.map --js_output_file deck_es_es_compiled.js src/deck_es_es.js src/words_es_es.js src/common.js src/deck.js
+	echo '//# sourceMappingURL=/deck_es_es.map' >> $@
 
 site/%.js: site/src/%.js
 	npx terser --module --ecma 6 --compress --mangle --source-map "base='site',url='$(notdir $@).map'" --output $@ -- $< 
