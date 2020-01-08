@@ -1,5 +1,5 @@
 COMPILEJS=java -jar ../tools/closure/closure-compiler-v20191111.jar -O ADVANCED --externs src/externs.js
-LOCALES=en_ie en_us es_es es_mx
+LOCALES=en_ie en_us es_es es_mx fr_fr
 
 compiled: lint html modules\
  $(LOCALES:%=site/card_%_compiled.js)\
@@ -29,10 +29,12 @@ site/card_en_ie.html: template/card.html template/card_en_ie.json $(PARTIALS)
 site/card_en_us.html: template/card.html template/card_en_us.json $(PARTIALS)
 site/card_es_es.html: template/card.html template/card_es_es.json $(PARTIALS)
 site/card_es_mx.html: template/card.html template/card_es_mx.json $(PARTIALS)
+site/card_fr_fr.html: template/card.html template/card_fr_fr.json $(PARTIALS)
 site/deck_en_ie.html: template/deck.html template/deck_en_ie.json $(PARTIALS)
 site/deck_en_us.html: template/deck.html template/deck_en_us.json $(PARTIALS)
 site/deck_es_es.html: template/deck.html template/deck_es_es.json $(PARTIALS)
 site/deck_es_mx.html: template/deck.html template/deck_es_mx.json $(PARTIALS)
+site/deck_fr_fr.html: template/deck.html template/deck_fr_fr.json $(PARTIALS)
 site/credit.html: template/credit.html template/credit.json $(PARTIALS)
 	$(MUSTACHE) credit.json credit.html >../$@
 site/index.html: template/index.html template/index.json $(PARTIALS)
@@ -60,10 +62,12 @@ site/card_en_ie_compiled.js: site/src/words_en_ie.js site/src/common.js site/src
 site/card_en_us_compiled.js: site/src/words_en_us.js site/src/common.js site/src/search_url.js site/src/card_en_us.js site/src/main.js site/src/shared.js site/src/externs.js
 site/card_es_es_compiled.js: site/src/words_es_es.js site/src/common.js site/src/search_url.js site/src/card_es_es.js site/src/main.js site/src/shared.js site/src/externs.js
 site/card_es_mx_compiled.js: site/src/words_es_mx.js site/src/common.js site/src/search_url.js site/src/card_es_mx.js site/src/main.js site/src/shared.js site/src/externs.js
+site/card_fr_fr_compiled.js: site/src/words_fr_fr.js site/src/common.js site/src/search_url.js site/src/card_fr_fr.js site/src/main.js site/src/shared.js site/src/externs.js
 site/deck_en_ie_compiled.js: site/src/words_en_ie.js site/src/deck_en_ie.js site/src/common.js site/src/deck.js
 site/deck_en_us_compiled.js: site/src/words_en_us.js site/src/deck_en_us.js site/src/common.js site/src/deck.js
 site/deck_es_es_compiled.js: site/src/words_es_es.js site/src/deck_es_es.js site/src/common.js site/src/deck.js
 site/deck_es_mx_compiled.js: site/src/words_es_mx.js site/src/deck_es_mx.js site/src/common.js site/src/deck.js
+site/deck_fr_fr_compiled.js: site/src/words_fr_fr.js site/src/deck_fr_fr.js site/src/common.js site/src/deck.js
 site/debug_compiled.js: site/src/words_es_mx.js site/src/common.js site/src/debug.js
 	cd site && $(COMPILEJS) --create_source_map debug.map --js_output_file debug_compiled.js src/words_es_mx.js src/common.js src/debug.js
 	echo '//# sourceMappingURL=/debug.map' >> $@
