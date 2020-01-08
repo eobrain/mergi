@@ -58,7 +58,7 @@ npm install
 Also if you will be doing `make words` below you will need to do
 
 ```sh
-sudo apt-get install graphicsmagick tesseract-ocr tesseract-ocr-eng tesseract-ocr-spa
+sudo apt-get install graphicsmagick tesseract-ocr tesseract-ocr-eng tesseract-ocr-spa  tesseract-ocr-fra
 ```
 
 An ubuntu and other Debian flavors of Linux (including Chrome OS), or the equicvalent on other platforms.

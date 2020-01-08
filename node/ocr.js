@@ -24,7 +24,8 @@ const retryWithExponentialBackOff = async (f, delayMs = 1) => {
 
 const LANG_MAP = {
   es: 'spa',
-  en: 'eng'
+  en: 'eng',
+  fr: 'fra'
 }
 
 /**
