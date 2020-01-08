@@ -20,8 +20,8 @@ const LOCALES = [
 ]
 const SRC = 'site/src'
 
-// const MAX_QUERY_COUNT = 700 * 4
-const MAX_QUERY_COUNT = 5 * 4
+const MAX_QUERY_COUNT = 700 * 4
+// const MAX_QUERY_COUNT = 5 * 4
 
 /**
  * Process the CSV files.
