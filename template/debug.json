@@ -1,0 +1,8 @@
+{
+    "title": "Elpurigo",
+    "modulepreloads": [],
+    "stylesheets": ["debug"],
+    "scripts": [
+        {"src": "debug_compiled.js", "type": "defer"}
+    ]
+}

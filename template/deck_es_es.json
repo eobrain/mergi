@@ -1,0 +1,10 @@
+{
+    "title": "Superrigardo",
+    "modulepreloads": [],
+    "stylesheets": ["app", "deck"],
+    "scripts": [
+        {"src": "deck_es_es_compiled.js", "type": "defer"}
+    ],
+    "lang": "es",
+    "country": "es"
+}

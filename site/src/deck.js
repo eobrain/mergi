@@ -6,30 +6,39 @@
 
 // @ts-check
 
-import { newCards, readCards, merge, score, decay, SIX_HOURS } from './common.js'
+import { init, newCards, readCards, merge, score, decay, SIX_HOURS } from './common.js'
 
-document.body.onload = () => {
-  const deckEl = document.getElementById('deck')
+/**
+ * @param {string} lang
+ * @param {string} country
+ * @param {!Array<Word>} mergiWords
+ */
+export default (lang, country, mergiWords) => {
+  init(lang, country, mergiWords)
 
-  const sort = () => {
-    cards.sort((a, b) => score(a) - score(b))
-  }
+  document.body.onload = () => {
+    const deckEl = document.getElementById('deck')
 
-  const cards = merge(readCards(), newCards())
-  sort()
-
-  cards.forEach((card) => {
-    const cardEl = document.createElement('li')
-    if (card.reversed) {
-      cardEl.className = 'reversed'
+    const sort = () => {
+      cards.sort((a, b) => score(a) - score(b))
     }
-    card.responses.forEach((r) => {
-      const rEl = document.createElement('div')
-      const color = `hsl(${120 * r.correctness}, ${100 * decay(r.t, SIX_HOURS)}%, 50%)`
-      rEl.style.background = color
-      cardEl.append(rEl)
+
+    const cards = merge(readCards(), newCards())
+    sort()
+
+    cards.forEach((card) => {
+      const cardEl = document.createElement('li')
+      if (card.reversed) {
+        cardEl.className = 'reversed'
+      }
+      card.responses.forEach((r) => {
+        const rEl = document.createElement('div')
+        const color = `hsl(${120 * r.correctness}, ${100 * decay(r.t, SIX_HOURS)}%, 50%)`
+        rEl.style.background = color
+        cardEl.append(rEl)
+      })
+      cardEl.title = score(card)
+      deckEl.append(cardEl)
     })
-    cardEl.title = score(card)
-    deckEl.append(cardEl)
-  })
+  }
 }

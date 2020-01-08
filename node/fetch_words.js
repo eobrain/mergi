@@ -12,10 +12,16 @@ import search from './scrape.js'
 import { Ocr } from './ocr.js'
 import { MAX_IMAGE_COUNT_PER_QUERY } from '../site/src/shared.js'
 
-const LOCALES = ['es_mx']
+const LOCALES = [
+  'es_mx',
+  'es_es',
+  'en_ie',
+  'en_us'
+]
+const SRC = 'site/src'
 
-// const MAX_QUERY_COUNT = 700
-const MAX_QUERY_COUNT = 5
+const MAX_QUERY_COUNT = 700 * 4
+// const MAX_QUERY_COUNT = 5 * 4
 
 /**
  * Process the CSV files.
@@ -51,13 +57,14 @@ const main = async () => {
   /**
    * Filter out images with text, and limit the number of images.
    * @param {!Array<Img>} images
+   * @param {string} lang
    * @return {Promise<Array<Img>>} subset of the images
    */
-  const filterImage = async (images) => {
+  const filterImage = async (images, lang) => {
     const result = []
     for (let i = 0; i < images.length && result.length < MAX_IMAGE_COUNT_PER_QUERY; ++i) {
       const image = images[i]
-      if (!(await ocr.hasText(image.src))) {
+      if (!(await ocr.hasText(image.src, lang))) {
         result.push(image)
       }
     }
@@ -65,26 +72,38 @@ const main = async () => {
   }
 
   const queryCount = await processCsv(async (a, b, c, d) => {})
-  console.log(`// ${new Date()} ${queryCount} queries:`)
-  console.log('/** @type {!Array<Word>} */')
-  console.log('export const mergiWords = [')
-  const startTime = Date.now()
+
+  // Create an output fuile for each locale
+  const outs = {}
+  LOCALES.forEach((locale) => {
+    const out = fs.createWriteStream(`${SRC}/words_${locale}.js`) // TODO(eob) add error handling
+    out.write('/** @type {!Array<Word>} */\n')
+    out.write('export const mergiWords = [\n')
+    outs[locale] = out
+  })
 
   let j = 0
-  const count = await processCsv(async (prefix, query, lang, country) => {
+  await processCsv(async (prefix, query, lang, country) => {
     const images = await search(query, lang, country, Math.min(queryCount, MAX_QUERY_COUNT))
-    const filteredImages = await filterImage(images)
+    const filteredImages = await filterImage(images, lang)
     console.error(`Word# ${++j} ${query}`)
-    console.log('  {')
-    console.log(`    prefix: "${prefix}",`)
-    console.log(`    query: "${query}",`)
-    console.log(`    lang: "${lang}",`)
-    console.log(`    country: "${country}",`)
-    console.log(`    images: ${JSON.stringify(filteredImages)}`)
-    console.log('  },')
+
+    const locale = `${lang}_${country}`
+    const out = outs[locale]
+    out.write('  {\n')
+    if (prefix) {
+      out.write(`    prefix: "${prefix}",\n`)
+    }
+    out.write(`    query: "${query}",\n`)
+    out.write(`    lang: "${lang}",\n`)
+    out.write(`    country: "${country}",\n`)
+    out.write(`    images: ${JSON.stringify(filteredImages)}\n`)
+    out.write('  },\n')
   })
-  const dt = Date.now() - startTime
-  console.log(`] // ${new Date()} ${count}==${queryCount} ${60 * 1000 * count / dt} requests per minute`)
+  LOCALES.forEach((locale) => {
+    const out = outs[locale]
+    out.write(']\n')
+  })
   ocr.cleanup()
 }
 
