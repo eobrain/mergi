@@ -13,15 +13,16 @@ import { Ocr } from './ocr.js'
 import { MAX_IMAGE_COUNT_PER_QUERY } from '../site/src/shared.js'
 
 const LOCALES = [
-  'es_mx',
-  'es_es',
-  'en_ie',
-  'en_us'
+  // 'es_mx',
+  // 'es_es',
+  // 'en_ie',
+  // 'en_us',
+  'fr_fr'
 ]
 const SRC = 'site/src'
 
-const MAX_QUERY_COUNT = 700 * 4
-// const MAX_QUERY_COUNT = 5 * 4
+// const MAX_QUERY_COUNT = 700 * 5
+const MAX_QUERY_COUNT = 5 * 5
 
 /**
  * Process the CSV files.
