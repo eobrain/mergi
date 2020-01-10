@@ -23,8 +23,9 @@ export default async (query, language, country, ofTotalQueries) => {
     {
       onopentag (name, attribs) {
         if (name === 'img') {
-          const src = attribs.src
-          if (src && src.startsWith('http')) {
+          const imageUrl = attribs.src
+          if (imageUrl && imageUrl.startsWith('http')) {
+            const src = imageUrl.replace(/^https?:/, '')
             const width = Number(attribs.width)
             const height = Number(attribs.height)
             images.push({ width, height, src })
