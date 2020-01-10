@@ -90,15 +90,23 @@ export const SIX_HOURS = 1000.0 * 60 * 60 * 6
 const FIVE_MINUTES = 1000.0 * 60 * 5
 
 /**
- * Emulate Java's hash code.
- * https://stackoverflow.com/questions/7616461/generate-a-hash-from-string-in-javascript
+* https://stackoverflow.com/a/52171480/978525
  *
  * @param {string} s
  * @return {number}
  */
-const hashCode = (s) =>
-  s.split('')
-    .reduce((a, b) => (((a << 5) - a) + b.charCodeAt(0)) | 0, 0)
+const hashCode = (s) => {
+  let h1 = 0xdeadbeef
+  let h2 = 0x41c6ce57
+  for (let i = 0, ch; i < s.length; i++) {
+    ch = s.charCodeAt(i)
+    h1 = Math.imul(h1 ^ ch, 2654435761)
+    h2 = Math.imul(h2 ^ ch, 1597334677)
+  }
+  h1 = Math.imul(h1 ^ h1 >>> 16, 2246822507) ^ Math.imul(h2 ^ h2 >>> 13, 3266489909)
+  h2 = Math.imul(h2 ^ h2 >>> 16, 2246822507) ^ Math.imul(h1 ^ h1 >>> 13, 3266489909)
+  return 4294967296 * (2097151 & h2) + (h1 >>> 0)
+}
 
 /**
  * Hash string to number between zero and one.
