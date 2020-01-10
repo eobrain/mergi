@@ -1,12 +1,12 @@
 <!DOCTYPE html>
-<html>
+<html lang="eo">
 {{> head}}
 
 <body>
     {{> header}}
     <main>
         {{#locales}}
-        <img width="100" height="{{flagHeightPx}}" src="images/flag_{{country}}.webp">
+        <img alt="flag of {{country}}" width="100" height="{{flagHeightPx}}" src="images/flag_{{country}}.webp">
         <a href="card_{{lang}}_{{country}}.html">{{langName}}</a>
         {{/locales}}
     </main>
