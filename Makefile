@@ -99,3 +99,10 @@ lint:
 
 clean:
 	rm -f site/*.js site/*.map site/*.html
+
+ site/server.pem:
+	cd site && openssl req -new -x509 -keyout server.pem -out server.pem -days 365 -nodes
+
+serve: site/server.pem site/serve.py
+	: visit https://localhost:4443
+	cd site && python serve.py
