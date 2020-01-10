@@ -7,3 +7,6 @@
 
 # HTML files generated from /template/*
 /site/*.html
+
+# Userd for dev-server HTTPS serving
+/site/server.pem

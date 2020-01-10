@@ -65,7 +65,7 @@ const main = async () => {
     const result = []
     for (let i = 0; i < images.length && result.length < MAX_IMAGE_COUNT_PER_QUERY; ++i) {
       const image = images[i]
-      if (!(await ocr.hasText(image.src, lang))) {
+      if (!(await ocr.hasText(`https:${image.src}`, lang))) {
         result.push(image)
       }
     }
