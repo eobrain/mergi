@@ -1,0 +1,10 @@
+{
+    "title": "Elpurigo",
+    "modulepreloads": [],
+    "stylesheets": ["debug"],
+    "scripts": [
+        {"src": "debug_fr_fr_compiled.js", "type": "defer"}
+    ],
+    "lang": "fr",
+    "country": "fr"
+}
