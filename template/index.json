@@ -1,7 +1,10 @@
 {
     "title": "Kartoj",
     "stylesheets": ["app", "index"],
-    "locales": [
+    "scripts": [
+        {"src": "index_compiled.js", "type": "nomodule defer"},
+        {"src": "index.js", "type": "type=\"module\""}
+    ],   "locales": [
         {"lang":"es", "country": "mx", "langName": "Español en mexico", "flagHeightPx": 57},
         {"lang":"es", "country": "es", "langName": "Español en españa", "flagHeightPx": 67},
         {"lang":"fr", "country": "fr", "langName": "Le français en France", "flagHeightPx": 67},
