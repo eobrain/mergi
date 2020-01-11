@@ -109,6 +109,11 @@ clean:
  site/server.pem:
 	cd site && openssl req -new -x509 -keyout server.pem -out server.pem -days 365 -nodes
 
-serve: site/server.pem site/serve.py
+
+serve: compiled
+	: visit https://localhost:8888
+	cd site && python -m SimpleHTTPServer 8888
+
+serve-ssl: site/server.pem site/serve.py compiled
 	: visit https://localhost:4443
 	cd site && python serve.py
