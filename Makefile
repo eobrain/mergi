@@ -4,6 +4,7 @@ LOCALES=en_ie en_us es_es es_mx fr_fr
 compiled: lint html modules\
  $(LOCALES:%=site/card_%_compiled.js)\
  $(LOCALES:%=site/deck_%_compiled.js)\
+ site/index_compiled.js\
  site/debug_compiled.js
 
 MUSTACHE=cd template && npx mustache -p footer.mustache -p head.mustache -p header.mustache
@@ -51,11 +52,11 @@ site/privacy.html: template/privacy.html template/privacy.json $(PARTIALS)
 	$(MUSTACHE) privacy.json privacy.html >../$@
 
 site/card_%_compiled.js: site/src/words_%.js site/src/common.js site/src/search_url.js site/src/card_%.js site/src/main.js site/src/shared.js site/src/externs.js
-	cd site && $(COMPILEJS) --create_source_map app_$*.map --js_output_file card_$*_compiled.js src/words_$*.js src/common.js src/search_url.js src/card_$*.js src/main.js src/shared.js
-	echo '//# sourceMappingURL=/app_$*.map' >> $@
+	cd site && $(COMPILEJS) --create_source_map app_$*_compiled.map --js_output_file card_$*_compiled.js src/words_$*.js src/common.js src/search_url.js src/card_$*.js src/main.js src/shared.js
+	echo '//# sourceMappingURL=/app_$*_compiled.map' >> $@
 site/deck_%_compiled.js: site/src/words_%.js site/src/deck_%.js site/src/common.js site/src/deck.js
-	cd site && $(COMPILEJS) --create_source_map deck_$*.map --js_output_file deck_$*_compiled.js src/deck_$*.js src/words_$*.js src/common.js src/deck.js
-	echo '//# sourceMappingURL=/deck_$*.map' >> $@
+	cd site && $(COMPILEJS) --create_source_map deck_$*_compiled.map --js_output_file deck_$*_compiled.js src/deck_$*.js src/words_$*.js src/common.js src/deck.js
+	echo '//# sourceMappingURL=/deck_$*_compiled.map' >> $@
 
 
 site/card_en_ie_compiled.js: site/src/words_en_ie.js site/src/common.js site/src/search_url.js site/src/card_en_ie.js site/src/main.js site/src/shared.js site/src/externs.js
@@ -68,9 +69,12 @@ site/deck_en_us_compiled.js: site/src/words_en_us.js site/src/deck_en_us.js site
 site/deck_es_es_compiled.js: site/src/words_es_es.js site/src/deck_es_es.js site/src/common.js site/src/deck.js
 site/deck_es_mx_compiled.js: site/src/words_es_mx.js site/src/deck_es_mx.js site/src/common.js site/src/deck.js
 site/deck_fr_fr_compiled.js: site/src/words_fr_fr.js site/src/deck_fr_fr.js site/src/common.js site/src/deck.js
+site/index_compiled.js: site/src/index.js
+	cd site && $(COMPILEJS) --create_source_map index_compiled.map --js_output_file index_compiled.js src/index.js
+	echo '//# sourceMappingURL=/index_compiled.map' >> $@
 site/debug_compiled.js: site/src/words_es_mx.js site/src/common.js site/src/debug.js
-	cd site && $(COMPILEJS) --create_source_map debug.map --js_output_file debug_compiled.js src/words_es_mx.js src/common.js src/debug.js
-	echo '//# sourceMappingURL=/debug.map' >> $@
+	cd site && $(COMPILEJS) --create_source_map debug_compiled.map --js_output_file debug_compiled.js src/words_es_mx.js src/common.js src/debug.js
+	echo '//# sourceMappingURL=/debug_compiled.map' >> $@
 
 site/%.js: site/src/%.js
 	npx terser --module --ecma 6 --compress --mangle --source-map "base='site',url='$(notdir $@).map'" --output $@ -- $< 
@@ -78,6 +82,8 @@ site/%.js: site/src/%.js
 modules:\
  $(LOCALES:%=site/card_%.js)\
  $(LOCALES:%=site/words_%.js)\
+ site/service-worker.js\
+ site/index.js\
  site/common.js\
  site/debug.js\
  site/deck.js\
