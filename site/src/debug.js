@@ -6,7 +6,9 @@
 
 // @ts-check
 
-import { init, newCards, readCards, images, merge, score } from './common.js'
+import { newCards, merge, score } from './card.js'
+import { readCards } from './storage.js'
+import { init, forEachImageOf } from './word.js'
 
 /**
  * @param {string} lang
@@ -28,14 +30,11 @@ export default (lang, country, mergiWords) => {
 
     cards.forEach((card) => {
       let imgHtml = ''
-      const imagesOfPhrase = images[card.phrase]
-      if (imagesOfPhrase) {
-        imagesOfPhrase.forEach((image) => {
-          imgHtml += `<img src="${image.src}" width="${image.width}" height="${image.height}"/>`
-        })
-      } else {
-        imgHtml = '(No images)'
-      }
+
+      forEachImageOf(card.phrase, (image) => {
+        imgHtml += `<img src="${image.src}" width="${image.width}" height="${image.height}"/>`
+      })
+      imgHtml = imgHtml || '(No images)'
 
       const phrase = card.reversed ? card.phrase : `<strong>${card.phrase}</strong>`
       const responsesString = JSON.stringify(card.responses.map((r) => `${r.correctness}`))

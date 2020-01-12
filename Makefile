@@ -56,32 +56,36 @@ site/info.html: template/info.html template/info.json $(PARTIALS)
 site/privacy.html: template/privacy.html template/privacy.json $(PARTIALS)
 	$(MUSTACHE) privacy.json privacy.html >../$@
 
-site/card_%_compiled.js: site/src/words_%.js site/src/common.js site/src/search_url.js site/src/card_%.js site/src/main.js site/src/shared.js site/src/externs.js
-	cd site && $(COMPILEJS) --create_source_map app_$*_compiled.map --js_output_file card_$*_compiled.js src/words_$*.js src/common.js src/search_url.js src/card_$*.js src/main.js src/shared.js
+CARDJS=search_url.js main.js shared.js card.js storage.js word.js
+DECKJS=deck.js card.js storage.js word.js
+DEBUGJS=debug.js card.js storage.js word.js
+
+site/card_%_compiled.js: site/src/words_%.js site/src/card_%.js $(CARDJS:%=site/src/%) site/src/externs.js
+	cd site && $(COMPILEJS) --create_source_map app_$*_compiled.map --js_output_file card_$*_compiled.js src/words_$*.js src/card_$*.js $(CARDJS:%=src/%)
 	echo '//# sourceMappingURL=/app_$*_compiled.map' >> $@
-site/deck_%_compiled.js: site/src/words_%.js site/src/deck_%.js site/src/common.js site/src/deck.js
-	cd site && $(COMPILEJS) --create_source_map deck_$*_compiled.map --js_output_file deck_$*_compiled.js src/deck_$*.js src/words_$*.js src/common.js src/deck.js
+site/deck_%_compiled.js: site/src/words_%.js site/src/deck_%.js $(DECKJS:%=site/src/%) site/src/externs.js
+	cd site && $(COMPILEJS) --create_source_map deck_$*_compiled.map --js_output_file deck_$*_compiled.js src/deck_$*.js src/words_$*.js $(DECKJS:%=src/%)
 	echo '//# sourceMappingURL=/deck_$*_compiled.map' >> $@
-site/debug_%_compiled.js: site/src/words_%.js site/src/debug_%.js site/src/common.js site/src/debug.js
-	cd site && $(COMPILEJS) --create_source_map debug_$*_compiled.map --js_output_file debug_$*_compiled.js src/debug_$*.js src/words_$*.js src/common.js src/debug.js
+site/debug_%_compiled.js: site/src/words_%.js site/src/debug_%.js $(DEBUGJS:%=site/src/%) site/src/externs.js
+	cd site && $(COMPILEJS) --create_source_map debug_$*_compiled.map --js_output_file debug_$*_compiled.js src/debug_$*.js src/words_$*.js $(DEBUGJS:%=src/%)
 	echo '//# sourceMappingURL=/debug_$*_compiled.map' >> $@
 
 
-site/card_en_ie_compiled.js: site/src/words_en_ie.js site/src/common.js site/src/search_url.js site/src/card_en_ie.js site/src/main.js site/src/shared.js site/src/externs.js
-site/card_en_us_compiled.js: site/src/words_en_us.js site/src/common.js site/src/search_url.js site/src/card_en_us.js site/src/main.js site/src/shared.js site/src/externs.js
-site/card_es_es_compiled.js: site/src/words_es_es.js site/src/common.js site/src/search_url.js site/src/card_es_es.js site/src/main.js site/src/shared.js site/src/externs.js
-site/card_es_mx_compiled.js: site/src/words_es_mx.js site/src/common.js site/src/search_url.js site/src/card_es_mx.js site/src/main.js site/src/shared.js site/src/externs.js
-site/card_fr_fr_compiled.js: site/src/words_fr_fr.js site/src/common.js site/src/search_url.js site/src/card_fr_fr.js site/src/main.js site/src/shared.js site/src/externs.js
-site/deck_en_ie_compiled.js: site/src/words_en_ie.js site/src/deck_en_ie.js site/src/common.js site/src/deck.js
-site/deck_en_us_compiled.js: site/src/words_en_us.js site/src/deck_en_us.js site/src/common.js site/src/deck.js
-site/deck_es_es_compiled.js: site/src/words_es_es.js site/src/deck_es_es.js site/src/common.js site/src/deck.js
-site/deck_es_mx_compiled.js: site/src/words_es_mx.js site/src/deck_es_mx.js site/src/common.js site/src/deck.js
-site/deck_fr_fr_compiled.js: site/src/words_fr_fr.js site/src/deck_fr_fr.js site/src/common.js site/src/deck.js
-site/debug_en_ie_compiled.js: site/src/words_en_ie.js site/src/debug_en_ie.js site/src/common.js site/src/debug.js
-site/debug_en_us_compiled.js: site/src/words_en_us.js site/src/debug_en_us.js site/src/common.js site/src/debug.js
-site/debug_es_es_compiled.js: site/src/words_es_es.js site/src/debug_es_es.js site/src/common.js site/src/debug.js
-site/debug_es_mx_compiled.js: site/src/words_es_mx.js site/src/debug_es_mx.js site/src/common.js site/src/debug.js
-site/debug_fr_fr_compiled.js: site/src/words_fr_fr.js site/src/debug_fr_fr.js site/src/common.js site/src/debug.js
+site/card_en_ie_compiled.js: site/src/words_en_ie.js site/src/card_en_ie.js $(CARDJS:%=site/src/%) site/src/externs.js
+site/card_en_us_compiled.js: site/src/words_en_us.js site/src/card_en_us.js $(CARDJS:%=site/src/%) site/src/externs.js
+site/card_es_es_compiled.js: site/src/words_es_es.js site/src/card_es_es.js $(CARDJS:%=site/src/%) site/src/externs.js
+site/card_es_mx_compiled.js: site/src/words_es_mx.js site/src/card_es_mx.js $(CARDJS:%=site/src/%) site/src/externs.js
+site/card_fr_fr_compiled.js: site/src/words_fr_fr.js site/src/card_fr_fr.js $(CARDJS:%=site/src/%) site/src/externs.js
+site/deck_en_ie_compiled.js: site/src/words_en_ie.js site/src/deck_en_ie.js $(DECKJS:%=site/src/%) site/src/externs.js
+site/deck_en_us_compiled.js: site/src/words_en_us.js site/src/deck_en_us.js $(DECKJS:%=site/src/%) site/src/externs.js
+site/deck_es_es_compiled.js: site/src/words_es_es.js site/src/deck_es_es.js $(DECKJS:%=site/src/%) site/src/externs.js
+site/deck_es_mx_compiled.js: site/src/words_es_mx.js site/src/deck_es_mx.js $(DECKJS:%=site/src/%) site/src/externs.js
+site/deck_fr_fr_compiled.js: site/src/words_fr_fr.js site/src/deck_fr_fr.js $(DECKJS:%=site/src/%) site/src/externs.js
+site/debug_en_ie_compiled.js: site/src/words_en_ie.js site/src/debug_en_ie.js $(DEBUGJS:%=site/src/%) site/src/externs.js
+site/debug_en_us_compiled.js: site/src/words_en_us.js site/src/debug_en_us.js $(DEBUGJS:%=site/src/%) site/src/externs.js
+site/debug_es_es_compiled.js: site/src/words_es_es.js site/src/debug_es_es.js $(DEBUGJS:%=site/src/%) site/src/externs.js
+site/debug_es_mx_compiled.js: site/src/words_es_mx.js site/src/debug_es_mx.js $(DEBUGJS:%=site/src/%) site/src/externs.js
+site/debug_fr_fr_compiled.js: site/src/words_fr_fr.js site/src/debug_fr_fr.js $(DEBUGJS:%=site/src/%) site/src/externs.js
 site/index_compiled.js: site/src/index.js
 	cd site && $(COMPILEJS) --create_source_map index_compiled.map --js_output_file index_compiled.js src/index.js
 	echo '//# sourceMappingURL=/index_compiled.map' >> $@
@@ -95,7 +99,9 @@ modules:\
  $(LOCALES:%=site/debug_%.js)\
  site/service-worker.js\
  site/index.js\
- site/common.js\
+ site/card.js\
+ site/storage.js\
+ site/word.js\
  site/debug.js\
  site/deck.js\
  site/main.js\

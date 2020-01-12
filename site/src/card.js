@@ -6,42 +6,9 @@
 
 // @ts-check
 
-/**
- * The text displayed on each flashcard.
- * @type {!Array<string>}
- */
-const phrases = []
+// See description of Card type in extern.js
 
-/**
- * list of images for each phrase
- * @type {!Object<string, !Array<Img> >}
- */
-export const images = {}
-
-/**
- * Extract the display phrase from the Word object.
- * @param {Word} word
- * @return {string} the phrase to display
- */
-export const toPhrase = (word) => word.prefix
-  ? `(${word.prefix}) ${word.query}`
-  : word.query
-
-/**
- * @param {string} lang
- * @param {string} country
- * @param {!Array<Word>} mergiWords
- */
-export const init = (lang, country, mergiWords) => {
-  // Initialize phrases and images.
-  mergiWords.forEach((word) => {
-    if (word.lang === lang && word.country === country) {
-      const phrase = toPhrase(word)
-      phrases.push(phrase)
-      images[phrase] = word.images
-    }
-  })
-}
+import { hasImages, forEachPhrase } from './word.js'
 
 /**
  * The string to use as a key for a card.
@@ -60,11 +27,6 @@ export const merge = (existing, added) => {
   const result = []
   const included = {}
 
-  /** Whether a card has images.
-   * @param {!Card} card
-   * @return {boolean}
-  */
-  const hasImages = (card) => !!images[card.phrase]
   if (existing) {
     existing.filter(hasImages).forEach((card) => {
       result.push(card)
@@ -153,29 +115,10 @@ export const newCards = () => {
   const cards = []
   for (let i = 0; i < 2; ++i) {
     const reversed = (i === 1)
-    phrases.forEach((phrase) => {
+    forEachPhrase((phrase) => {
       const responses = []
       cards.push({ phrase, reversed, responses })
     })
   }
   return cards
 }
-
-/** Key used to store the cards in the browser local storage. */
-const KEY = 'mergi-order-v4'
-
-/**
- * Write the cards to local storage.
- * @param {!Array<Card>} cards to write
- */
-export const writeCards = (cards) => {
-  window.localStorage.setItem(KEY, JSON.stringify(cards))
-}
-
-/**
- * Read cards from local storage.
- * @return {!Array<Card>}
- */
-export const readCards = () =>
-  /**  @type {!Array<Card>} */
-  (JSON.parse(window.localStorage.getItem(KEY) || '[]'))

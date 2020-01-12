@@ -6,7 +6,9 @@
 
 // @ts-check
 
-import { init, newCards, readCards, writeCards, images, merge, score } from './common.js'
+import { newCards, merge, score } from './card.js'
+import { readCards, writeCards } from './storage.js'
+import { init, forEachImageOf } from './word.js'
 import { MAX_IMAGE_COUNT_PER_QUERY } from './shared.js'
 import imageSearchUrl from './search_url.js'
 
@@ -122,7 +124,7 @@ export default (lang, country, mergiWords) => {
      */
     const addImages = (imagesEl) => {
       let imageCount = 0
-      images[phrase].forEach((image) => {
+      forEachImageOf(phrase, (image) => {
         ++imageCount
         if (imageCount > MAX_IMAGE_COUNT_PER_QUERY) {
           return

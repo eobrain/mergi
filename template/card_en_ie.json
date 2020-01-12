@@ -4,7 +4,9 @@
         "words_en_ie.js",
         "shared.js",
         "search_url.js",
-        "common.js",
+        "card.js",
+        "word.js",
+        "storage.js",
         "main.js",
         "card_en_ie.js"
     ],
