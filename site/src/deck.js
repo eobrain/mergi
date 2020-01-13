@@ -6,7 +6,9 @@
 
 // @ts-check
 
-import { init, newCards, readCards, merge, score, decay, SIX_HOURS } from './common.js'
+import { newCards, merge, score, decay, SIX_HOURS } from './card.js'
+import { readCards } from './storage.js'
+import { init } from './word.js'
 
 /**
  * @param {string} lang

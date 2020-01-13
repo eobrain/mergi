@@ -6,33 +6,41 @@
 
 // @ts-check
 
-import { newCards, readCards, images, merge, score } from './common.js'
+import { newCards, merge, score } from './card.js'
+import { readCards } from './storage.js'
+import { init, forEachImageOf } from './word.js'
 
-document.body.onload = () => {
-  const tableEl = document.getElementById('table')
+/**
+ * @param {string} lang
+ * @param {string} country
+ * @param {!Array<Word>} mergiWords
+ */
+export default (lang, country, mergiWords) => {
+  init(lang, country, mergiWords)
 
-  const sort = () => {
-    cards.sort((a, b) => score(a) - score(b))
-  }
+  document.body.onload = () => {
+    const tableEl = document.getElementById('table')
 
-  const cards = merge(readCards(), newCards())
-  sort()
-
-  cards.forEach((card) => {
-    let imgHtml = ''
-    const imagesOfPhrase = images[card.phrase]
-    if (imagesOfPhrase) {
-      imagesOfPhrase.forEach((image) => {
-        imgHtml += `<img src="${image.src}" width="${image.width}" height="${image.height}"/>`
-      })
-    } else {
-      imgHtml = '(No images)'
+    const sort = () => {
+      cards.sort((a, b) => score(a) - score(b))
     }
 
-    const phrase = card.reversed ? card.phrase : `<strong>${card.phrase}</strong>`
-    const responsesString = JSON.stringify(card.responses.map((r) => `${r.correctness}`))
-    tableEl.insertAdjacentHTML('beforeend',
+    const cards = merge(readCards(), newCards())
+    sort()
+
+    cards.forEach((card) => {
+      let imgHtml = ''
+
+      forEachImageOf(card.phrase, (image) => {
+        imgHtml += `<img src="${image.src}" width="${image.width}" height="${image.height}"/>`
+      })
+      imgHtml = imgHtml || '(No images)'
+
+      const phrase = card.reversed ? card.phrase : `<strong>${card.phrase}</strong>`
+      const responsesString = JSON.stringify(card.responses.map((r) => `${r.correctness}`))
+      tableEl.insertAdjacentHTML('beforeend',
       `<tr><td>${score(card)}</td><td>${responsesString}</td><td>${phrase}</td><td>${imgHtml}</td></tr>`
-    )
-  })
+      )
+    })
+  }
 }
