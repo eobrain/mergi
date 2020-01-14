@@ -17,10 +17,9 @@
 
 /* Box widths in vw units
  *   body     |                  100                    |
- *   main     :2|2:               92                :2|2:
- *   section      :2|2:           84            :2|2:
- *   nav              :2|2:       76        :2|2:
- *   img              |2|   38  :2|2:  38     :2|
+ *   main     :1|1:               96                :1|1:
+ *   section      :1|1:           92            :1|1:
+ *   nav              :1|1:       88        :1|1:
  */
 
 body {
@@ -37,22 +36,24 @@ body {
 }
 
 header, main, footer {
-    width: 92vw;
-    margin: 2vw;
-    padding: 2vw;
+    width: 96vw;
+    margin: 1vh 1vw;
+    padding: 1vh 1vw;
 }
 
 section {
-    width: 84vw;
-    margin: 2vw;
-    padding: 2vw;
+    width: 92vw;
+    height: 90vh;
+    margin: 1vh 1vw;
+    padding: 1vh 1vw;
+    overflow: hidden;
 }
 
 nav {
-    width: 76vw;
-    margin: 2vw;
-    padding: 5px 2vw;
-    height: 45px;
+    width: 88vw;
+    margin: 1vh 1vw;
+    padding: 1vh 1vw;
+    height: 5vh;
     background-color: #acb7ae;
     /* Barely Green */
     flex: none;
@@ -60,23 +61,30 @@ nav {
 }
 
 .word {
-    padding: 2vw 2vw;
-    height: calc(100% - 4vw);
+    padding: 1vh 1vw;
     font-size: 40px;
 }
 
 .word a {
     display: block;
     width: 76vw;
-    margin: 25vh 2vw;
-    padding: 5px 2vw;
+    margin: 25vh 1vw;
+    padding: 1vh 1vw;
 }
 
 .images img {
-    width: 38vw;
-    height: auto;
-    padding: 2vw;
+    width: auto;
+    border: 2vmin solid white;
+    margin: 1vmin;
+    vertical-align: middle;
 }
+
+.images img:nth-child(2) { height:22vmax }
+.images img:nth-child(3) { height:16.5vmax }
+.images img:nth-child(4) { height:13.2vmax }
+.images img:nth-child(5) { height:11vmax }
+.images img:nth-child(6) { height:9.4vmax }
+.images img:nth-child(7) { height:8.3vmax }
 
 header {
     text-align: left;
@@ -109,8 +117,8 @@ nav span {
 
 nav svg {
     width: auto;
-    height: 50px;
-    margin: 0 5px;
+    height: 100%;
+    margin: 0 5vw;
     fill: #92a094/* Slightly darker than Barely Green */
 }
 
@@ -118,44 +126,6 @@ nav svg {
     perspective: 500px;
     perspective-origin: 50% 100px;
     flex: auto;
-}
-
-.images {
-    display: grid;
-    grid-template-columns: repeat(2, 1fr);
-    grid-template-rows: 1fr repeat(3, 3fr);
-    grid-column-gap: 0px;
-    grid-row-gap: 0px;
-    align-items: center;
-    overflow: hidden;
-}
-
-nav {
-    grid-area: 1 / 1 / 2 / 3;
-}
-
-img:nth-child(2) {
-    grid-area: 2 / 1 / 3 / 2;
-}
-
-img:nth-child(3) {
-    grid-area: 2 / 2 / 3 / 3;
-}
-
-img:nth-child(4) {
-    grid-area: 3 / 1 / 4 / 2;
-}
-
-img:nth-child(6) {
-    grid-area: 3 / 2 / 4 / 3;
-}
-
-img:nth-child(6) {
-    grid-area: 4 / 1 / 5 / 2;
-}
-
-img:nth-child(7) {
-    grid-area: 4 / 2 / 5 / 3;
 }
 
 #front {
