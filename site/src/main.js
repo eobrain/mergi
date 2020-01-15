@@ -135,6 +135,9 @@ export default (lang, country, mergiWords) => {
         imgEl.width = image.width
         imgEl.height = image.height
         imgEl.alt = `image search result ${imageCount}`
+        if (image.height > image.width * 0.666) {
+          imgEl.className += ' portrait'
+        }
         imagesEl.append(imgEl)
       })
     }

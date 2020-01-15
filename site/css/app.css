@@ -73,18 +73,33 @@ nav {
 }
 
 .images img {
-    width: auto;
     border: 2vmin solid white;
     margin: 1vmin;
     vertical-align: middle;
 }
 
-.images img:nth-child(2) { height:22vmax }
-.images img:nth-child(3) { height:16.5vmax }
-.images img:nth-child(4) { height:13.2vmax }
-.images img:nth-child(5) { height:11vmax }
-.images img:nth-child(6) { height:9.4vmax }
-.images img:nth-child(7) { height:8.3vmax }
+
+@media (orientation: landscape) {
+    .images img {
+        height: 30vh;
+        width: auto;
+    }
+    .images img.portrait {
+        height: 40vh;
+    }
+
+}
+
+@media (orientation: portrait) {
+    .images img {
+        width: 80vw;
+        height: auto;
+    }
+    .images img.portrait {
+        width: 40vw;
+    }
+}
+
 
 header {
     text-align: left;
