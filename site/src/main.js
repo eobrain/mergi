@@ -59,12 +59,28 @@ export default (lang, country, mergiWords) => {
     return element
   }
 
+  /**
+   * Return firts element with given class or throw error if it does not exist.
+   * @param {!Element} el
+   * @param {string} classname
+   * @return {!Element} DOM element with given class
+   */
+  const getChild = (el, classname) => {
+    const element = el.getElementsByClassName(classname).item(0)
+    if (!element) {
+      throw new Error(`Bad page. No element with class="${classname}" in element`)
+    }
+    return element
+  }
+
   const cardEl = getElement('card')
   const frontEl = getElement('front')
   const backEl = getElement('back')
   const correctEl = getElement('correct')
   const mehEl = getElement('meh')
   const wrongEl = getElement('wrong')
+  const frontContainerEl = getChild(frontEl, 'content-container')
+  const backContainerEl = getChild(backEl, 'content-container')
 
   /* global SpeechSynthesisUtterance, gtag */
 
@@ -115,7 +131,9 @@ export default (lang, country, mergiWords) => {
      * @param {!Element} element
      */
     const removeContent = (element) => {
-      element.querySelectorAll('.content').forEach(el => el.remove())
+      while (element.firstElementChild) {
+        element.firstElementChild.remove()
+      }
     }
 
     /**
@@ -130,13 +148,17 @@ export default (lang, country, mergiWords) => {
           return
         }
         const imgEl = document.createElement('img')
-        imgEl.className = 'content'
         imgEl.src = image.src
         imgEl.width = image.width
         imgEl.height = image.height
         imgEl.alt = `image search result ${imageCount}`
-        if (image.height > image.width * 0.666) {
+        const aspectRatio = image.width / image.height
+        if (aspectRatio > 1.66666) {
+          imgEl.className += ' landscape'
+        } else if (aspectRatio < 0.6) {
           imgEl.className += ' portrait'
+        } else {
+          imgEl.className += ' square'
         }
         imagesEl.append(imgEl)
       })
@@ -147,30 +169,29 @@ export default (lang, country, mergiWords) => {
      */
     const addPhrase = (textCardEl) => {
       const pEl = document.createElement('a')
-      pEl.className = 'content'
       pEl.href = imageSearchUrl(queryText, lang, country)
       pEl.innerHTML = phrase
       textCardEl.append(pEl)
     }
-    removeContent(frontEl)
-    removeContent(backEl)
+    removeContent(frontContainerEl)
+    removeContent(backContainerEl)
     backEl.className = 'unflipped'
     backEl.onclick = unflip
     frontEl.className = 'unflipped'
     frontEl.onclick = cardReveal
     if (reversed) {
-      addImages(frontEl)
+      addImages(frontContainerEl)
       frontEl.classList.add('images')
-      addPhrase(backEl)
+      addPhrase(backContainerEl)
       backEl.classList.add('word')
       revealSay = say
       unflipSay = () => { }
       logScreenView('ask-image')
       logViewItem(`${phrase} [ask-image]`)
     } else {
-      addPhrase(frontEl)
+      addPhrase(frontContainerEl)
       frontEl.classList.add('word')
-      addImages(backEl)
+      addImages(backContainerEl)
       backEl.classList.add('images')
       revealSay = () => { }
       unflipSay = say

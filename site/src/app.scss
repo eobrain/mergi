@@ -7,61 +7,88 @@
 */
 
 /* Palette https://hookagency.com/website-color-schemes/ 7
-#acb7ae Barely Green
-#92a094 Slightly darker than Barely Green
-#82716e The Brown-shirts
-#e4decd Tan Blonde
-#c2b490 Blondey
 */
 
+// Palette https://hookagency.com/website-color-schemes/ 7
 
-/* Box widths in vw units
- *   body     |                  100                    |
- *   main     :1|1:               96                :1|1:
- *   section      :1|1:           92            :1|1:
- *   nav              :1|1:       88        :1|1:
- */
+$bodyColor: #e4decd; // Tan Blonde
+$backColor: #82716e; // The Brown-shirts
+$frontColor: #c2b490; //Blondey
+$navColor: #acb7ae; // Barely Green
+$iconColor: #92a094; // Slightly darker than Barely Green
+
+
+
+
+$bodyHeight: 100vh;
+$footerHeight: 2vh;
+$navHeight: 5vh;
+$verticalMargin: 1vh;
+$verticalPadding: 1vh;
+
+$mainHeight: $bodyHeight - $footerHeight - 3 * $verticalMargin - 4 * $verticalPadding;
+$sectionHeight: $mainHeight - 2 * $verticalMargin - 2 * $verticalPadding;
+$contentHeight: $sectionHeight - $navHeight - 3 * $verticalMargin - 4 * $verticalPadding;
+$imageGridHeight: $contentHeight / 10;
+$imgBorder: 2vmin;
 
 body {
-    height: 100vh;
+    height: $bodyHeight;
     width: 100vw;
     margin: 0;
     padding: 0;
     font-family: 'Roboto', sans-serif;
     text-align: center;
-    /* Tan Blonde */
-    background-color: #e4decd;
+    background-color: $bodyColor;
     display: flex;
     flex-direction: column;
 }
 
 header, main, footer {
     width: 96vw;
-    margin: 1vh 1vw;
-    padding: 1vh 1vw;
+    margin: $verticalMargin 1vw;
+    padding: $verticalPadding 1vw;
+}
+
+main {
+    height: $mainHeight;
+    flex: auto;
 }
 
 section {
     width: 92vw;
-    height: 90vh;
-    margin: 1vh 1vw;
-    padding: 1vh 1vw;
+    height: $sectionHeight;
+    margin: $verticalMargin 1vw;
+    padding: $verticalPadding 1vw;
     overflow: hidden;
 }
 
 nav {
     width: 88vw;
-    margin: 1vh 1vw;
-    padding: 1vh 1vw;
-    height: 5vh;
-    background-color: #acb7ae;
-    /* Barely Green */
+    margin: $verticalMargin 1vw;
+    padding: $verticalPadding 1vw;
+    height: $navHeight;
+    background-color: $navColor;
     flex: none;
     overflow: hidden;
+    font-size: 0;
 }
 
+.content-container {
+    width: 88vw;
+    height: $contentHeight;
+    margin: $verticalMargin 1vw;
+    padding: $verticalPadding 1vw;
+}
+
+footer {
+    height: $footerHeight;
+    flex: none;
+}
+
+
 .word {
-    padding: 1vh 1vw;
+    padding: $verticalPadding 1vw;
     font-size: 40px;
 }
 
@@ -69,37 +96,48 @@ nav {
     display: block;
     width: 76vw;
     margin: 25vh 1vw;
-    padding: 1vh 1vw;
+    padding: $verticalPadding 1vw;
 }
 
 .images img {
-    border: 2vmin solid white;
-    margin: 1vmin;
+    box-sizing: border-box;
+    width: auto;
+    border: $imgBorder solid;
+    margin: 0 1vw;
     vertical-align: middle;
 }
 
-
-@media (orientation: landscape) {
-    .images img {
-        height: 30vh;
-        width: auto;
-    }
-    .images img.portrait {
-        height: 40vh;
-    }
-
+#front img {
+    border-color: $frontColor;
 }
+#back img {
+    border-color: $backColor;
+}
+
 
 @media (orientation: portrait) {
-    .images img {
-        width: 80vw;
-        height: auto;
+    .portrait {
+        height: 30%;
     }
-    .images img.portrait {
-        width: 40vw;
+    .square {
+        height: 20%;
+    }
+    .landscape {
+        height: 15%;
     }
 }
 
+@media (orientation: landscape) {
+    .portrait {
+        height: 75%
+    }
+    .square {
+        height: 50%;
+    }
+    .landscape {
+        height: 25%;
+    }
+}
 
 header {
     text-align: left;
@@ -115,7 +153,7 @@ nav span {
 }
 
 #info, #question.active {
-    fill: #82716e/* The Brown-shirts */
+    fill: $backColor;
 }
 
 #correct.active {
@@ -134,22 +172,21 @@ nav svg {
     width: auto;
     height: 100%;
     margin: 0 5vw;
-    fill: #92a094/* Slightly darker than Barely Green */
+    fill: $iconColor;
 }
+
 
 #card {
     perspective: 500px;
     perspective-origin: 50% 100px;
-    flex: auto;
 }
 
 #front {
-    background-color: #c2b490/* Blondey */
+    background-color: $frontColor;
 }
 
 #back {
-    background-color: #82716e;
-    /* The Brown-shirts */
+    background-color: $backColor;
 }
 
 .initial #front.flipped, .initial #back.unflipped {
@@ -179,22 +216,18 @@ nav svg {
     position: absolute;
 }
 
-footer {
-    flex: none;
-}
-
 @keyframes offscreen {
     0% {
         transform: translate(0, 0)
     }
     25% {
-        transform: translate(1000px, 200px)
+        transform: translate(300vw, 50vh)
     }
     50% {
-        transform: translate(0, 1000px)
+        transform: translate(0, 200vh)
     }
     75% {
-        transform: translate(-1000px, 200px)
+        transform: translate(-300vw, 50vh)
     }
     100% {
         transform: translate(0, 0)
