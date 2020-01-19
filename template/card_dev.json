@@ -1,6 +1,6 @@
 {
     "title": "Kartoj",
-    "stylesheets": ["app"],
+    "stylesheets": ["common","app"],
     "scripts": [
         {"src": "src/index.js", "type": "type=\"module\""}
     ]

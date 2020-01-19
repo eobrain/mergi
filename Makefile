@@ -1,7 +1,7 @@
 COMPILEJS=java -jar ../tools/closure/closure-compiler-v20191111.jar -O ADVANCED --externs src/externs.js
 LOCALES=en_ie en_us es_es es_mx fr_fr
 
-STYLE=app debug deck index info normalize
+STYLE=app common debug deck index info normalize
 
 compiled: lint html modules\
  $(STYLE:%=site/css/%.css)\
@@ -100,6 +100,9 @@ site/%.js: site/src/%.js
 site/css/%.css: site/src/%.scss
 	npx node-sass --output-style compressed site/src/$*.scss > site/css/$*.css
 
+site/css/app.css: site/src/app.scss site/src/_def.scss
+site/css/common.css: site/src/common.scss site/src/_def.scss
+
 modules:\
  $(LOCALES:%=site/card_%.js)\
  $(LOCALES:%=site/words_%.js)\
@@ -128,7 +131,7 @@ lint:
 	npx standard node/*.js site/src/*.js 
 
 clean:
-	rm -f site/*.js site/*.map site/*.html site/*.css
+	rm -f site/*.js site/*.map site/*.html site/css/*
 
  site/server.pem:
 	cd site && openssl req -new -x509 -keyout server.pem -out server.pem -days 365 -nodes

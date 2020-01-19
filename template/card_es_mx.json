@@ -10,7 +10,7 @@
         "main.js",
         "card_es_mx.js"
     ],
-    "stylesheets": ["app"],
+    "stylesheets": ["common","app"],
     "scripts": [
         {"src": "card_es_mx_compiled.js", "type": "nomodule defer"},
         {"src": "card_es_mx.js", "type": "type=\"module\""}

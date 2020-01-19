@@ -6,89 +6,49 @@
 // http://www.eclipse.org/legal/epl-v10.html
 */
 
-/* Palette https://hookagency.com/website-color-schemes/ 7
-*/
+@import 'def';
 
-// Palette https://hookagency.com/website-color-schemes/ 7
-
-$bodyColor: #e4decd; // Tan Blonde
-$backColor: #82716e; // The Brown-shirts
-$frontColor: #c2b490; //Blondey
-$navColor: #acb7ae; // Barely Green
-$iconColor: #92a094; // Slightly darker than Barely Green
-
-
-
-
-$bodyHeight: 100vh;
-$footerHeight: 2vh;
-$navHeight: 5vh;
-$verticalMargin: 1vh;
-$verticalPadding: 1vh;
-
-$mainHeight: $bodyHeight - $footerHeight - 3 * $verticalMargin - 4 * $verticalPadding;
+$sectionWidth: $mainWidth - 2 * $horizontalMargin - 2 * $horizontalPadding;
 $sectionHeight: $mainHeight - 2 * $verticalMargin - 2 * $verticalPadding;
-$contentHeight: $sectionHeight - $navHeight - 3 * $verticalMargin - 4 * $verticalPadding;
-$imageGridHeight: $contentHeight / 10;
-$imgBorder: 2vmin;
-
-body {
-    height: $bodyHeight;
-    width: 100vw;
-    margin: 0;
-    padding: 0;
-    font-family: 'Roboto', sans-serif;
-    text-align: center;
-    background-color: $bodyColor;
-    display: flex;
-    flex-direction: column;
+section {
+    width: $sectionWidth;
+    height: $sectionHeight;
+    margin: $verticalMargin $horizontalMargin;
+    padding: $verticalPadding $horizontalPadding;
+    overflow: hidden;
 }
 
-header, main, footer {
-    width: 96vw;
-    margin: $verticalMargin 1vw;
-    padding: $verticalPadding 1vw;
+section {
+    text-align: center;
 }
 
 main {
     height: $mainHeight;
-    flex: auto;
 }
 
-section {
-    width: 92vw;
-    height: $sectionHeight;
-    margin: $verticalMargin 1vw;
-    padding: $verticalPadding 1vw;
-    overflow: hidden;
-}
-
+$navHeight: 5vh;
+$navWidth: $sectionWidth - 2 * $horizontalMargin - 2 * $horizontalPadding;
 nav {
-    width: 88vw;
-    margin: $verticalMargin 1vw;
-    padding: $verticalPadding 1vw;
+    width: $navWidth;
+    margin: $verticalMargin $horizontalMargin;
+    padding: $verticalPadding $horizontalPadding;
     height: $navHeight;
-    background-color: $navColor;
-    flex: none;
     overflow: hidden;
     font-size: 0;
 }
 
+$contentHeight: $sectionHeight - $navHeight - 3 * $verticalMargin - 4 * $verticalPadding;
 .content-container {
-    width: 88vw;
+    width: $navWidth;
     height: $contentHeight;
-    margin: $verticalMargin 1vw;
-    padding: $verticalPadding 1vw;
+    margin: $verticalMargin $horizontalMargin;
+    padding: $verticalPadding $horizontalPadding;
 }
 
-footer {
-    height: $footerHeight;
-    flex: none;
-}
 
 
 .word {
-    padding: $verticalPadding 1vw;
+    padding: $verticalPadding $horizontalPadding;
     font-size: 40px;
 }
 
@@ -96,9 +56,10 @@ footer {
     display: block;
     width: 76vw;
     margin: 25vh 1vw;
-    padding: $verticalPadding 1vw;
+    padding: $verticalPadding $horizontalPadding;
 }
 
+$imgBorder: 2vmin;
 .images img {
     box-sizing: border-box;
     width: auto;
@@ -107,12 +68,6 @@ footer {
     vertical-align: middle;
 }
 
-#front img {
-    border-color: $frontColor;
-}
-#back img {
-    border-color: $backColor;
-}
 
 
 @media (orientation: portrait) {
@@ -152,27 +107,11 @@ nav span {
     padding: 1em;
 }
 
-#info, #question.active {
-    fill: $backColor;
-}
-
-#correct.active {
-    fill: green
-}
-
-#meh.active {
-    fill: orange
-}
-
-#wrong.active {
-    fill: red
-}
 
 nav svg {
     width: auto;
     height: 100%;
     margin: 0 5vw;
-    fill: $iconColor;
 }
 
 
@@ -181,13 +120,6 @@ nav svg {
     perspective-origin: 50% 100px;
 }
 
-#front {
-    background-color: $frontColor;
-}
-
-#back {
-    background-color: $backColor;
-}
 
 .initial #front.flipped, .initial #back.unflipped {
     display: none;

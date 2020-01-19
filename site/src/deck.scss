@@ -1,17 +1,21 @@
+// Palette https://hookagency.com/website-color-schemes/ 7
+$frontColor: #c2b490; //Blondey
+$navColor: #acb7ae; // Barely Green
+
+
 li {
     margin: 2px;
     padding: 1px;
     width: 22px;
     height: 42px;
-    background-color: #c2b490;/* Blondey */
+    background-color: $frontColor;
     float: left;
     list-style: none;
     border-radius: 2px;
 }
 
 li.reversed {
-    background-color: #acb7ae;
-    /* Barely Green */
+    background-color: $navColor;
 }
 
 li div {
