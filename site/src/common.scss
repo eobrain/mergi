@@ -1,0 +1,90 @@
+@import 'def';
+
+// Palette https://hookagency.com/website-color-schemes/ 7
+$bodyColor: #e4decd; // Tan Blonde
+$backColor: #82716e; // The Brown-shirts
+$frontColor: #c2b490; //Blondey
+$navColor: #acb7ae; // Barely Green
+$iconColor: #92a094; // Slightly darker than Barely Green
+
+body {
+    height: $bodyHeight;
+    width: $bodyWidth;
+    background-color: $bodyColor;
+    display: flex;
+    flex-direction: column;
+    margin: 0;
+    padding: 0;
+    font-family: 'Roboto', sans-serif;
+}
+
+header, main, footer {
+    width: $mainWidth;
+    margin: $verticalMargin $horizontalMargin;
+    padding: $verticalPadding $horizontalPadding;
+}
+
+main {
+    flex: auto;
+}
+nav {
+    flex: none;
+    background-color: $navColor;
+}
+
+header, footer {
+    text-align: center;
+}
+
+footer {
+    height: $footerHeight;
+    flex: none;
+}
+
+article li, p {
+    margin: 5vmin;
+}
+
+p, article li  {
+    font-size: 5vmin;
+}
+
+h2 {
+    margin: 3vmin;
+    font-size: 6vmin;
+}
+
+#front img {
+    border-color: $frontColor;
+}
+#back img {
+    border-color: $backColor;
+}
+
+#info, #question.active {
+    fill: $backColor;
+}
+
+#front {
+    background-color: $frontColor;
+}
+
+#back {
+    background-color: $backColor;
+}
+
+#correct.active {
+    fill: green
+}
+
+#meh.active {
+    fill: orange
+}
+
+#wrong.active {
+    fill: red
+}
+
+nav svg {
+    fill: $iconColor;
+}

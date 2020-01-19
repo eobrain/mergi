@@ -2,5 +2,5 @@
     "title": "Kredito",
     "modulepreloads": [],
     "scripts": [],
-    "stylesheets": ["app"]
+    "stylesheets": ["common"]
 }

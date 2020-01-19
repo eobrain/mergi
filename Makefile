@@ -1,7 +1,10 @@
 COMPILEJS=java -jar ../tools/closure/closure-compiler-v20191111.jar -O ADVANCED --externs src/externs.js
 LOCALES=en_ie en_us es_es es_mx fr_fr
 
+STYLE=app common debug deck index info normalize
+
 compiled: lint html modules\
+ $(STYLE:%=site/css/%.css)\
  $(LOCALES:%=site/card_%_compiled.js)\
  $(LOCALES:%=site/deck_%_compiled.js)\
  $(LOCALES:%=site/debug_%_compiled.js)\
@@ -20,6 +23,7 @@ html:\
  site/card_bundled.html\
  site/info.html\
  site/privacy.html
+
 
 site/card_%.html: template/card.html template/card_%.json $(PARTIALS)
 	$(MUSTACHE) card_$*.json card.html >../$@
@@ -93,6 +97,13 @@ site/index_compiled.js: site/src/index.js
 site/%.js: site/src/%.js
 	npx terser --module --ecma 6 --compress --mangle --source-map "base='site',url='$(notdir $@).map'" --output $@ -- $< 
 
+site/css/%.css: site/src/%.scss
+	mkdir -p site/css
+	npx node-sass --output-style compressed site/src/$*.scss > site/css/$*.css
+
+site/css/app.css: site/src/app.scss site/src/_def.scss
+site/css/common.css: site/src/common.scss site/src/_def.scss
+
 modules:\
  $(LOCALES:%=site/card_%.js)\
  $(LOCALES:%=site/words_%.js)\
@@ -121,7 +132,7 @@ lint:
 	npx standard node/*.js site/src/*.js 
 
 clean:
-	rm -f site/*.js site/*.map site/*.html
+	rm -f site/*.js site/*.map site/*.html site/css/*
 
  site/server.pem:
 	cd site && openssl req -new -x509 -keyout server.pem -out server.pem -days 365 -nodes

@@ -10,7 +10,7 @@
         "main.js",
         "card_en_ie.js"
     ],
-    "stylesheets": ["app"],
+    "stylesheets": ["common","app"],
     "scripts": [
         {"src": "card_en_ie_compiled.js", "type": "nomodule defer"},
         {"src": "card_en_ie.js", "type": "type=\"module\""}

@@ -1,0 +1,12 @@
+$bodyWidth: 100vw;
+$bodyHeight: 100vh;
+
+$horizontalMargin: 1vw;
+$horizontalPadding: 1vw;
+$verticalMargin: 1vh;
+$verticalPadding: 1vh;
+
+$footerHeight: 2vh;
+
+$mainWidth: $bodyWidth - 2 * $horizontalMargin - 2 * $horizontalPadding;
+$mainHeight: $bodyHeight - $footerHeight - 3 * $verticalMargin - 4 * $verticalPadding;

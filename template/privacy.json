@@ -1,6 +1,6 @@
 {
     "title": "Privateco",
     "modulepreloads": [],
-    "stylesheets": ["app"],
+    "stylesheets": ["common"],
     "scripts": []
 }

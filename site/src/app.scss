@@ -1,0 +1,178 @@
+/*
+// Copyright (c) 2019 Eamonn O'Brien-Strain All rights reserved. This
+// program and the accompanying materials are made available under the
+// terms of the Eclipse Public License v1.0 which accompanies this
+// distribution, and is available at
+// http://www.eclipse.org/legal/epl-v10.html
+*/
+
+@import 'def';
+
+$sectionWidth: $mainWidth - 2 * $horizontalMargin - 2 * $horizontalPadding;
+$sectionHeight: $mainHeight - 2 * $verticalMargin - 2 * $verticalPadding;
+section {
+    width: $sectionWidth;
+    height: $sectionHeight;
+    margin: $verticalMargin $horizontalMargin;
+    padding: $verticalPadding $horizontalPadding;
+    overflow: hidden;
+}
+
+section {
+    text-align: center;
+}
+
+main {
+    height: $mainHeight;
+}
+
+$navHeight: 5vh;
+$navWidth: $sectionWidth - 2 * $horizontalMargin - 2 * $horizontalPadding;
+nav {
+    width: $navWidth;
+    margin: $verticalMargin $horizontalMargin;
+    padding: $verticalPadding $horizontalPadding;
+    height: $navHeight;
+    overflow: hidden;
+    font-size: 0;
+}
+
+$contentHeight: $sectionHeight - $navHeight - 3 * $verticalMargin - 4 * $verticalPadding;
+.content-container {
+    width: $navWidth;
+    height: $contentHeight;
+    margin: $verticalMargin $horizontalMargin;
+    padding: $verticalPadding $horizontalPadding;
+}
+
+
+
+.word {
+    padding: $verticalPadding $horizontalPadding;
+    font-size: 40px;
+}
+
+.word a {
+    display: block;
+    width: 76vw;
+    margin: 25vh 1vw;
+    padding: $verticalPadding $horizontalPadding;
+}
+
+$imgBorder: 2vmin;
+.images img {
+    box-sizing: border-box;
+    width: auto;
+    border: $imgBorder solid;
+    margin: 0 1vw;
+    vertical-align: middle;
+}
+
+
+
+@media (orientation: portrait) {
+    .portrait {
+        height: 30%;
+    }
+    .square {
+        height: 20%;
+    }
+    .landscape {
+        height: 15%;
+    }
+}
+
+@media (orientation: landscape) {
+    .portrait {
+        height: 75%
+    }
+    .square {
+        height: 50%;
+    }
+    .landscape {
+        height: 25%;
+    }
+}
+
+header {
+    text-align: left;
+}
+
+header img {
+    vertical-align: middle
+}
+
+nav span {
+    font-size: 30px;
+    padding: 1em;
+}
+
+
+nav svg {
+    width: auto;
+    height: 100%;
+    margin: 0 5vw;
+}
+
+
+#card {
+    perspective: 500px;
+    perspective-origin: 50% 100px;
+}
+
+
+.initial #front.flipped, .initial #back.unflipped {
+    display: none;
+}
+
+#front.flipped {
+    transform: rotateY(180deg);
+}
+
+#back.unflipped {
+    transform: rotateY(-180deg);
+}
+
+#front.unflipped, #back.flipped {
+    transform: rotateY(0deg);
+}
+
+#front, #back, nav {
+    border-radius: 10px;
+}
+
+#front, #back {
+    backface-visibility: hidden;
+    transform-style: preserve-3d;
+    transition: transform 2s;
+    position: absolute;
+}
+
+@keyframes offscreen {
+    0% {
+        transform: translate(0, 0)
+    }
+    25% {
+        transform: translate(300vw, 50vh)
+    }
+    50% {
+        transform: translate(0, 200vh)
+    }
+    75% {
+        transform: translate(-300vw, 50vh)
+    }
+    100% {
+        transform: translate(0, 0)
+    }
+}
+
+.offscreen {
+    animation-duration: 2s;
+    /* Should be same as OFFSCREEN_TIME in index.js */
+    animation-name: offscreen;
+}
+
+.initial.offscreen {
+    animation-duration: 0s;
+    animation-name: offscreen;
+}
