@@ -98,6 +98,7 @@ site/%.js: site/src/%.js
 	npx terser --module --ecma 6 --compress --mangle --source-map "base='site',url='$(notdir $@).map'" --output $@ -- $< 
 
 site/css/%.css: site/src/%.scss
+	mkdir -p site/css
 	npx node-sass --output-style compressed site/src/$*.scss > site/css/$*.css
 
 site/css/app.css: site/src/app.scss site/src/_def.scss
