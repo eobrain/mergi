@@ -163,16 +163,22 @@ export default (lang, country, mergiWords) => {
         imagesEl.append(imgEl)
       })
     }
+
     /**
      * Add the phrase to the other side of the card.
      * @param {!Element} textCardEl
      */
     const addPhrase = (textCardEl) => {
-      const pEl = document.createElement('a')
-      pEl.href = imageSearchUrl(queryText, lang, country)
+      const pEl = document.createElement('p')
       pEl.innerHTML = phrase
       textCardEl.append(pEl)
+
+      const searchEl = document.createElement('a')
+      searchEl.href = imageSearchUrl(queryText, lang, country)
+      searchEl.innerHTML = 'Serĉi'
+      textCardEl.append(searchEl)
     }
+
     removeContent(frontContainerEl)
     removeContent(backContainerEl)
     backEl.className = 'unflipped'

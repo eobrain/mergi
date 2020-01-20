@@ -45,18 +45,22 @@ $contentHeight: $sectionHeight - $navHeight - 3 * $verticalMargin - 4 * $vertica
     padding: $verticalPadding $horizontalPadding;
 }
 
-
-
-.word {
-    padding: $verticalPadding $horizontalPadding;
-    font-size: 40px;
+.word .content-container {
+    display: flex;
+    flex-direction: column;
 }
 
-.word a {
-    display: block;
-    width: 76vw;
-    margin: 25vh 1vw;
+.word p {
+    flex: auto;
     padding: $verticalPadding $horizontalPadding;
+    font-size: 10vmin;
+}
+
+.content-container a {
+    flex: none;
+    padding: 3vmin;
+    text-align: right;
+    font-size: 6vmin;
 }
 
 $imgBorder: 2vmin;
