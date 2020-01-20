@@ -5,6 +5,9 @@
 /site/*.js
 /site/*.map
 
+# CSS files generated from /site/src/*.sccs
+/site/css/*.css
+
 # HTML files generated from /template/*
 /site/*.html
 
