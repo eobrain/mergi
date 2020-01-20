@@ -21,8 +21,8 @@ const LOCALES = [
 ]
 const SRC = 'site/src'
 
-// const MAX_QUERY_COUNT = 700 * 5
-const MAX_QUERY_COUNT = 5 * 5
+const MAX_QUERY_COUNT = 700 * 5
+// const MAX_QUERY_COUNT = 5 * 5
 
 /**
  * Process the CSV files.
@@ -36,11 +36,12 @@ const processCsv = (processCsvLine) => new Promise((resolve) => {
     .on('data', (row) => {
       LOCALES.forEach((locale) => {
         if (promises.length > MAX_QUERY_COUNT) {
-          return // bail out if we have exceeded the maximum
+          console.info(`Bailing out. We have reached our max of ${MAX_QUERY_COUNT} queries`)
+          return
         }
         const [lang, country] = locale.split('_')
         if (row[lang + '_word']) {
-        // const query = `${row[lang + '_category']}: ${row[lang + '_word']}`
+          console.table(row)
           const prefix = row[lang + '_prefix']
           const query = row[lang + '_word']
           promises.push(processCsvLine(prefix, query, lang, country))
