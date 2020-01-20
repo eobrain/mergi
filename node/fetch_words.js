@@ -12,11 +12,15 @@ import search from './scrape.js'
 import { Ocr } from './ocr.js'
 import { MAX_IMAGE_COUNT_PER_QUERY } from '../site/src/shared.js'
 
+// This must be the same as the DATA variable in Makefile.
+const DATA = 'data/words.csv'
+// const DATA = 'data/words_debug.csv'
+
 const LOCALES = [
-  // 'es_mx',
-  // 'es_es',
-  // 'en_ie',
-  // 'en_us',
+  'es_mx',
+  'es_es',
+  'en_ie',
+  'en_us',
   'fr_fr'
 ]
 const SRC = 'site/src'
@@ -31,9 +35,10 @@ const MAX_QUERY_COUNT = 700 * 5
  */
 const processCsv = (processCsvLine) => new Promise((resolve) => {
   const promises = []
-  fs.createReadStream('data/words.csv')
+  fs.createReadStream(DATA)
     .pipe(csv())
     .on('data', (row) => {
+      console.info(Object.keys(row).map((k) => row[k]).join('|'))
       LOCALES.forEach((locale) => {
         if (promises.length > MAX_QUERY_COUNT) {
           console.info(`Bailing out. We have reached our max of ${MAX_QUERY_COUNT} queries`)
@@ -41,7 +46,6 @@ const processCsv = (processCsvLine) => new Promise((resolve) => {
         }
         const [lang, country] = locale.split('_')
         if (row[lang + '_word']) {
-          console.table(row)
           const prefix = row[lang + '_prefix']
           const query = row[lang + '_word']
           promises.push(processCsvLine(prefix, query, lang, country))

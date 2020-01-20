@@ -8,6 +8,9 @@ import gm from 'gm' // GraphicsMagick
 import request from 'request'
 import semaphore from 'await-semaphore'
 
+/** Most detected characters that we allow in an image. */
+const MAX_TEXT_LEN = 2
+
 /**
  * @param {function():void} f
  * @param {number} delayMs
@@ -53,15 +56,6 @@ const downloadAndTransform = (src, toPath) => new Promise((resolve, reject) =>
       reject(err)
     }
   }))
-    .color((err, count) => {
-      if (err) {
-        console.error(`${src} PROBLEM COUNTING COLORS (${err})`)
-        reject(err)
-      } else if (count < 4000) {
-        // console.debug(`${src} TOO FEW COLORS (${count})`)
-        resolve(true)
-      }
-    })
     .modulate(100, 0)
     .write(toPath, (err) => {
       if (err) {
@@ -118,8 +112,8 @@ export const Ocr = async (lang) => {
     }
 
     try {
-      const text = await recognizeLimited(tempName, lang)
-      const has = text.trim().length > 1
+      const text = (await recognizeLimited(tempName, lang)).trim()
+      const has = text.length > MAX_TEXT_LEN
       if (has) {
         console.error(`"${text}"`)
       }

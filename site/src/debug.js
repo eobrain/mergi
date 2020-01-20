@@ -9,6 +9,7 @@
 import { newCards, merge, score } from './card.js'
 import { readCards } from './storage.js'
 import { init, forEachImageOf } from './word.js'
+import imageSearchUrl from './search_url.js'
 
 /**
  * @param {string} lang
@@ -29,6 +30,9 @@ export default (lang, country, mergiWords) => {
     sort()
 
     cards.forEach((card) => {
+      if (card.reversed) {
+        return
+      }
       let imgHtml = ''
 
       forEachImageOf(card.phrase, (image) => {
@@ -37,9 +41,11 @@ export default (lang, country, mergiWords) => {
       imgHtml = imgHtml || '(No images)'
 
       const phrase = card.reversed ? card.phrase : `<strong>${card.phrase}</strong>`
+      const queryText = card.phrase.split(')').slice(-1)[0].trim()
+      const phraseLink = `<a href="${imageSearchUrl(queryText, lang, country)}">${phrase}</a>`
       const responsesString = JSON.stringify(card.responses.map((r) => `${r.correctness}`))
       tableEl.insertAdjacentHTML('beforeend',
-      `<tr><td>${score(card)}</td><td>${responsesString}</td><td>${phrase}</td><td>${imgHtml}</td></tr>`
+      `<tr><td>${score(card)}</td><td>${responsesString}</td><td>${phraseLink}</td><td>${imgHtml}</td></tr>`
       )
     })
   }
