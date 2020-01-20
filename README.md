@@ -55,6 +55,9 @@ Then run
 npm install
 ```
 
+> Try running the above several times if it fails. (As of January 2020, `npm install` sometimes fails because of an [intermittent bug][6])
+
+
 Also if you will be doing `make words` below you will need to do
 
 ```sh
@@ -116,3 +119,4 @@ http://www.eclipse.org/legal/epl-v10.html
 [3]: https://api.netlify.com/api/v1/badges/a5cb7d45-7151-42dc-9a5d-9cc3f64bd40b/deploy-status
 [4]: https://app.netlify.com/sites/hungry-rosalind-0028da/deploys
 [5]: https://github.com/nvm-sh/nvm
+[6]: https://github.com/nodejs/node/issues/30581
