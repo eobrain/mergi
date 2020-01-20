@@ -1,3 +1,15 @@
+# This is the build file for the Kartoj.
+# USAGE:
+#   make
+#      Builds all the JTML, JS, and CSS using checked in words.js
+#   make words
+#      Recreates words.js by calling Google image search for many images (slow).
+# See README for more.
+
+# This must be the same as the DATA constant in fetch_words.js
+DATA=data/words.csv
+# DATA=data/words_debug.csv
+
 COMPILEJS=java -jar ../tools/closure/closure-compiler-v20191111.jar -O ADVANCED --externs src/externs.js
 LOCALES=en_ie en_us es_es es_mx fr_fr
 
@@ -60,9 +72,9 @@ site/info.html: template/info.html template/info.json $(PARTIALS)
 site/privacy.html: template/privacy.html template/privacy.json $(PARTIALS)
 	$(MUSTACHE) privacy.json privacy.html >../$@
 
-CARDJS=search_url.js main.js shared.js card.js storage.js word.js
-DECKJS=deck.js card.js storage.js word.js
-DEBUGJS=debug.js card.js storage.js word.js
+CARDJS=search_url.js main.js shared.js search_url.js card.js storage.js word.js
+DECKJS=deck.js shared.js search_url.js card.js storage.js word.js
+DEBUGJS=debug.js shared.js search_url.js card.js storage.js word.js
 
 site/card_%_compiled.js: site/src/words_%.js site/src/card_%.js $(CARDJS:%=site/src/%) site/src/externs.js
 	cd site && $(COMPILEJS) --create_source_map app_$*_compiled.map --js_output_file card_$*_compiled.js src/words_$*.js src/card_$*.js $(CARDJS:%=src/%)
@@ -119,7 +131,8 @@ modules:\
  site/search_url.js\
  site/shared.js
 
-words: lint data/words.csv node/fetch_words.js node/scrape.js
+
+words: lint $(DATA) node/fetch_words.js node/scrape.js
 	node node/fetch_words.js
 	npx standard --fix site/src/words_??_??.js
 

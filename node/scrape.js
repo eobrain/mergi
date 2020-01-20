@@ -7,7 +7,6 @@ import sleep from './sleep.js'
 
 const QUERIES_PER_MINUTE = 60.0
 
-//
 /**
  *  Returns promise of list of { width, height, src } objects
  * @param {string} query
