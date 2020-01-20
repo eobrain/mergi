@@ -25,6 +25,7 @@ export default (lang, country, mergiWords) => {
    * @type {{
    * head: function(): Card,
    * updateHeadAndSort: function(number),
+   * pluck: function(string)
    * }}
    */
   const order = (() => {
@@ -41,6 +42,29 @@ export default (lang, country, mergiWords) => {
       cards[0].responses.push({ t, correctness })
       sort()
       writeCards(cards)
+    }
+
+    const moveToBeginning = (xs, i) => {
+      const x = xs[i]
+      xs.splice(i, 1)
+      xs.unshift(x)
+    }
+
+    const pluck = (side, phrase) => {
+      const reversed = (side === 'images')
+      const n = cards.length
+      for (let i = 0; i < n; ++i) {
+        if (cards[i].reversed === reversed && cards[i].phrase === phrase) {
+          moveToBeginning(cards, i)
+          console.info(`Plucking ${side} side of card "${phrase}"`)
+          return
+        }
+      }
+      console.warn(`${side} side of card "${phrase}" not found`)
+    }
+    if (document.location.hash) {
+      const [side, phraseEncoded] = document.location.hash.substring(1).split(',')
+      pluck(side, decodeURIComponent(phraseEncoded))
     }
 
     return { head, updateHeadAndSort }
@@ -194,6 +218,7 @@ export default (lang, country, mergiWords) => {
       unflipSay = () => { }
       logScreenView('ask-image')
       logViewItem(`${phrase} [ask-image]`)
+      document.location.hash = `images,${encodeURIComponent(phrase)}`
     } else {
       addPhrase(frontContainerEl)
       frontEl.classList.add('word')
@@ -203,6 +228,7 @@ export default (lang, country, mergiWords) => {
       unflipSay = say
       logScreenView('ask-text')
       logViewItem(`${phrase} [ask-text]`)
+      document.location.hash = `phrase,${encodeURIComponent(phrase)}`
     }
   }
 
