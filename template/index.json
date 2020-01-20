@@ -8,7 +8,7 @@
     ],   "locales": [
         {"lang":"es", "country": "mx", "langName": "Español", "flagHeightPx": 57},
         {"lang":"es", "country": "es", "langName": "Español", "flagHeightPx": 67},
-        {"lang":"fr", "country": "fr", "langName": "Le français", "flagHeightPx": 67},
+        {"lang":"fr", "country": "fr", "langName": "Le Français", "flagHeightPx": 67},
         {"lang":"en", "country": "ie", "langName": "English", "flagHeightPx": 50},
         {"lang":"en", "country": "us", "langName": "English", "flagHeightPx": 52}
     ]
