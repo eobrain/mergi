@@ -11,6 +11,7 @@
         "card_fr_fr.js"
     ],
     "stylesheets": ["common","app"],
+    "google": "notranslate",
     "scripts": [
         {"src": "card_fr_fr_compiled.js", "type": "nomodule defer"},
         {"src": "card_fr_fr.js", "type": "type=\"module\""}
