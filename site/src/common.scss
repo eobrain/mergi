@@ -37,7 +37,6 @@ header, footer {
 }
 
 footer {
-    height: $footerHeight;
     flex: none;
 }
 
@@ -45,7 +44,7 @@ article li, p {
     margin: 5vmin;
 }
 
-p, article li  {
+a, p, article li  {
     font-size: 5vmin;
 }
 

@@ -22,10 +22,6 @@ section {
     text-align: center;
 }
 
-main {
-    height: $mainHeight;
-}
-
 $navHeight: 5vh;
 $navWidth: $sectionWidth - 2 * $horizontalMargin - 2 * $horizontalPadding;
 nav {
@@ -60,7 +56,6 @@ $contentHeight: $sectionHeight - $navHeight - 3 * $verticalMargin - 4 * $vertica
     flex: none;
     padding: 3vmin;
     text-align: right;
-    font-size: 6vmin;
 }
 
 $imgBorder: 2vmin;

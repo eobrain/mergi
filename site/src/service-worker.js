@@ -1,22 +1,16 @@
 /* global self, caches, fetch */
 
-const cacheName = 'cache-v1'
+const cacheName = 'kartoj-v2'
+
+const style = ['app', 'common', 'debug', 'deck', 'index', 'info', 'normalize']
+const countries = ['es', 'fr', 'ie', 'mx', 'us']
+const locales = ['es_es', 'fr_fr', 'en_ie', 'es_mx', 'en_us']
 const precacheResources = [
   'index.html',
-  'images/flag_es.webp',
-  'images/flag_fr.webp',
-  'images/flag_ie.webp',
-  'images/flag_mx.webp',
-  'images/flag_us.webp',
-  'css/normalize.css',
-  'css/app.css',
-  'css/index.css',
   'images/noun_Man_1912182_32x32.png',
-  'card_es_es.html',
-  'card_es_mx.html',
-  'card_fr_fr.html',
-  'card_en_ie.html',
-  'card_en_us.html'
+  ...countries.map((country) => `images/flag_${country}.webp`),
+  ...style.map((s) => `css/${s}.css`),
+  ...locales.map((locale) => `card_${locale}.html`)
 ]
 
 self.addEventListener('install', event => {
