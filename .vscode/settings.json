@@ -6,6 +6,7 @@
         "mergi",
         "modulepreloads",
         "nomodule",
+        "notranslate",
         "onopentag",
         "stylesheets",
         "tesseractocr",

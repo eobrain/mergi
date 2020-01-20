@@ -1,6 +1,7 @@
 {
     "title": "Kartoj",
     "stylesheets": ["common","app"],
+    "google": "notranslate",
     "scripts": [
         {"src": "src/index.js", "type": "type=\"module\""}
     ]
