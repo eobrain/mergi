@@ -40,9 +40,8 @@ export default (lang, country, mergiWords) => {
       })
       imgHtml = imgHtml || '(No images)'
 
-      const phrase = card.reversed ? card.phrase : `<strong>${card.phrase}</strong>`
       const queryText = card.phrase.split(')').slice(-1)[0].trim()
-      const phraseLink = `<a href="${imageSearchUrl(queryText, lang, country)}">${phrase}</a>`
+      const phraseLink = `<a href="${imageSearchUrl(queryText, lang, country)}">${card.phrase}</a>`
       const responsesString = JSON.stringify(card.responses.map((r) => `${r.correctness}`))
       tableEl.insertAdjacentHTML('beforeend',
       `<tr><td>${score(card)}</td><td>${responsesString}</td><td>${phraseLink}</td><td>${imgHtml}</td></tr>`
