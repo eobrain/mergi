@@ -1,6 +1,6 @@
 // @ts-check
 
-import imageSearchUrl from '../site/src/search_url.js'
+import imageSearchUrl from '../src/js/search_url.js'
 import htmlparser2 from 'htmlparser2'
 import fetch from 'node-fetch'
 import sleep from './sleep.js'
