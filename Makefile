@@ -10,7 +10,7 @@
 DATA=data/words.csv
 # DATA=data/words_debug.csv
 
-COMPILEJS=java -jar ../tools/closure/closure-compiler-v20191111.jar -O ADVANCED --externs src/externs.js
+COMPILEJS=java -jar tools/closure/closure-compiler-v20191111.jar -O ADVANCED --externs src/js/externs.js
 LOCALES=en_ie en_us es_es es_mx fr_fr
 
 STYLE=app common debug deck index info normalize
@@ -76,37 +76,37 @@ CARDJS=search_url.js main.js shared.js search_url.js card.js storage.js word.js
 DECKJS=deck.js shared.js search_url.js card.js storage.js word.js
 DEBUGJS=debug.js shared.js search_url.js card.js storage.js word.js
 
-site/card_%_compiled.js: site/src/words_%.js site/src/card_%.js $(CARDJS:%=site/src/%) site/src/externs.js
-	cd site && $(COMPILEJS) --create_source_map app_$*_compiled.map --js_output_file card_$*_compiled.js src/words_$*.js src/card_$*.js $(CARDJS:%=src/%)
+site/card_%_compiled.js: src/js/words_%.js src/js/card_%.js $(CARDJS:%=src/js/%) 
+	$(COMPILEJS) --create_source_map site/app_$*_compiled.map --js_output_file $@ $<
 	echo '//# sourceMappingURL=/app_$*_compiled.map' >> $@
-site/deck_%_compiled.js: site/src/words_%.js site/src/deck_%.js $(DECKJS:%=site/src/%) site/src/externs.js
-	cd site && $(COMPILEJS) --create_source_map deck_$*_compiled.map --js_output_file deck_$*_compiled.js src/deck_$*.js src/words_$*.js $(DECKJS:%=src/%)
+site/deck_%_compiled.js: src/js/words_%.js src/js/deck_%.js $(DECKJS:%=src/js/%) src/js/externs.js
+	$(COMPILEJS) --create_source_map site/deck_$*_compiled.map --js_output_file $@ $<
 	echo '//# sourceMappingURL=/deck_$*_compiled.map' >> $@
-site/debug_%_compiled.js: site/src/words_%.js site/src/debug_%.js $(DEBUGJS:%=site/src/%) site/src/externs.js
-	cd site && $(COMPILEJS) --create_source_map debug_$*_compiled.map --js_output_file debug_$*_compiled.js src/debug_$*.js src/words_$*.js $(DEBUGJS:%=src/%)
+site/debug_%_compiled.js: src/js/words_%.js src/js/debug_%.js $(DEBUGJS:%=src/js/%) src/js/externs.js
+	$(COMPILEJS) --create_source_map site/debug_$*_compiled.map --js_output_file $@ $<
 	echo '//# sourceMappingURL=/debug_$*_compiled.map' >> $@
 
 
-site/card_en_ie_compiled.js: site/src/words_en_ie.js site/src/card_en_ie.js $(CARDJS:%=site/src/%) site/src/externs.js
-site/card_en_us_compiled.js: site/src/words_en_us.js site/src/card_en_us.js $(CARDJS:%=site/src/%) site/src/externs.js
-site/card_es_es_compiled.js: site/src/words_es_es.js site/src/card_es_es.js $(CARDJS:%=site/src/%) site/src/externs.js
-site/card_es_mx_compiled.js: site/src/words_es_mx.js site/src/card_es_mx.js $(CARDJS:%=site/src/%) site/src/externs.js
-site/card_fr_fr_compiled.js: site/src/words_fr_fr.js site/src/card_fr_fr.js $(CARDJS:%=site/src/%) site/src/externs.js
-site/deck_en_ie_compiled.js: site/src/words_en_ie.js site/src/deck_en_ie.js $(DECKJS:%=site/src/%) site/src/externs.js
-site/deck_en_us_compiled.js: site/src/words_en_us.js site/src/deck_en_us.js $(DECKJS:%=site/src/%) site/src/externs.js
-site/deck_es_es_compiled.js: site/src/words_es_es.js site/src/deck_es_es.js $(DECKJS:%=site/src/%) site/src/externs.js
-site/deck_es_mx_compiled.js: site/src/words_es_mx.js site/src/deck_es_mx.js $(DECKJS:%=site/src/%) site/src/externs.js
-site/deck_fr_fr_compiled.js: site/src/words_fr_fr.js site/src/deck_fr_fr.js $(DECKJS:%=site/src/%) site/src/externs.js
-site/debug_en_ie_compiled.js: site/src/words_en_ie.js site/src/debug_en_ie.js $(DEBUGJS:%=site/src/%) site/src/externs.js
-site/debug_en_us_compiled.js: site/src/words_en_us.js site/src/debug_en_us.js $(DEBUGJS:%=site/src/%) site/src/externs.js
-site/debug_es_es_compiled.js: site/src/words_es_es.js site/src/debug_es_es.js $(DEBUGJS:%=site/src/%) site/src/externs.js
-site/debug_es_mx_compiled.js: site/src/words_es_mx.js site/src/debug_es_mx.js $(DEBUGJS:%=site/src/%) site/src/externs.js
-site/debug_fr_fr_compiled.js: site/src/words_fr_fr.js site/src/debug_fr_fr.js $(DEBUGJS:%=site/src/%) site/src/externs.js
-site/index_compiled.js: site/src/index.js
-	cd site && $(COMPILEJS) --create_source_map index_compiled.map --js_output_file index_compiled.js src/index.js
+site/card_en_ie_compiled.js: src/js/words_en_ie.js src/js/card_en_ie.js $(CARDJS:%=src/js/%) src/js/externs.js
+site/card_en_us_compiled.js: src/js/words_en_us.js src/js/card_en_us.js $(CARDJS:%=src/js/%) src/js/externs.js
+site/card_es_es_compiled.js: src/js/words_es_es.js src/js/card_es_es.js $(CARDJS:%=src/js/%) src/js/externs.js
+site/card_es_mx_compiled.js: src/js/words_es_mx.js src/js/card_es_mx.js $(CARDJS:%=src/js/%) src/js/externs.js
+site/card_fr_fr_compiled.js: src/js/words_fr_fr.js src/js/card_fr_fr.js $(CARDJS:%=src/js/%) src/js/externs.js
+site/deck_en_ie_compiled.js: src/js/words_en_ie.js src/js/deck_en_ie.js $(DECKJS:%=src/js/%) src/js/externs.js
+site/deck_en_us_compiled.js: src/js/words_en_us.js src/js/deck_en_us.js $(DECKJS:%=src/js/%) src/js/externs.js
+site/deck_es_es_compiled.js: src/js/words_es_es.js src/js/deck_es_es.js $(DECKJS:%=src/js/%) src/js/externs.js
+site/deck_es_mx_compiled.js: src/js/words_es_mx.js src/js/deck_es_mx.js $(DECKJS:%=src/js/%) src/js/externs.js
+site/deck_fr_fr_compiled.js: src/js/words_fr_fr.js src/js/deck_fr_fr.js $(DECKJS:%=src/js/%) src/js/externs.js
+site/debug_en_ie_compiled.js: src/js/words_en_ie.js src/js/debug_en_ie.js $(DEBUGJS:%=src/js/%) src/js/externs.js
+site/debug_en_us_compiled.js: src/js/words_en_us.js src/js/debug_en_us.js $(DEBUGJS:%=src/js/%) src/js/externs.js
+site/debug_es_es_compiled.js: src/js/words_es_es.js src/js/debug_es_es.js $(DEBUGJS:%=src/js/%) src/js/externs.js
+site/debug_es_mx_compiled.js: src/js/words_es_mx.js src/js/debug_es_mx.js $(DEBUGJS:%=src/js/%) src/js/externs.js
+site/debug_fr_fr_compiled.js: src/js/words_fr_fr.js src/js/debug_fr_fr.js $(DEBUGJS:%=src/js/%) src/js/externs.js
+site/index_compiled.js: src/js/index.js
+	$(COMPILEJS) --create_source_map site/index_compiled.map --js_output_file $@ $<
 	echo '//# sourceMappingURL=/index_compiled.map' >> $@
 
-site/%.js: site/src/%.js
+site/%.js: src/js/%.js
 	npx terser --module --ecma 6 --compress --mangle --source-map "base='site',url='$(notdir $@).map'" --output $@ -- $< 
 
 site/css/%.css: src/scss/%.scss
@@ -134,7 +134,7 @@ modules:\
 
 words: lint $(DATA) node/fetch_words.js node/scrape.js
 	node node/fetch_words.js
-	npx standard --fix site/src/words_??_??.js
+	npx standard --fix src/js/words_??_??.js
 
 ocr-test: site/ocr.html
 
@@ -142,7 +142,7 @@ site/ocr.html: site/words_es_mx.js node/ocr.js node/ocr_test.js
 	node node/ocr_test.js > $@
 
 lint:
-	npx standard node/*.js site/src/*.js 
+	npx standard node/*.js src/js/*.js 
 
 clean:
 	rm -f site/*.js site/*.map site/*.html site/css/*
