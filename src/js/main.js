@@ -25,7 +25,7 @@ export default (lang, country, mergiWords) => {
    * @type {{
    * head: function(): Card,
    * updateHeadAndSort: function(number),
-   * pluck: function(string)
+   * handleUrlHash: function(string)
    * }}
    */
   const order = (() => {
@@ -62,12 +62,16 @@ export default (lang, country, mergiWords) => {
       }
       console.warn(`${side} side of card "${phrase}" not found`)
     }
-    if (document.location.hash) {
-      const [side, phraseEncoded] = document.location.hash.substring(1).split(',')
-      pluck(side, decodeURIComponent(phraseEncoded))
-    }
 
-    return { head, updateHeadAndSort }
+    const handleUrlHash = () => {
+      if (document.location.hash) {
+        const [side, phraseEncoded] = document.location.hash.substring(1).split(',')
+        pluck(side, decodeURIComponent(phraseEncoded))
+      }
+    }
+    handleUrlHash()
+
+    return { head, updateHeadAndSort, handleUrlHash }
   })()
 
   /**
@@ -229,6 +233,13 @@ export default (lang, country, mergiWords) => {
       logScreenView('ask-text')
       logViewItem(`${phrase} [ask-text]`)
       document.location.hash = `phrase,${encodeURIComponent(phrase)}`
+    }
+    const internalHash = document.location.hash
+    window.onhashchange = (event) => {
+      if (document.location.hash !== internalHash) {
+        order.handleUrlHash()
+        ask()
+      }
     }
   }
 
