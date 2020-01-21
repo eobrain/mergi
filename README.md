@@ -95,7 +95,7 @@ optimized, portable JavaScript that we distribute, and to generate the HTML from
 You can then preview the site by doing
 
 ```sh
-cd site && python -m SimpleHTTPServer 8888
+make serve
 ```
 
 and viewing http://localhost:8888/ (preferably using dev-tools to turn on mobile emulation).

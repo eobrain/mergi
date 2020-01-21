@@ -2,6 +2,8 @@
 # USAGE:
 #   make
 #      Builds all the JTML, JS, and CSS using checked in words.js
+#   make serves
+#      Serves the site on http://localhost:8888
 #   make words
 #      Recreates words.js by calling Google image search for many images (slow).
 # See README for more.
