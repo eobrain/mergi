@@ -109,12 +109,12 @@ site/index_compiled.js: site/src/index.js
 site/%.js: site/src/%.js
 	npx terser --module --ecma 6 --compress --mangle --source-map "base='site',url='$(notdir $@).map'" --output $@ -- $< 
 
-site/css/%.css: site/src/%.scss
+site/css/%.css: src/scss/%.scss
 	mkdir -p site/css
-	npx node-sass --output-style compressed site/src/$*.scss > site/css/$*.css
+	npx node-sass --output-style compressed src/scss/$*.scss > site/css/$*.css
 
-site/css/app.css: site/src/app.scss site/src/_def.scss
-site/css/common.css: site/src/common.scss site/src/_def.scss
+site/css/app.css: src/scss/app.scss src/scss/_def.scss
+site/css/common.css: src/scss/common.scss src/scss/_def.scss
 
 modules:\
  $(LOCALES:%=site/card_%.js)\
