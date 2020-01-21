@@ -22,8 +22,8 @@ compiled: lint html modules\
  $(LOCALES:%=site/debug_%_compiled.js)\
  site/index_compiled.js
 
-MUSTACHE=cd template && npx mustache -p footer.mustache -p head.mustache -p header.mustache
-PARTIALS=template/head.mustache template/footer.mustache template/header.mustache
+MUSTACHE=npx mustache -p src/html/footer.mustache -p src/html/head.mustache -p src/html/header.mustache
+PARTIALS=src/html/head.mustache src/html/footer.mustache src/html/header.mustache
 
 html:\
  $(LOCALES:%=site/card_%.html)\
@@ -37,40 +37,40 @@ html:\
  site/privacy.html
 
 
-site/card_%.html: template/card.html template/card_%.json $(PARTIALS)
-	$(MUSTACHE) card_$*.json card.html >../$@
-site/deck_%.html: template/deck.html template/deck_%.json $(PARTIALS)
-	$(MUSTACHE) deck_$*.json deck.html >../$@
-site/debug_%.html: template/debug.html template/debug_%.json $(PARTIALS)
-	$(MUSTACHE) debug_$*.json debug.html >../$@
+site/card_%.html: src/html/card.html src/json/card_%.json $(PARTIALS)
+	$(MUSTACHE) src/json/card_$*.json src/html/card.html >$@
+site/deck_%.html: src/html/deck.html src/json/deck_%.json $(PARTIALS)
+	$(MUSTACHE) src/json/deck_$*.json src/html/deck.html >$@
+site/debug_%.html: src/html/debug.html src/json/debug_%.json $(PARTIALS)
+	$(MUSTACHE) src/json/debug_$*.json src/html/debug.html >$@
 
-site/card_en_ie.html: template/card.html template/card_en_ie.json $(PARTIALS)
-site/card_en_us.html: template/card.html template/card_en_us.json $(PARTIALS)
-site/card_es_es.html: template/card.html template/card_es_es.json $(PARTIALS)
-site/card_es_mx.html: template/card.html template/card_es_mx.json $(PARTIALS)
-site/card_fr_fr.html: template/card.html template/card_fr_fr.json $(PARTIALS)
-site/deck_en_ie.html: template/deck.html template/deck_en_ie.json $(PARTIALS)
-site/deck_en_us.html: template/deck.html template/deck_en_us.json $(PARTIALS)
-site/deck_es_es.html: template/deck.html template/deck_es_es.json $(PARTIALS)
-site/deck_es_mx.html: template/deck.html template/deck_es_mx.json $(PARTIALS)
-site/deck_fr_fr.html: template/deck.html template/deck_fr_fr.json $(PARTIALS)
-site/debug_en_ie.html: template/debug.html template/debug_en_ie.json $(PARTIALS)
-site/debug_en_us.html: template/debug.html template/debug_en_us.json $(PARTIALS)
-site/debug_es_es.html: template/debug.html template/debug_es_es.json $(PARTIALS)
-site/debug_es_mx.html: template/debug.html template/debug_es_mx.json $(PARTIALS)
-site/debug_fr_fr.html: template/debug.html template/debug_fr_fr.json $(PARTIALS)
-site/credit.html: template/credit.html template/credit.json $(PARTIALS)
-	$(MUSTACHE) credit.json credit.html >../$@
-site/index.html: template/index.html template/index.json $(PARTIALS)
-	$(MUSTACHE) index.json index.html >../$@
-site/card_dev.html: template/card.html template/card_dev.json $(PARTIALS)
-	$(MUSTACHE) card_dev.json card.html >../$@
-site/card_bundled.html: template/card.html template/card_bundled.json $(PARTIALS)
-	$(MUSTACHE) card_bundled.json card.html >../$@
-site/info.html: template/info.html template/info.json $(PARTIALS)
-	$(MUSTACHE) info.json info.html >../$@
-site/privacy.html: template/privacy.html template/privacy.json $(PARTIALS)
-	$(MUSTACHE) privacy.json privacy.html >../$@
+site/card_en_ie.html: src/html/card.html src/json/card_en_ie.json $(PARTIALS)
+site/card_en_us.html: src/html/card.html src/json/card_en_us.json $(PARTIALS)
+site/card_es_es.html: src/html/card.html src/json/card_es_es.json $(PARTIALS)
+site/card_es_mx.html: src/html/card.html src/json/card_es_mx.json $(PARTIALS)
+site/card_fr_fr.html: src/html/card.html src/json/card_fr_fr.json $(PARTIALS)
+site/deck_en_ie.html: src/html/deck.html src/json/deck_en_ie.json $(PARTIALS)
+site/deck_en_us.html: src/html/deck.html src/json/deck_en_us.json $(PARTIALS)
+site/deck_es_es.html: src/html/deck.html src/json/deck_es_es.json $(PARTIALS)
+site/deck_es_mx.html: src/html/deck.html src/json/deck_es_mx.json $(PARTIALS)
+site/deck_fr_fr.html: src/html/deck.html src/json/deck_fr_fr.json $(PARTIALS)
+site/debug_en_ie.html: src/html/debug.html src/json/debug_en_ie.json $(PARTIALS)
+site/debug_en_us.html: src/html/debug.html src/json/debug_en_us.json $(PARTIALS)
+site/debug_es_es.html: src/html/debug.html src/json/debug_es_es.json $(PARTIALS)
+site/debug_es_mx.html: src/html/debug.html src/json/debug_es_mx.json $(PARTIALS)
+site/debug_fr_fr.html: src/html/debug.html src/json/debug_fr_fr.json $(PARTIALS)
+site/credit.html: src/html/credit.html src/json/credit.json $(PARTIALS)
+	$(MUSTACHE) src/json/credit.json src/html/credit.html >$@
+site/index.html: src/html/index.html src/json/index.json $(PARTIALS)
+	$(MUSTACHE) src/json/index.json src/html/index.html >$@
+site/card_dev.html: src/html/card.html src/json/card_dev.json $(PARTIALS)
+	$(MUSTACHE) src/json/card_dev.json src/html/card.html >$@
+site/card_bundled.html: src/html/card.html src/json/card_bundled.json $(PARTIALS)
+	$(MUSTACHE) src/json/card_bundled.json src/html/card.html >$@
+site/info.html: src/html/info.html src/json/info.json $(PARTIALS)
+	$(MUSTACHE) src/json/info.json src/html/info.html >$@
+site/privacy.html: src/html/privacy.html src/json/privacy.json $(PARTIALS)
+	$(MUSTACHE) src/json/privacy.json src/html/privacy.html >$@
 
 CARDJS=search_url.js main.js shared.js search_url.js card.js storage.js word.js
 DECKJS=deck.js shared.js search_url.js card.js storage.js word.js
