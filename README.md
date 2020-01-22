@@ -89,7 +89,7 @@ If you have changed any JavaScript or templates you can run
 make
 ```
 
-to use the closure compiler to transpile the `site/src` JavaScript into the
+to use the closure compiler to transpile the `src/js` JavaScript into the
 optimized, portable JavaScript that we distribute, and to generate the HTML from the templates.
 
 You can then preview the site by doing

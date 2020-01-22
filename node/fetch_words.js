@@ -9,8 +9,8 @@
 import csv from 'csv-parser'
 import fs from 'fs'
 import search from './scrape.js'
-import { Ocr } from './ocr.js'
-import { MAX_IMAGE_COUNT_PER_QUERY } from '../site/src/shared.js'
+import hasText from './ocr.js'
+import { MAX_IMAGE_COUNT_PER_QUERY } from '../src/js/shared.js'
 
 // This must be the same as the DATA variable in Makefile.
 const DATA = 'data/words.csv'
@@ -23,7 +23,7 @@ const LOCALES = [
   'en_us',
   'fr_fr'
 ]
-const SRC = 'site/src'
+const SRC = 'src/js'
 
 const MAX_QUERY_COUNT = 700 * 5
 // const MAX_QUERY_COUNT = 5 * 5
@@ -58,19 +58,17 @@ const processCsv = (processCsvLine) => new Promise((resolve) => {
 })
 
 const main = async () => {
-  const ocr = await Ocr()
-
   /**
    * Filter out images with text, and limit the number of images.
-   * @param {!Array<Img>} images
-   * @param {string} lang
-   * @return {Promise<Array<Img>>} subset of the images
+   * @param {!Array<Img>} images candidate images
+   * @param {string} lang 2-letter language code
+   * @return {Promise<Array<Img>>} subset of the images with no text
    */
   const filterImage = async (images, lang) => {
     const result = []
     for (let i = 0; i < images.length && result.length < MAX_IMAGE_COUNT_PER_QUERY; ++i) {
       const image = images[i]
-      if (!(await ocr.hasText(`https:${image.src}`, lang))) {
+      if (!(await hasText(`https:${image.src}`, lang))) {
         result.push(image)
       }
     }
@@ -110,7 +108,6 @@ const main = async () => {
     const out = outs[locale]
     out.write(']\n')
   })
-  ocr.cleanup()
 }
 
 main()

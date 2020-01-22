@@ -12,8 +12,9 @@ import semaphore from 'await-semaphore'
 const MAX_TEXT_LEN = 2
 
 /**
- * @param {function():void} f
- * @param {number} delayMs
+ * @param {function():void} f callback
+ * @param {number} delayMs delay before recursively calling this function
+ * @returns {void}
  */
 const retryWithExponentialBackOff = async (f, delayMs = 1) => {
   try {
@@ -35,8 +36,8 @@ const LANG_MAP = {
  * Run OCR to extract string from image.
  * See https://github.com/tesseract-ocr/tesseract/blob/master/doc/tesseract.1.asc
  * @param {string} path of image
- * @param {string} lang
- * @return {Promise<string>}
+ * @param {string} lang 2-letter language code
+ * @return {Promise<string>} promise of OCR-extracted string.
  */
 const recognize = (path, lang) => tesseract.recognize(path, {
   lang: LANG_MAP[lang],
@@ -75,8 +76,8 @@ const tesseractSemaphore = new semaphore.Semaphore(5)
  * Run OCR to extract string from image, using a semaphore to limit
  * simultaneous calls to Tesseract.
  * @param {string} path of image
- * @param {string} lang
- * @return {Promise<string>}
+ * @param {string} lang 2-letter language code
+ * @return {Promise<string>} promise of OCRed text
  */
 const recognizeLimited = async (path, lang) => {
   const release = await tesseractSemaphore.acquire()
@@ -91,46 +92,32 @@ const recognizeLimited = async (path, lang) => {
 }
 
 /**
- * @return Promise<{
- *   hasText: function(string,string)Promise<boolean>,
- *   cleanup: function()Promise<void>
- * }>
- */
-export const Ocr = async (lang) => {
-  /**
-   * Does the image at the given URL contain text or have too few colors?
-   * @param {string} src
-   * @param {string} lang
-   * @return {Promise<boolean>}
+   * @param {string} src URL of image
+   * @param {string} lang 2-letter language code
+   * @return {Promise<boolean>} whether the image contains text
    */
-  const hasText = async (src, lang) => {
-    const tempName = temp.path('mergi_')
-    const tooFewColors = await retryWithExponentialBackOff(
-      async () => downloadAndTransform(src, tempName))
-    if (tooFewColors) {
-      return true
-    }
+export default async (src, lang) => {
+  const tempName = temp.path('mergi_')
+  const tooFewColors = await retryWithExponentialBackOff(
+    async () => downloadAndTransform(src, tempName))
+  if (tooFewColors) {
+    return true
+  }
 
-    try {
-      const text = (await recognizeLimited(tempName, lang)).trim()
-      const has = text.length > MAX_TEXT_LEN
-      if (has) {
-        console.error(`"${text}"`)
+  try {
+    const text = (await recognizeLimited(tempName, lang)).trim()
+    const has = text.length > MAX_TEXT_LEN
+    if (has) {
+      console.error(`"${text}"`)
+    }
+    return has
+  } catch (e) {
+    console.error(`Problem running OCR on ${src} (${e})`)
+  } finally {
+    unlink(tempName, (e) => {
+      if (e) {
+        console.log('/* unlink:', e, '*/')
       }
-      return has
-    } catch (e) {
-      console.error(`Problem running OCR on ${src} (${e})`)
-    } finally {
-      unlink(tempName, (e) => {
-        if (e) {
-          console.log('/* unlink:', e, '*/')
-        }
-      })
-    }
+    })
   }
-
-  const cleanup = async () => {
-  }
-
-  return { hasText, cleanup }
 }

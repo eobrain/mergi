@@ -1,11 +1,11 @@
 # Local nodejs modules recreated by `npm install`
 /node_modules
 
-# Transpiled JavaScript generated from /site/src/*.js
+# Transpiled JavaScript generated from /src/js/*.js
 /site/*.js
 /site/*.map
 
-# CSS files generated from /site/src/*.sccs
+# CSS files generated from /src/sccs/*.sccs
 /site/css/*.css
 
 # HTML files generated from /template/*
