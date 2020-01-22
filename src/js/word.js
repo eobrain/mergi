@@ -22,7 +22,7 @@ const images = {}
 
 /**
  * Extract the display phrase from the Word object.
- * @param {Word} word
+ * @param {Word} word scraped
  * @return {string} the phrase to display
  */
 export const toPhrase = (word) => word.prefix
@@ -30,9 +30,10 @@ export const toPhrase = (word) => word.prefix
   : word.query
 
 /**
- * @param {string} lang
- * @param {string} country
- * @param {!Array<Word>} mergiWords
+ * @param {string} lang 2-letter language code
+ * @param {string} country -2-letter
+ * @param {!Array<Word>} mergiWords scraped images for each word
+ * @returns {void}
  */
 export const init = (lang, country, mergiWords) => {
   // Initialize phrases and images.
@@ -45,19 +46,22 @@ export const init = (lang, country, mergiWords) => {
   })
 }
 
-/** Whether a card has images.
- * @param {!Card} card
- * @return {boolean}
+/**
+ * @param {!Card} card one side of a flashcard
+ * @return {boolean} whether card has images
  */
 export const hasImages = (card) => !!images[card.phrase]
 
 /** Iterate through all the phrases
- * @param {function(string)} f
+ * @param {function(string)} f callback
+ * @returns {void}
 */
 export const forEachPhrase = (f) => { phrases.forEach(f) }
 
 /** Iterate through all the images of a phrase
- * @param {function(Img)} f
+ * @param {string} phrase to find images of
+ * @param {function(Img)} f callback
+ * @returns {void}
 */
 export const forEachImageOf = (phrase, f) => {
   const imagesOfPhrase = images[phrase]

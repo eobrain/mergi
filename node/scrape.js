@@ -8,12 +8,11 @@ import sleep from './sleep.js'
 const QUERIES_PER_MINUTE = 60.0
 
 /**
- *  Returns promise of list of { width, height, src } objects
- * @param {string} query
- * @param {string} language
- * @param {string} country
- * @param {number} ofTotalQueries
- * @return {Promise<!Array<Img> >}
+ * @param {string} query what to search for
+ * @param {string} language 2-letter language code
+ * @param {string} country 2-letter country code
+ * @param {number} ofTotalQueries total number of queries that this is one of
+ * @return {Promise<!Array<Img> >} promise of a list of images
  */
 export default async (query, language, country, ofTotalQueries) => {
   const images = []

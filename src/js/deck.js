@@ -11,9 +11,10 @@ import { readCards } from './storage.js'
 import { init } from './word.js'
 
 /**
- * @param {string} lang
- * @param {string} country
- * @param {!Array<Word>} mergiWords
+ * @param {string} lang 2-letter language code
+ * @param {string} country 2-letter country code
+ * @param {!Array<Word>} mergiWords scraped words and images
+ * @returns {void}
  */
 export default (lang, country, mergiWords) => {
   init(lang, country, mergiWords)

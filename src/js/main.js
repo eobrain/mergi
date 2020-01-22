@@ -13,9 +13,10 @@ import { MAX_IMAGE_COUNT_PER_QUERY } from './shared.js'
 import imageSearchUrl from './search_url.js'
 
 /**
- * @param {string} lang
- * @param {string} country
- * @param {!Array<Word>} mergiWords
+ * @param {string} lang 2-letter language code
+ * @param {string} country 2-letter country code
+ * @param {!Array<Word>} mergiWords scraped words and images
+ * @returns {void}
  */
 export default (lang, country, mergiWords) => {
   init(lang, country, mergiWords)
@@ -76,7 +77,7 @@ export default (lang, country, mergiWords) => {
 
   /**
    * Return element with given ID or throw error if it does not exist.
-   * @param {string} id
+   * @param {string} id attribute
    * @return {!Element} DOM element with given ID
    */
   const getElement = (id) => {
@@ -89,8 +90,8 @@ export default (lang, country, mergiWords) => {
 
   /**
    * Return firts element with given class or throw error if it does not exist.
-   * @param {!Element} el
-   * @param {string} classname
+   * @param {!Element} el DOM element
+   * @param {string} classname CSS class
    * @return {!Element} DOM element with given class
    */
   const getChild = (el, classname) => {
@@ -117,27 +118,32 @@ export default (lang, country, mergiWords) => {
 
   /**
    * Log that user has viewed this screen
-   * @param {string} screen
+   * @param {string} screen name of screen
+   * @returns {void}
    */
   const logScreenView = (screen) => {
     gtag('event', 'screen_view', { screen_name: screen })
   }
   /**
    * Log that user has viewed these items.
-   * @param {string} items
+   * @param {string} items name of items
+   * @returns {void}
    */
   const logViewItem = (items) => {
     gtag('event', 'view_item', { items })
   }
   /**
    * Log that user has responded with this correctness.
-   * @param {number} correctness
+   * @param {number} correctness what fraction correct
+   * @returns {void}
    */
   const logResponse = (correctness) => {
     gtag('event', 'response', { correctness })
   }
 
-  /** Present the front of the card to the user. */
+  /** Present the front of the card to the user.
+   * @returns {void}
+   */
   const ask = () => {
     const { phrase, reversed } = order.head()
     cardEl.classList.add('offscreen')
@@ -156,7 +162,8 @@ export default (lang, country, mergiWords) => {
 
     /**
      * Remove all current children from a DOM elements.
-     * @param {!Element} element
+     * @param {!Element} element parent DOM element
+     * @returns {void}
      */
     const removeContent = (element) => {
       while (element.firstElementChild) {
@@ -166,7 +173,8 @@ export default (lang, country, mergiWords) => {
 
     /**
      * Add the images to one side of the card.
-     * @param {!Element} imagesEl
+     * @param {!Element} imagesEl parent DOM element for the images
+     * @returns {void}
      */
     const addImages = (imagesEl) => {
       let imageCount = 0
@@ -194,7 +202,8 @@ export default (lang, country, mergiWords) => {
 
     /**
      * Add the phrase to the other side of the card.
-     * @param {!Element} textCardEl
+     * @param {!Element} textCardEl DOM element in which to add phrase
+     * @returns {void}
      */
     const addPhrase = (textCardEl) => {
       const pEl = document.createElement('p')
@@ -243,7 +252,9 @@ export default (lang, country, mergiWords) => {
     }
   }
 
-  /** Set the CSS classes that will trigger an animation to flip the card to show the answer side. */
+  /** Set the CSS classes that will trigger an animation to flip the card to show the answer side.
+   * @returns {void}
+  */
   const flip = () => {
     backEl.classList.add('flipped')
     frontEl.classList.add('flipped')
@@ -253,7 +264,9 @@ export default (lang, country, mergiWords) => {
     logScreenView('reveal')
   }
 
-  /** Set the CSS classes that will trigger an animation to unflip the card to show the question side. */
+  /** Set the CSS classes that will trigger an animation to unflip the card to show the question side.
+   * @returns {void}
+  */
   const unflip = () => {
     unflipSay()
     backEl.classList.add('unflipped')
@@ -263,7 +276,9 @@ export default (lang, country, mergiWords) => {
     logScreenView('unflip')
   }
 
-  /** Reveal the answer. */
+  /** Reveal the answer.
+   * @returns {void}
+  */
   const cardReveal = () => {
     revealSay()
     flip()
@@ -271,9 +286,8 @@ export default (lang, country, mergiWords) => {
   }
 
   /**
-   * Generate a function that updates the card deck with the user response.
-   * @param {number} correctness
-   * @return {function()}
+   * @param {number} correctness to what degree was the user correct
+   * @return {function()}  a function that updates the card deck with the user response
    */
   const answerFn = (correctness) => () => {
     logResponse(correctness)
@@ -294,9 +308,10 @@ export default (lang, country, mergiWords) => {
 
   /**
    * Change element to be active or not.
-   * @param {!Element} el
-   * @param {boolean} active
+   * @param {!Element} el DOM element to be possibly made active
+   * @param {boolean} active whether to make active
    * @param {function()} onclick applied if active
+   * @returns {void}
    */
   const activeIf = (el, active, onclick) => {
     if (active) {
@@ -310,7 +325,8 @@ export default (lang, country, mergiWords) => {
 
   /**
    * Update active (or not) status of the controls.
-   * @param {boolean} answersActive
+   * @param {boolean} answersActive whether answer icons are active
+   * @returns {void}
    */
   const navIconsActive = (answersActive) => {
     activeIf(correctEl, answersActive, correct)
