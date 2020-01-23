@@ -1,10 +1,10 @@
 // @ts-check
 
 /**
- * Image search URL for for given query in given locale.
- * @param {string} query
- * @param {string} language
- * @param {string} country
+ * @param {string} query what to search for
+ * @param {string} language 2-letter language code
+ * @param {string} country 2-letter country code
+ * @returns {string} Image search URL for for given query in given locale
  */
 export default (query, language, country) => {
   const q = `q=${encodeURI(query)}`

@@ -12,14 +12,14 @@ const KEY = 'mergi-order-v4'
 /**
  * Write the cards to local storage.
  * @param {!Array<Card>} cards to write
+ * @returns {void}
  */
 export const writeCards = (cards) => {
   window.localStorage.setItem(KEY, JSON.stringify(cards))
 }
 
 /**
- * Read cards from local storage.
- * @return {!Array<Card>}
+ * @return {!Array<Card>} cards read from local storage
  */
 export const readCards = () =>
   /**  @type {!Array<Card>} */

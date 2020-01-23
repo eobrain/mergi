@@ -12,7 +12,7 @@ import { hasImages, forEachPhrase } from './word.js'
 
 /**
  * The string to use as a key for a card.
- * @param {Card} card
+ * @param {Card} card one side of a flashcard
  * @return {string} lookup key for card
  */
 const key = (card) => `${card.phrase}|${card.reversed}`
@@ -54,8 +54,8 @@ const FIVE_MINUTES = 1000.0 * 60 * 5
 /**
 * https://stackoverflow.com/a/52171480/978525
  *
- * @param {string} s
- * @return {number}
+ * @param {string} s to be hashed
+ * @return {number} 32-bit integer non-crypto-secure hash
  */
 const hashCode = (s) => {
   let h1 = 0xdeadbeef
@@ -72,7 +72,7 @@ const hashCode = (s) => {
 
 /**
  * Hash string to number between zero and one.
- * @param {string} s
+ * @param {string} s to be hashed
  * @return {number} string hashed to a value between zero and one
  */
 const randomized = (s) => hashCode(s) / ((1 << 31) * 2.0)
@@ -91,8 +91,8 @@ export const decay = (t, tao) => Math.exp((t - now) / tao)
 /**
  * Score used to determine the position of the card in the pack, depending
  * on response and current time.
- * @param {Card} card
- * @return {number}
+ * @param {Card} card one side of a flashcard
+ * @return {number} score
  */
 export const score = (card) => {
   const responseCount = card.responses.length
