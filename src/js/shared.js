@@ -2,4 +2,4 @@
 
 // @ts-check
 
-export const MAX_IMAGE_COUNT_PER_QUERY = 6
+export const MAX_IMAGE_COUNT_PER_QUERY = 6;

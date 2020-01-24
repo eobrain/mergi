@@ -136,7 +136,7 @@ modules:\
 
 words: lint $(DATA) node/fetch_words.js node/scrape.js
 	node node/fetch_words.js
-	npx standard --fix src/js/words_??_??.js
+	npx eslint --fix src/js/words_??_??.js
 
 ocr-test: site/ocr.html
 
@@ -144,7 +144,7 @@ site/ocr.html: site/words_es_mx.js node/ocr.js node/ocr_test.js
 	node node/ocr_test.js > $@
 
 lint:
-	npx standard node/*.js src/js/*.js 
+	npx eslint node/*.js src/js/*.js 
 
 clean:
 	rm -f site/*.js site/*.map site/*.html site/css/*

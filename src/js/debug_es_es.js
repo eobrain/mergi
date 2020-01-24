@@ -6,7 +6,7 @@
 
 // @ts-check
 
-import { mergiWords } from './words_es_es.js'
-import debug from './debug.js'
+import {mergiWords} from './words_es_es.js';
+import debug from './debug.js';
 
-debug('es', 'es', mergiWords)
+debug('es', 'es', mergiWords);

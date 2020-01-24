@@ -6,47 +6,60 @@
 
 // @ts-check
 
-import { newCards, merge, score } from './card.js'
-import { readCards } from './storage.js'
-import { init, forEachImageOf } from './word.js'
-import imageSearchUrl from './search_url.js'
+import {newCards, merge, score} from './card.js';
+import {readCards} from './storage.js';
+import {init, forEachImageOf} from './word.js';
+import imageSearchUrl from './search_url.js';
 
 /**
  * @param {string} lang 2-letter language code
  * @param {string} country 2-letter country code
  * @param {!Array<Word>} mergiWords scraped words and images
- * @returns {void}
+ * @return {void}
  */
 export default (lang, country, mergiWords) => {
-  init(lang, country, mergiWords)
+  init(lang, country, mergiWords);
 
   document.body.onload = () => {
-    const tableEl = document.getElementById('table')
+    const tableEl = document.getElementById('table');
 
     const sort = () => {
-      cards.sort((a, b) => score(a) - score(b))
-    }
+      cards.sort((a, b) => score(a) - score(b));
+    };
 
-    const cards = merge(readCards(), newCards())
-    sort()
+    const cards = merge(readCards(), newCards());
+    sort();
 
     cards.forEach((card) => {
       if (card.reversed) {
-        return
+        return;
       }
-      let imgHtml = ''
+      let imgHtml = '';
 
       forEachImageOf(card.phrase, (image) => {
-        imgHtml += `<img src="${image.src}" width="${image.width}" height="${image.height}"/>`
-      })
-      imgHtml = imgHtml || '(No images)'
+        imgHtml +=
+          `<img
+              src="${image.src}"
+              width="${image.width}"
+              height="${image.height}"/>`;
+      });
+      imgHtml = imgHtml || '(No images)';
 
-      const queryText = card.phrase.split(')').slice(-1)[0].trim()
-      const phraseLink = `<a href="${imageSearchUrl(queryText, lang, country)}">${card.phrase}</a>`
-      const responsesString = JSON.stringify(card.responses.map((r) => `${r.correctness}`))
+      const queryText = card.phrase.split(')').slice(-1)[0].trim();
+      const phraseLink =
+        `<a href="${imageSearchUrl(queryText, lang, country)}">
+           ${card.phrase}
+         </a>`;
+      const responsesString = JSON.stringify(
+          card.responses.map((r) => `${r.correctness}`));
       tableEl.insertAdjacentHTML('beforeend',
-      `<tr><td>${score(card)}</td><td>${responsesString}</td><td>${phraseLink}</td><td>${imgHtml}</td></tr>`
-      )
-    })
-  }
-}
+          `<tr>
+             <td>${score(card)}</td>
+             <td>${responsesString}</td>
+             <td>${phraseLink}</td>
+             <td>${imgHtml}</td>
+            </tr>`
+      );
+    });
+  };
+};

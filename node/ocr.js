@@ -1,36 +1,38 @@
 // @ts-check
 
-import { unlink } from 'fs'
-import temp from 'temp'
-import tesseract from 'node-tesseract-ocr'
-import sleep from './sleep.js'
-import gm from 'gm' // GraphicsMagick
-import request from 'request'
-import semaphore from 'await-semaphore'
+import {unlink} from 'fs';
+import temp from 'temp';
+import tesseract from 'node-tesseract-ocr';
+import sleep from './sleep.js';
+import gm from 'gm'; // GraphicsMagick
+import request from 'request';
+import semaphore from 'await-semaphore';
+
+/* global Promise */
 
 /** Most detected characters that we allow in an image. */
-const MAX_TEXT_LEN = 2
+const MAX_TEXT_LEN = 2;
 
 /**
  * @param {function():void} f callback
  * @param {number} delayMs delay before recursively calling this function
- * @returns {void}
+ * @return {void}
  */
 const retryWithExponentialBackOff = async (f, delayMs = 1) => {
   try {
-    return f()
+    return f();
   } catch (e) {
-    console.error(f, 'failed. Retrying after', delayMs, 'ms')
-    sleep(delayMs)
-    return retryWithExponentialBackOff(f, delayMs * 2)
+    console.error(f, 'failed. Retrying after', delayMs, 'ms');
+    sleep(delayMs);
+    return retryWithExponentialBackOff(f, delayMs * 2);
   }
-}
+};
 
 const LANG_MAP = {
   es: 'spa',
   en: 'eng',
-  fr: 'fra'
-}
+  fr: 'fra',
+};
 
 /**
  * Run OCR to extract string from image.
@@ -41,8 +43,8 @@ const LANG_MAP = {
  */
 const recognize = (path, lang) => tesseract.recognize(path, {
   lang: LANG_MAP[lang],
-  psm: 11
-})
+  psm: 11,
+});
 
 /**
  * Download image to given path and count the number of colors in it.
@@ -53,24 +55,24 @@ const recognize = (path, lang) => tesseract.recognize(path, {
 const downloadAndTransform = (src, toPath) => new Promise((resolve, reject) =>
   gm(request(src, (err) => {
     if (err) {
-      console.error(`problem fetching "${src}"`)
-      reject(err)
+      console.error(`problem fetching "${src}"`);
+      reject(err);
     }
   }))
-    .modulate(100, 0)
-    .write(toPath, (err) => {
-      if (err) {
-        console.error(`${src} COULD NOT WRITE TO ${toPath} (${err})`)
-        reject(err)
-      } else {
+      .modulate(100, 0)
+      .write(toPath, (err) => {
+        if (err) {
+          console.error(`${src} COULD NOT WRITE TO ${toPath} (${err})`);
+          reject(err);
+        } else {
         // console.debug(`${src} GOOD IMAGE WRITTEN TO ${toPath}`)
-        resolve(false)
-      }
-    })
+          resolve(false);
+        }
+      })
 
-)
+);
 
-const tesseractSemaphore = new semaphore.Semaphore(5)
+const tesseractSemaphore = new semaphore.Semaphore(5);
 
 /**
  * Run OCR to extract string from image, using a semaphore to limit
@@ -80,44 +82,46 @@ const tesseractSemaphore = new semaphore.Semaphore(5)
  * @return {Promise<string>} promise of OCRed text
  */
 const recognizeLimited = async (path, lang) => {
-  const release = await tesseractSemaphore.acquire()
+  const release = await tesseractSemaphore.acquire();
   try {
-    return (await recognize(path, lang)) || ''
+    return (await recognize(path, lang)) || '';
   } catch (e) {
-    console.error(`Problem in recognizeLimited: ${JSON.stringify(e)}`)
-    return ''
+    console.error(`Problem in recognizeLimited: ${JSON.stringify(e)}`);
+    return '';
   } finally {
-    release()
+    release();
   }
-}
+};
 
 /**
    * @param {string} src URL of image
    * @param {string} lang 2-letter language code
    * @return {Promise<boolean>} whether the image contains text
    */
-export default async (src, lang) => {
-  const tempName = temp.path('mergi_')
+const ocr = async (src, lang) => {
+  const tempName = temp.path('mergi_');
   const tooFewColors = await retryWithExponentialBackOff(
-    async () => downloadAndTransform(src, tempName))
+      async () => downloadAndTransform(src, tempName));
   if (tooFewColors) {
-    return true
+    return true;
   }
 
   try {
-    const text = (await recognizeLimited(tempName, lang)).trim()
-    const has = text.length > MAX_TEXT_LEN
+    const text = (await recognizeLimited(tempName, lang)).trim();
+    const has = text.length > MAX_TEXT_LEN;
     if (has) {
-      console.error(`"${text}"`)
+      console.error(`"${text}"`);
     }
-    return has
+    return has;
   } catch (e) {
-    console.error(`Problem running OCR on ${src} (${e})`)
+    console.error(`Problem running OCR on ${src} (${e})`);
   } finally {
     unlink(tempName, (e) => {
       if (e) {
-        console.log('/* unlink:', e, '*/')
+        console.log('/* unlink:', e, '*/');
       }
-    })
+    });
   }
-}
+};
+
+export default ocr;

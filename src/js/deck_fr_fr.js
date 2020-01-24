@@ -6,7 +6,7 @@
 
 // @ts-check
 
-import { mergiWords } from './words_fr_fr.js'
-import deck from './deck.js'
+import {mergiWords} from './words_fr_fr.js';
+import deck from './deck.js';
 
-deck('fr', 'fr', mergiWords)
+deck('fr', 'fr', mergiWords);

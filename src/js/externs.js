@@ -1,5 +1,5 @@
 /**
- * @fileoverview Declarations for the closure compiler. Not part of the production code.
+ * @fileoverview Declarations for the closure compiler.
  * @externs
  */
 
@@ -21,7 +21,7 @@
      correctness: number,
    }>,
 }} */
-let Card // eslint-disable-line no-unused-vars
+let Card; // eslint-disable-line no-unused-vars
 
 /** Attributes of an image to be displayed on one side of the flashcard.
 @typedef {{
@@ -29,7 +29,7 @@ let Card // eslint-disable-line no-unused-vars
    height: number,
    src: string,
 }} */
-let Img // eslint-disable-line no-unused-vars
+let Img; // eslint-disable-line no-unused-vars
 
 /** Data for one flashcard, scraped from the response to an image search query.
  * It includes the locale (language code and country code), the search query,
@@ -43,7 +43,7 @@ let Img // eslint-disable-line no-unused-vars
    prefix: string,
    images: !Array<Img>,
 }} */
-let Word // eslint-disable-line no-unused-vars
+let Word; // eslint-disable-line no-unused-vars
 
 /** Google Analytics call. */
-let gtag // eslint-disable-line no-unused-vars
+let gtag; // eslint-disable-line no-unused-vars

@@ -6,7 +6,7 @@
 
 // @ts-check
 
-import { mergiWords } from './words_es_mx.js'
-import main from './main.js'
+import {mergiWords} from './words_es_mx.js';
+import main from './main.js';
 
-main('es', 'mx', mergiWords)
+main('es', 'mx', mergiWords);

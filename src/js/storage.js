@@ -7,20 +7,20 @@
 // @ts-check
 
 /** Key used to store the cards in the browser local storage. */
-const KEY = 'mergi-order-v4'
+const KEY = 'mergi-order-v4';
 
 /**
  * Write the cards to local storage.
  * @param {!Array<Card>} cards to write
- * @returns {void}
+ * @return {void}
  */
 export const writeCards = (cards) => {
-  window.localStorage.setItem(KEY, JSON.stringify(cards))
-}
+  window.localStorage.setItem(KEY, JSON.stringify(cards));
+};
 
 /**
  * @return {!Array<Card>} cards read from local storage
  */
 export const readCards = () =>
   /**  @type {!Array<Card>} */
-  (JSON.parse(window.localStorage.getItem(KEY) || '[]'))
+  (JSON.parse(window.localStorage.getItem(KEY) || '[]'));

@@ -1,7 +1,8 @@
 {
-    "rules": {
-        "valid-jsdoc": "error"
-    },
+    "extends": [
+        "eslint:recommended",
+        "google"
+    ],
     "env": {
         "browser": true,
         "node": true

@@ -8,14 +8,14 @@
 
 // See description of Card type in extern.js
 
-import { hasImages, forEachPhrase } from './word.js'
+import {hasImages, forEachPhrase} from './word.js';
 
 /**
  * The string to use as a key for a card.
  * @param {Card} card one side of a flashcard
  * @return {string} lookup key for card
  */
-const key = (card) => `${card.phrase}|${card.reversed}`
+const key = (card) => `${card.phrase}|${card.reversed}`;
 
 /**
  * Merge two arrays of cards
@@ -24,32 +24,32 @@ const key = (card) => `${card.phrase}|${card.reversed}`
  * @return {!Array<Card>} the union of the two lists
  */
 export const merge = (existing, added) => {
-  const result = []
-  const included = {}
+  const result = [];
+  const included = {};
 
   if (existing) {
     existing.filter(hasImages).forEach((card) => {
-      result.push(card)
-      included[key(card)] = true
-    })
+      result.push(card);
+      included[key(card)] = true;
+    });
   }
   if (added) {
     added.filter(hasImages).forEach((card) => {
-      const k = key(card)
+      const k = key(card);
       if (!included[k]) {
-        result.push(card)
-        included[k] = true
+        result.push(card);
+        included[k] = true;
       }
-    })
+    });
   }
-  return result
-}
+  return result;
+};
 
 /** @type {number} */
-export const SIX_HOURS = 1000.0 * 60 * 60 * 6
+export const SIX_HOURS = 1000.0 * 60 * 60 * 6;
 
 /** @type {number} */
-const FIVE_MINUTES = 1000.0 * 60 * 5
+const FIVE_MINUTES = 1000.0 * 60 * 5;
 
 /**
 * https://stackoverflow.com/a/52171480/978525
@@ -58,27 +58,29 @@ const FIVE_MINUTES = 1000.0 * 60 * 5
  * @return {number} 32-bit integer non-crypto-secure hash
  */
 const hashCode = (s) => {
-  let h1 = 0xdeadbeef
-  let h2 = 0x41c6ce57
+  let h1 = 0xdeadbeef;
+  let h2 = 0x41c6ce57;
   for (let i = 0, ch; i < s.length; i++) {
-    ch = s.charCodeAt(i)
-    h1 = Math.imul(h1 ^ ch, 2654435761)
-    h2 = Math.imul(h2 ^ ch, 1597334677)
+    ch = s.charCodeAt(i);
+    h1 = Math.imul(h1 ^ ch, 2654435761);
+    h2 = Math.imul(h2 ^ ch, 1597334677);
   }
-  h1 = Math.imul(h1 ^ h1 >>> 16, 2246822507) ^ Math.imul(h2 ^ h2 >>> 13, 3266489909)
-  h2 = Math.imul(h2 ^ h2 >>> 16, 2246822507) ^ Math.imul(h1 ^ h1 >>> 13, 3266489909)
-  return 4294967296 * (2097151 & h2) + (h1 >>> 0)
-}
+  h1 = Math.imul(
+      h1 ^ h1 >>> 16, 2246822507) ^ Math.imul(h2 ^ h2 >>> 13, 3266489909);
+  h2 = Math.imul(
+      h2 ^ h2 >>> 16, 2246822507) ^ Math.imul(h1 ^ h1 >>> 13, 3266489909);
+  return 4294967296 * (2097151 & h2) + (h1 >>> 0);
+};
 
 /**
  * Hash string to number between zero and one.
  * @param {string} s to be hashed
  * @return {number} string hashed to a value between zero and one
  */
-const randomized = (s) => hashCode(s) / ((1 << 31) * 2.0)
+const randomized = (s) => hashCode(s) / ((1 << 31) * 2.0);
 
 /** @type number */
-const now = Date.now()
+const now = Date.now();
 
 /**
  * Exponential time decay
@@ -86,7 +88,7 @@ const now = Date.now()
  * @param {number} tao time constant in milliseconds
  * @return {number} exp(-dt/tao)
  */
-export const decay = (t, tao) => Math.exp((t - now) / tao)
+export const decay = (t, tao) => Math.exp((t - now) / tao);
 
 /**
  * Score used to determine the position of the card in the pack, depending
@@ -95,15 +97,16 @@ export const decay = (t, tao) => Math.exp((t - now) / tao)
  * @return {number} score
  */
 export const score = (card) => {
-  const responseCount = card.responses.length
+  const responseCount = card.responses.length;
   if (responseCount === 0) {
-    return randomized(key(card))
+    return randomized(key(card));
   }
-  const tLatest = card.responses[responseCount - 1].t
+  const tLatest = card.responses[responseCount - 1].t;
   return decay(tLatest, FIVE_MINUTES) + card.responses
-    .map((response) => (response.correctness - 0.5) * decay(response.t, SIX_HOURS))
-    .reduce((sum, x) => sum + x)
-}
+      .map((response) =>
+        (response.correctness - 0.5) * decay(response.t, SIX_HOURS))
+      .reduce((sum, x) => sum + x);
+};
 
 /** Use phrases list to generate card list.
  * There will be twice as many cards as phrases because there will be
@@ -112,13 +115,13 @@ export const score = (card) => {
  * @return {!Array<Card>} ordered list of cards
  */
 export const newCards = () => {
-  const cards = []
+  const cards = [];
   for (let i = 0; i < 2; ++i) {
-    const reversed = (i === 1)
+    const reversed = (i === 1);
     forEachPhrase((phrase) => {
-      const responses = []
-      cards.push({ phrase, reversed, responses })
-    })
+      const responses = [];
+      cards.push({phrase, reversed, responses});
+    });
   }
-  return cards
-}
+  return cards;
+};

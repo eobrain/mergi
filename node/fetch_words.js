@@ -6,14 +6,16 @@
 
 // @ts-check
 
-import csv from 'csv-parser'
-import fs from 'fs'
-import search from './scrape.js'
-import hasText from './ocr.js'
-import { MAX_IMAGE_COUNT_PER_QUERY } from '../src/js/shared.js'
+import csv from 'csv-parser';
+import fs from 'fs';
+import search from './scrape.js';
+import hasText from './ocr.js';
+import {MAX_IMAGE_COUNT_PER_QUERY} from '../src/js/shared.js';
+
+/* global Promise */
 
 // This must be the same as the DATA variable in Makefile.
-const DATA = 'data/words.csv'
+const DATA = 'data/words.csv';
 // const DATA = 'data/words_debug.csv'
 
 const LOCALES = [
@@ -21,41 +23,43 @@ const LOCALES = [
   'es_es',
   'en_ie',
   'en_us',
-  'fr_fr'
-]
-const SRC = 'src/js'
+  'fr_fr',
+];
+const SRC = 'src/js';
 
-const MAX_QUERY_COUNT = 700 * 5
+const MAX_QUERY_COUNT = 700 * 5;
 // const MAX_QUERY_COUNT = 5 * 5
 
 /**
  * Process the CSV files.
- * @param {function(string,string,string,string):Promise<void>} processCsvLine callback on each line
+ * @param {function(string,string,string,string):Promise<void>}
+ *    processCsvLine callback on each line
  * @return {Promise<number>} number of queries made
  */
 const processCsv = (processCsvLine) => new Promise((resolve) => {
-  const promises = []
+  const promises = [];
   fs.createReadStream(DATA)
-    .pipe(csv())
-    .on('data', (row) => {
-      console.info(Object.keys(row).map((k) => row[k]).join('|'))
-      LOCALES.forEach((locale) => {
-        if (promises.length > MAX_QUERY_COUNT) {
-          console.info(`Bailing out. We have reached our max of ${MAX_QUERY_COUNT} queries`)
-          return
-        }
-        const [lang, country] = locale.split('_')
-        if (row[lang + '_word']) {
-          const prefix = row[lang + '_prefix']
-          const query = row[lang + '_word']
-          promises.push(processCsvLine(prefix, query, lang, country))
-        }
+      .pipe(csv())
+      .on('data', (row) => {
+        console.info(Object.keys(row).map((k) => row[k]).join('|'));
+        LOCALES.forEach((locale) => {
+          if (promises.length > MAX_QUERY_COUNT) {
+            console.info(
+                `Bailing out. Reached our max of ${MAX_QUERY_COUNT} queries`);
+            return;
+          }
+          const [lang, country] = locale.split('_');
+          if (row[lang + '_word']) {
+            const prefix = row[lang + '_prefix'];
+            const query = row[lang + '_word'];
+            promises.push(processCsvLine(prefix, query, lang, country));
+          }
+        });
       })
-    })
-    .on('end', () => {
-      Promise.all(promises).then(() => resolve(promises.length))
-    })
-})
+      .on('end', () => {
+        Promise.all(promises).then(() => resolve(promises.length));
+      });
+});
 
 const main = async () => {
   /**
@@ -65,50 +69,58 @@ const main = async () => {
    * @return {Promise<Array<Img>>} subset of the images with no text
    */
   const filterImage = async (images, lang) => {
-    const result = []
-    for (let i = 0; i < images.length && result.length < MAX_IMAGE_COUNT_PER_QUERY; ++i) {
-      const image = images[i]
+    const result = [];
+    for (
+      let i = 0;
+      i < images.length && result.length < MAX_IMAGE_COUNT_PER_QUERY;
+      ++i
+    ) {
+      const image = images[i];
       if (!(await hasText(`https:${image.src}`, lang))) {
-        result.push(image)
+        result.push(image);
       }
     }
-    return result
-  }
+    return result;
+  };
 
-  const queryCount = await processCsv(async (a, b, c, d) => {})
+  const queryCount = await processCsv(async (a, b, c, d) => {});
 
   // Create an output fuile for each locale
-  const outs = {}
+  const outs = {};
   LOCALES.forEach((locale) => {
-    const out = fs.createWriteStream(`${SRC}/words_${locale}.js`) // TODO(eob) add error handling
-    out.write('/** @type {!Array<Word>} */\n')
-    out.write('export const mergiWords = [\n')
-    outs[locale] = out
-  })
+    // TODO(eob) add error handling
+    const out = fs.createWriteStream(`${SRC}/words_${locale}.js`);
+    out.write('/** @type {!Array<Word>} */\n');
+    out.write('export const mergiWords = [\n');
+    outs[locale] = out;
+  });
 
-  let j = 0
+  let j = 0;
   await processCsv(async (prefix, query, lang, country) => {
-    const images = await search(query, lang, country, Math.min(queryCount, MAX_QUERY_COUNT))
-    const filteredImages = await filterImage(images, lang)
-    console.error(`Word# ${++j} ${query}`)
+    const images = await search(
+        query, lang, country, Math.min(queryCount, MAX_QUERY_COUNT));
+    const filteredImages = await filterImage(images, lang);
+    console.error(`Word# ${++j} ${query}`);
 
-    const locale = `${lang}_${country}`
-    const out = outs[locale]
-    out.write('  {\n')
+    const locale = `${lang}_${country}`;
+    const out = outs[locale];
+    out.write('  {\n');
     if (prefix) {
-      out.write(`    prefix: "${prefix}",\n`)
+      out.write(`    prefix: "${prefix}",\n`);
     }
-    out.write(`    query: "${query}",\n`)
-    out.write(`    lang: "${lang}",\n`)
-    out.write(`    country: "${country}",\n`)
-    out.write(`    images: ${JSON.stringify(filteredImages)}\n`)
-    out.write('  },\n')
-  })
+    out.write(`    query: "${query}",\n`);
+    out.write(`    lang: "${lang}",\n`);
+    out.write(`    country: "${country}",\n`);
+    out.write(`    images: ${JSON.stringify(filteredImages)}\n`);
+    out.write('  },\n');
+  });
   LOCALES.forEach((locale) => {
-    const out = outs[locale]
-    out.write(']\n')
-  })
-}
+    const out = outs[locale];
+    out.write(']\n');
+  });
+};
 
 main()
-  .catch((e) => { console.error(e) })
+    .catch((e) => {
+      console.error(e);
+    });
