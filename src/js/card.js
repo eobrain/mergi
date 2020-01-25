@@ -27,21 +27,17 @@ export const merge = (existing, added) => {
   const result = []
   const included = {}
 
-  if (existing) {
-    existing.filter(hasImages).forEach((card) => {
+  existing.filter(hasImages).forEach((card) => {
+    result.push(card)
+    included[key(card)] = true
+  })
+  added.filter(hasImages).forEach((card) => {
+    const k = key(card)
+    if (!included[k]) {
       result.push(card)
-      included[key(card)] = true
-    })
-  }
-  if (added) {
-    added.filter(hasImages).forEach((card) => {
-      const k = key(card)
-      if (!included[k]) {
-        result.push(card)
-        included[k] = true
-      }
-    })
-  }
+      included[k] = true
+    }
+  })
   return result
 }
 
