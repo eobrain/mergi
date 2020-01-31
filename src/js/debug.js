@@ -37,7 +37,7 @@ export default (lang, country, mergiWords) => {
       let imgHtml = ''
 
       forEachImageOf(card.phrase, (image) => {
-        imgHtml += `<img src="${image.src}" width="${image.width}" height="${image.height}"/>`
+        imgHtml += `<img src="${image.src}" width="${image.width}" height="${image.height}">`
       })
       imgHtml = imgHtml || '(No images)'
 
@@ -45,7 +45,7 @@ export default (lang, country, mergiWords) => {
       const phraseLink = `<a href="${imageSearchUrl(queryText, lang, country)}">${card.phrase}</a>`
       const responsesString = JSON.stringify(card.responses.map((r) => `${r.correctness}`))
       tableEl.insertAdjacentHTML('beforeend',
-      `<tr><td>${score(card)}</td><td>${responsesString}</td><td>${phraseLink}</td><td>${imgHtml}</td></tr>`
+        `<tr><td>${score(card)}</td><td>${responsesString}</td><td>${phraseLink}</td><td>${imgHtml}</td></tr>`
       )
     })
   }
