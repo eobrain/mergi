@@ -20,11 +20,11 @@ const handleWord = async (word) => {
   }
   console.log(`<tr><td>${word.query}</td><td>`)
   yesses.forEach((src) => {
-    console.log(`<img src="${src}"/>`)
+    console.log(`<img src="${src}">`)
   })
   console.log('</td><td>')
   nos.forEach((src) => {
-    console.log(`<img src="${src}"/>`)
+    console.log(`<img src="${src}">`)
   })
   console.log('</td></tr>')
 }
