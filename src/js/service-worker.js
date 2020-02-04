@@ -8,7 +8,7 @@ const locales = ['es_es', 'fr_fr', 'en_ie', 'es_mx', 'en_us']
 const precacheResources = [
   'index.html',
   'images/noun_Man_1912182_32x32.png',
-  ...countries.map((country) => `images/flag_${country}.webp`),
+  ...countries.map((country) => `images/flag_${country}.jpg`),
   ...style.map((s) => `css/${s}.css`),
   ...locales.map((locale) => `card_${locale}.html`)
 ]
