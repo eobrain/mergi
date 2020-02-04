@@ -4,10 +4,16 @@
 
 <body>
     {{> header}}
-    <main>
+    <main class="column">
         {{#locales}}
-        <a href="card_{{lang}}_{{country}}.html">{{langName}}</a>
-        <a href="card_{{lang}}_{{country}}.html"><img alt="flag of {{country}}" width="100" height="66" src="images/flag_{{country}}.jpg"></a>
+        <div>
+        <a class="row" href="card_{{lang}}_{{country}}.html">
+            <p>{{langName}}</p>
+            <div>
+                <img alt="flag of {{country}}" width="100" height="66" src="images/flag_{{country}}.jpg">
+            </div>
+        </a>
+        </div>
         {{/locales}}
     </main>
     {{> footer}}
