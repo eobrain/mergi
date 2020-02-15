@@ -2,29 +2,27 @@
 $frontColor: #c2b490; //Blondey
 $navColor: #acb7ae; // Barely Green
 
-
 li {
-    margin: 2px;
-    padding: 1px;
-    width: 22px;
-    height: 42px;
-    background-color: $frontColor;
-    float: left;
-    list-style: none;
-    border-radius: 2px;
-}
-
-li.reversed {
-    background-color: $navColor;
-}
-
-li div {
+  margin: 2px;
+  padding: 1px;
+  width: 22px;
+  height: 42px;
+  background-color: $frontColor;
+  float: left;
+  list-style: none;
+  border-radius: 2px;
+  div {
     width: 10px;
     height: 10px;
     border-radius: 100px;
     float: left;
+  }
+}
+
+li.reversed {
+  background-color: $navColor;
 }
 
 footer {
-    clear: left;
+  clear: left;
 }

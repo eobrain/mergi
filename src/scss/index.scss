@@ -1,9 +1,21 @@
-main {
-    display: grid;
-    grid-template-columns: repeat(2, 1fr);
-    grid-template-rows: repeat(5, 1fr); 
-    grid-column-gap: 10px;
-    grid-row-gap: 10px;
-    justify-items: center;
-    align-items: center;
+.column {
+    display: flex;
+    flex-direction: column;
+}
+
+.column > * {
+    display: block;
+    flex-grow: 1;
+}
+
+.row {
+    display: flex;
+    flex-direction: row;
+    width: 100vw;
+}
+
+.row > * {
+    flex-grow: 1;
+    padding: 0 5vw;
+    width: 50vw;
 }

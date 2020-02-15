@@ -87,6 +87,9 @@ site/deck_%_compiled.js: src/js/words_%.js src/js/deck_%.js $(DECKJS:%=src/js/%)
 site/debug_%_compiled.js: src/js/words_%.js src/js/debug_%.js $(DEBUGJS:%=src/js/%) src/js/externs.js
 	$(COMPILEJS) --create_source_map site/debug_$*_compiled.map --js_output_file $@ $<
 	echo '//# sourceMappingURL=/debug_$*_compiled.map' >> $@
+site/index_compiled.js: src/js/index.js 
+	$(COMPILEJS) --create_source_map site/index_compiled.map --js_output_file $@ $<
+	echo '//# sourceMappingURL=/index_compiled.map' >> $@
 
 
 site/card_en_ie_compiled.js: src/js/words_en_ie.js src/js/card_en_ie.js $(CARDJS:%=src/js/%) src/js/externs.js
@@ -104,9 +107,6 @@ site/debug_en_us_compiled.js: src/js/words_en_us.js src/js/debug_en_us.js $(DEBU
 site/debug_es_es_compiled.js: src/js/words_es_es.js src/js/debug_es_es.js $(DEBUGJS:%=src/js/%) src/js/externs.js
 site/debug_es_mx_compiled.js: src/js/words_es_mx.js src/js/debug_es_mx.js $(DEBUGJS:%=src/js/%) src/js/externs.js
 site/debug_fr_fr_compiled.js: src/js/words_fr_fr.js src/js/debug_fr_fr.js $(DEBUGJS:%=src/js/%) src/js/externs.js
-site/index_compiled.js: src/js/index.js
-	$(COMPILEJS) --create_source_map site/index_compiled.map --js_output_file $@ $<
-	echo '//# sourceMappingURL=/index_compiled.map' >> $@
 
 site/%.js: src/js/%.js
 	npx terser --module --ecma 6 --compress --mangle --source-map "base='site',url='$(notdir $@).map'" --output $@ -- $< 

@@ -1,4 +1,4 @@
-@import 'def';
+@import "def";
 
 // Palette https://hookagency.com/website-color-schemes/ 7
 $bodyColor: #e4decd; // Tan Blonde
@@ -8,82 +8,86 @@ $navColor: #acb7ae; // Barely Green
 $iconColor: #92a094; // Slightly darker than Barely Green
 
 body {
-    height: $bodyHeight;
-    width: $bodyWidth;
-    background-color: $bodyColor;
-    display: flex;
-    flex-direction: column;
-    margin: 0;
-    padding: 0;
-    font-family: 'Roboto', sans-serif;
+  height: $bodyHeight;
+  width: $bodyWidth;
+  background-color: $bodyColor;
+  display: flex;
+  flex-direction: column;
+  margin: 0;
+  padding: 0;
+  font-family: "Roboto", sans-serif;
 }
 
-header, main, footer {
-    width: $mainWidth;
-    margin: $verticalMargin $horizontalMargin;
-    padding: $verticalPadding $horizontalPadding;
+header,
+main,
+footer {
+  width: $mainWidth;
+  margin: $verticalMargin $horizontalMargin;
+  padding: $verticalPadding $horizontalPadding;
 }
 
 main {
-    flex: auto;
+  flex: auto;
 }
 nav {
-    flex: none;
-    background-color: $navColor;
+  flex: none;
+  background-color: $navColor;
+  svg {
+    fill: $iconColor;
+  }
 }
 
-header, footer {
-    text-align: center;
+header,
+footer {
+  text-align: center;
 }
 
 footer {
-    flex: none;
+  flex: none;
 }
 
-article li, p {
-    margin: 5vmin;
+article li,
+p {
+  margin: 5vmin;
 }
 
-a, p, article li  {
-    font-size: 5vmin;
+a,
+p,
+article li {
+  font-size: 5vmin;
 }
 
 h2 {
-    margin: 3vmin;
-    font-size: 6vmin;
-}
-
-#front img {
-    border-color: $frontColor;
-}
-#back img {
-    border-color: $backColor;
-}
-
-#info, #question.active {
-    fill: $backColor;
+  margin: 3vmin;
+  font-size: 6vmin;
 }
 
 #front {
-    background-color: $frontColor;
+  background-color: $frontColor;
+  img {
+    border-color: $frontColor;
+  }
+}
+#back {
+  background-color: $backColor;
+  img {
+    border-color: $backColor;
+  }
 }
 
-#back {
-    background-color: $backColor;
+#info,
+#question.active {
+  fill: $backColor;
 }
 
 #correct.active {
-    fill: green
+  fill: green;
 }
 
 #meh.active {
-    fill: orange
+  fill: orange;
 }
 
 #wrong.active {
-    fill: red
-}
-
-nav svg {
-    fill: $iconColor;
+  fill: red;
 }
