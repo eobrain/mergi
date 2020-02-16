@@ -14,7 +14,7 @@
     "gm": "^1.23.1",
     "googleapis": "^43.0.0",
     "htmlparser2": "^4.0.0",
-    "node-sass": "^4.13.0",
+    "node-sass": "^4.13.1",
     "node-tesseract-ocr": "^1.0.0",
     "request": "^2.88.0",
     "temp": "^0.9.1",
