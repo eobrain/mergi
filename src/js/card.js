@@ -25,21 +25,17 @@ const key = (card) => `${card.phrase}|${card.reversed}`
  * @return {!Array<Card>} the union of the two lists
  */
 export const merge = (words, existing, added) => {
-  const result = []
   const included = {}
-
-  existing.filter((card) => words.hasImages(card)).forEach((card) => {
-    result.push(card)
-    included[key(card)] = true
-  })
-  added.filter((card) => words.hasImages(card)).forEach((card) => {
-    const k = key(card)
-    if (!included[k]) {
-      result.push(card)
+  // Concatenate arrays and filter out no-image cards
+  // and any qduplicates (cards with the same key)
+  return [...existing, ...added]
+    .filter(card => words.hasImages(card))
+    .filter(card => {
+      const k = key(card)
+      const seenAlready = included[k]
       included[k] = true
-    }
-  })
-  return result
+      return !seenAlready
+    })
 }
 
 /** @type {number} */

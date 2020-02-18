@@ -98,6 +98,30 @@ export default (test) => {
     t.is(actual.length, 3)
   })
 
+  test('duplicates', t => {
+    const words = new IndexedWords('xx', 'yy', [
+      { query: 'foo', lang: 'xx', country: 'yy', images: [{}] },
+      { query: 'bar', lang: 'xx', country: 'yy', images: [{}] },
+      { query: 'baz', lang: 'xx', country: 'yy', images: [{}] }
+    ])
+
+    const actual = merge(words, [
+      { phrase: 'foo' },
+      { phrase: 'baz' },
+      { phrase: 'bar' },
+      { phrase: 'foo' },
+      { phrase: 'foo' },
+      { phrase: 'foo' },
+      { phrase: 'foo' }
+    ], [
+      { phrase: 'foo' },
+      { phrase: 'baz' },
+      { phrase: 'foo' }
+    ])
+
+    t.is(actual.length, 3)
+  })
+
   test('filtering of images', t => {
     const words = new IndexedWords('xx', 'yy', [
       { query: 'has image', lang: 'xx', country: 'yy', images: [{}] },
