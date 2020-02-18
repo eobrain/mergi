@@ -36,7 +36,6 @@ export default (test) => {
     const words = new IndexedWords('xx', 'yy', [
       { query: 'foo', lang: 'xx', country: 'yy', images: [{}] }
     ])
-    t.truthy(words)
 
     const actual = merge(words, [
       { phrase: 'foo' }
@@ -55,7 +54,6 @@ export default (test) => {
       { query: 'bar', lang: 'xx', country: 'yy', images: [{}] },
       { query: 'baz', lang: 'xx', country: 'yy', images: [{}] }
     ])
-    t.truthy(words)
 
     const actual = merge(words, [
       { phrase: 'foo' },
@@ -74,7 +72,6 @@ export default (test) => {
       { query: 'no image', lang: 'xx', country: 'yy' },
       { query: 'also no image', lang: 'xx', country: 'yy' }
     ])
-    t.truthy(words)
 
     const actual = merge(words, [
       { phrase: 'has image' },
@@ -96,7 +93,6 @@ export default (test) => {
       { query: 'has image', lang: 'xx', country: 'yy', images: [{}] },
       { query: 'also has image', lang: 'xx', country: 'yy', images: [{}] }
     ])
-    t.truthy(words)
 
     const actual = merge(words, [
       { phrase: 'has image' },
@@ -120,7 +116,6 @@ export default (test) => {
       { query: 'wrong language', lang: 'BB', country: 'yy' },
       { query: 'all wrong', lang: 'CC', country: 'DD' }
     ])
-    t.truthy(words)
 
     const actual = merge(words, [
       { phrase: 'right locale' },
@@ -134,5 +129,25 @@ export default (test) => {
       { phrase: 'right locale' }
     ]
     t.deepEqual(actual, expected)
+  })
+
+  const makeArray = n => x => [...Array(900)].map((_, i) => x(i))
+
+  test('many', t => {
+    const makeBigArray = makeArray(900)
+    const lang = 'xx'
+    const country = 'yy'
+    const images = [{}]
+    const words = new IndexedWords(lang, country, makeBigArray(i => {
+      const query = `q${i}`
+      return { query, lang, country, images }
+    }))
+
+    const actual = merge(words, [], makeBigArray(i => {
+      const phrase = `q${i}`
+      return { phrase }
+    }))
+
+    t.is(actual.length, 900)
   })
 }
