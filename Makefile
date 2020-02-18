@@ -17,12 +17,19 @@ LOCALES=en_ie en_us es_es es_mx fr_fr
 
 STYLE=app common debug deck index info normalize
 
-compiled: lint html modules\
+compiled: lint runtest html modules\
  $(STYLE:%=site/css/%.css)\
  $(LOCALES:%=site/card_%_compiled.js)\
  $(LOCALES:%=site/deck_%_compiled.js)\
  $(LOCALES:%=site/debug_%_compiled.js)\
  site/index_compiled.js
+
+runtest:
+	npm test
+
+runbrowsertest: lint
+	: Open http://localhost:8887/browsertest
+	python -m SimpleHTTPServer 8887
 
 MUSTACHE=npx mustache -p src/html/footer.mustache -p src/html/head.mustache -p src/html/header.mustache
 PARTIALS=src/html/head.mustache src/html/footer.mustache src/html/header.mustache
@@ -121,6 +128,7 @@ site/css/common.css: src/scss/common.scss src/scss/_def.scss
 modules:\
  $(LOCALES:%=site/card_%.js)\
  $(LOCALES:%=site/words_%.js)\
+ $(LOCALES:%=site/deck_%.js)\
  $(LOCALES:%=site/debug_%.js)\
  site/service-worker.js\
  site/index.js\

@@ -8,7 +8,7 @@
 
 import { newCards, merge, score, decay, SIX_HOURS } from './card.js'
 import { readCards } from './storage.js'
-import { init } from './word.js'
+import { IndexedWords } from './word.js'
 
 /**
  * @param {string} lang 2-letter language code
@@ -17,7 +17,7 @@ import { init } from './word.js'
  * @returns {void}
  */
 export default (lang, country, mergiWords) => {
-  init(lang, country, mergiWords)
+  const words = new IndexedWords(lang, country, mergiWords)
 
   document.body.onload = () => {
     const deckEl = document.getElementById('deck')
@@ -26,7 +26,7 @@ export default (lang, country, mergiWords) => {
       cards.sort((a, b) => score(a) - score(b))
     }
 
-    const cards = merge(readCards(), newCards())
+    const cards = merge(words, readCards(), newCards(words))
     sort()
 
     cards.forEach((card) => {
