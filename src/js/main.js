@@ -8,7 +8,7 @@
 
 import { newCards, merge, score } from './card.js'
 import { readCards, writeCards } from './storage.js'
-import { init, forEachImageOf } from './word.js'
+import { IndexedWords } from './word.js'
 import { MAX_IMAGE_COUNT_PER_QUERY } from './shared.js'
 import imageSearchUrl from './search_url.js'
 
@@ -19,7 +19,7 @@ import imageSearchUrl from './search_url.js'
  * @returns {void}
  */
 export default (lang, country, mergiWords) => {
-  init(lang, country, mergiWords)
+  const words = new IndexedWords(lang, country, mergiWords)
 
   /**
    * An ordered list of cards.
@@ -30,7 +30,7 @@ export default (lang, country, mergiWords) => {
    * }}
    */
   const order = (() => {
-    const cards = merge(readCards(), newCards())
+    const cards = merge(words, readCards(), newCards(words))
     const sort = () => {
       cards.sort((a, b) => score(a) - score(b))
     }
@@ -178,7 +178,7 @@ export default (lang, country, mergiWords) => {
      */
     const addImages = (imagesEl) => {
       let imageCount = 0
-      forEachImageOf(phrase, (image) => {
+      words.forEachImageOf(phrase, (image) => {
         ++imageCount
         if (imageCount > MAX_IMAGE_COUNT_PER_QUERY) {
           return

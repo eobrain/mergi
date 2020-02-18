@@ -4,7 +4,12 @@
   "description": "Immersive Image-Based Language Learning",
   "main": "index.js",
   "scripts": {
-    "test": "echo \"Error: no test specified\" && exit 1"
+    "test": "ava"
+  },
+  "ava": {
+    "require": [
+      "./test/_setup-browser-env.js"
+    ]
   },
   "author": "Eamonn O'Brien-Strain",
   "license": "EPL-1.0",
@@ -26,6 +31,8 @@
   },
   "type": "module",
   "devDependencies": {
+    "ava": "^3.3.0",
+    "browser-env": "^3.3.0",
     "eslint": "^6.8.0",
     "mustache": "^3.1.0",
     "standard": "^14.3.1"

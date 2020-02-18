@@ -3,7 +3,8 @@
     "modulepreloads": [],
     "stylesheets": ["debug"],
     "scripts": [
-        {"src": "debug_es_es_compiled.js", "type": "defer"}
+        {"src": "debug_es_es_compiled.js", "type": "nomodule defer"},
+        {"src": "debug_es_es.js", "type": "type=\"module\""}
     ],
     "lang": "es",
     "country": "es"

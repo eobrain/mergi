@@ -8,7 +8,7 @@
 
 // See description of Card type in extern.js
 
-import { hasImages, forEachPhrase } from './word.js'
+// import { IndexedWords } from './word.js'
 
 /**
  * The string to use as a key for a card.
@@ -19,19 +19,20 @@ const key = (card) => `${card.phrase}|${card.reversed}`
 
 /**
  * Merge two arrays of cards
+ * @param {!IndexedWords} words
  * @param {!Array<Card>} existing cards
  * @param {!Array<Card>} added cards
  * @return {!Array<Card>} the union of the two lists
  */
-export const merge = (existing, added) => {
+export const merge = (words, existing, added) => {
   const result = []
   const included = {}
 
-  existing.filter(hasImages).forEach((card) => {
+  existing.filter((card) => words.hasImages(card)).forEach((card) => {
     result.push(card)
     included[key(card)] = true
   })
-  added.filter(hasImages).forEach((card) => {
+  added.filter((card) => words.hasImages(card)).forEach((card) => {
     const k = key(card)
     if (!included[k]) {
       result.push(card)
@@ -105,13 +106,14 @@ export const score = (card) => {
  * There will be twice as many cards as phrases because there will be
  * both a reversed and non-reversed card for each phrase.
  * All cards start with empty responses list.
+ * @param {!IndexedWords} words
  * @return {!Array<Card>} ordered list of cards
  */
-export const newCards = () => {
+export const newCards = (words) => {
   const cards = []
   for (let i = 0; i < 2; ++i) {
     const reversed = (i === 1)
-    forEachPhrase((phrase) => {
+    words.forEachPhrase((phrase) => {
       const responses = []
       cards.push({ phrase, reversed, responses })
     })

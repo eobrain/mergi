@@ -8,7 +8,7 @@
 
 import { newCards, merge, score } from './card.js'
 import { readCards } from './storage.js'
-import { init, forEachImageOf } from './word.js'
+import { IndexedWords } from './word.js'
 import imageSearchUrl from './search_url.js'
 
 /**
@@ -18,35 +18,33 @@ import imageSearchUrl from './search_url.js'
  * @returns {void}
  */
 export default (lang, country, mergiWords) => {
-  init(lang, country, mergiWords)
+  const words = new IndexedWords(lang, country, mergiWords)
 
-  document.body.onload = () => {
-    const tableEl = document.getElementById('table')
+  const tableEl = document.getElementById('table')
 
-    const sort = () => {
-      cards.sort((a, b) => score(a) - score(b))
-    }
-
-    const cards = merge(readCards(), newCards())
-    sort()
-
-    cards.forEach((card) => {
-      if (card.reversed) {
-        return
-      }
-      let imgHtml = ''
-
-      forEachImageOf(card.phrase, (image) => {
-        imgHtml += `<img src="${image.src}" width="${image.width}" height="${image.height}">`
-      })
-      imgHtml = imgHtml || '(No images)'
-
-      const queryText = card.phrase.split(')').slice(-1)[0].trim()
-      const phraseLink = `<a href="${imageSearchUrl(queryText, lang, country)}">${card.phrase}</a>`
-      const responsesString = JSON.stringify(card.responses.map((r) => `${r.correctness}`))
-      tableEl.insertAdjacentHTML('beforeend',
-        `<tr><td>${score(card)}</td><td>${responsesString}</td><td>${phraseLink}</td><td>${imgHtml}</td></tr>`
-      )
-    })
+  const sort = () => {
+    cards.sort((a, b) => score(a) - score(b))
   }
+
+  const cards = merge(words, readCards(), newCards(words))
+  sort()
+
+  cards.forEach((card) => {
+    if (card.reversed) {
+      return
+    }
+    let imgHtml = ''
+
+    words.forEachImageOf(card.phrase, (image) => {
+      imgHtml += `<img src="${image.src}" width="${image.width}" height="${image.height}">`
+    })
+    imgHtml = imgHtml || '(No images)'
+
+    const queryText = card.phrase.split(')').slice(-1)[0].trim()
+    const phraseLink = `<a href="${imageSearchUrl(queryText, lang, country)}">${card.phrase}</a>`
+    const responsesString = JSON.stringify(card.responses.map((r) => `${r.correctness}`))
+    tableEl.insertAdjacentHTML('beforeend',
+        `<tr><td>${score(card)}</td><td>${responsesString}</td><td>${phraseLink}</td><td>${imgHtml}</td></tr>`
+    )
+  })
 }

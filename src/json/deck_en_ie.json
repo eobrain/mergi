@@ -3,7 +3,8 @@
     "modulepreloads": [],
     "stylesheets": ["common", "deck"],
     "scripts": [
-        {"src": "deck_en_ie_compiled.js", "type": "defer"}
+        {"src": "deck_en_ie_compiled.js", "type": "nomodule defer"},
+        {"src": "deck_en_ie.js", "type": "type=\"module\""}
     ],
     "lang": "en",
     "country": "ie"
