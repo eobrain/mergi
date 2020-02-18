@@ -1,4 +1,4 @@
-import { merge } from '../src/js/card.js'
+import { merge, newCards } from '../src/js/card.js'
 import { IndexedWords } from '../src/js/word.js'
 
 /* global performance */
@@ -43,7 +43,7 @@ const shuffle = (a) => {
 }
 
 export default (test) => {
-  test('merge empty', t => {
+  test('merge: empty', t => {
     const words = new IndexedWords('xx', 'yy', [])
     t.truthy(words)
 
@@ -52,7 +52,7 @@ export default (test) => {
     t.deepEqual([], actual)
   })
 
-  test('merge no images', t => {
+  test('merge: no images', t => {
     const words = new IndexedWords('xx', 'yy', [])
     t.truthy(words)
 
@@ -65,7 +65,7 @@ export default (test) => {
     t.deepEqual([], both)
   })
 
-  test('merge one', t => {
+  test('merge: one', t => {
     const words = new IndexedWords('xx', 'yy', [
       { query: 'foo', lang: 'xx', country: 'yy', images: [{}] }
     ])
@@ -81,7 +81,7 @@ export default (test) => {
     t.deepEqual(actual, expected)
   })
 
-  test('merge multiple cards', t => {
+  test('merge: multiple cards', t => {
     const words = new IndexedWords('xx', 'yy', [
       { query: 'foo', lang: 'xx', country: 'yy', images: [{}] },
       { query: 'bar', lang: 'xx', country: 'yy', images: [{}] },
@@ -98,7 +98,7 @@ export default (test) => {
     t.is(actual.length, 3)
   })
 
-  test('duplicates', t => {
+  test('merge: duplicates', t => {
     const words = new IndexedWords('xx', 'yy', [
       { query: 'foo', lang: 'xx', country: 'yy', images: [{}] },
       { query: 'bar', lang: 'xx', country: 'yy', images: [{}] },
@@ -122,7 +122,7 @@ export default (test) => {
     t.is(actual.length, 3)
   })
 
-  test('filtering of images', t => {
+  test('merge: filtering of images', t => {
     const words = new IndexedWords('xx', 'yy', [
       { query: 'has image', lang: 'xx', country: 'yy', images: [{}] },
       { query: 'also has image', lang: 'xx', country: 'yy', images: [{}] },
@@ -145,7 +145,7 @@ export default (test) => {
     t.deepEqual(actual, expected)
   })
 
-  test('filtering of non existing', t => {
+  test('merge: filtering of non existing', t => {
     const words = new IndexedWords('xx', 'yy', [
       { query: 'has image', lang: 'xx', country: 'yy', images: [{}] },
       { query: 'also has image', lang: 'xx', country: 'yy', images: [{}] }
@@ -166,7 +166,7 @@ export default (test) => {
     t.deepEqual(actual, expected)
   })
 
-  test('filtering by locale', t => {
+  test('merge: filtering by locale', t => {
     const words = new IndexedWords('xx', 'yy', [
       { query: 'right locale', lang: 'xx', country: 'yy', images: [{}] },
       { query: 'wrong country', lang: 'xx', country: 'AA', images: [{}] },
@@ -188,10 +188,10 @@ export default (test) => {
     t.deepEqual(actual, expected)
   })
 
-  const makeArray = n => x => [...Array(900)].map((_, i) => x(i))
+  const makeArray = n => x => [...Array(n)].map((_, i) => x(i))
+  const makeBigArray = makeArray(900)
 
-  test('many', t => {
-    const makeBigArray = makeArray(900)
+  test('merge: many', t => {
     const lang = 'xx'
     const country = 'yy'
     const images = [{}]
@@ -207,7 +207,6 @@ export default (test) => {
 
     t.is(actual.length, 900)
   })
-  const makeBigArray = makeArray(900)
   const lang = 'xx'
   const country = 'yy'
   const images = [{}]
@@ -228,31 +227,88 @@ export default (test) => {
 
   const words = new IndexedWords(lang, country, data)
 
-  test('everything', t => {
-    const start = performance.now()
-    const actual = merge(words, [], makeBigArray(i => {
+  test('merge: everything', t => {
+    const cards = makeBigArray(i => {
       const phrase = `q${i}`
       return { phrase }
-    }))
+    })
+    const start = performance.now()
+
+    const actual = merge(words, [], cards)
+
     const end = performance.now()
     console.log(`merge took ${end - start} ms`)
 
     t.is(actual.length, 900)
   })
 
-  test('everything multiple', t => {
+  test('merge: everything multiple', t => {
     const stats = Stats()
+    const cards = makeBigArray(i => {
+      const phrase = `q${i}`
+      return { phrase }
+    })
     for (let i = 0; i < 100; ++i) {
       const start = performance.now()
-      const actual = merge(words, [], makeBigArray(i => {
-        const phrase = `q${i}`
-        return { phrase }
-      }))
+
+      const actual = merge(words, [], cards)
+
       const end = performance.now()
       stats.put(end - start)
 
       t.is(actual.length, 900)
     }
     console.log(`merge stats (ms): ${stats.toString()}`)
+  })
+
+  test('newCards: a few', t => {
+    const words = new IndexedWords('xx', 'yy', [
+      { query: 'foo', lang: 'xx', country: 'yy', images: [{}] },
+      { query: 'bar', lang: 'xx', country: 'yy', images: [{}] },
+      { query: 'baz', lang: 'xx', country: 'yy', images: [{}] }
+    ])
+
+    const cards = newCards(words)
+
+    t.is(cards.length, 6)
+    const expected = [
+      { phrase: 'foo', reversed: false, responses: [] },
+      { phrase: 'bar', reversed: false, responses: [] },
+      { phrase: 'baz', reversed: false, responses: [] },
+      { phrase: 'foo', reversed: true, responses: [] },
+      { phrase: 'bar', reversed: true, responses: [] },
+      { phrase: 'baz', reversed: true, responses: [] }
+    ]
+    t.deepEqual(cards, expected)
+  })
+
+  const words1000 = new IndexedWords('xx', 'yy', makeArray(1000)(i => {
+    const query = `q${i}`
+    return { query, lang, country, images }
+  }))
+
+  test('newCards: many', t => {
+    const start = performance.now()
+
+    const cards = newCards(words1000)
+
+    const end = performance.now()
+    console.log(`newCards took ${end - start} ms`)
+    t.is(cards.length, 2000)
+  })
+
+  test('newCards: many multiple', t => {
+    const stats = Stats()
+    for (let i = 0; i < 1000; ++i) {
+      const start = performance.now()
+
+      const cards = newCards(words1000)
+
+      const end = performance.now()
+      stats.put(end - start)
+
+      t.is(cards.length, 2000)
+    }
+    console.log(`newCards stats (ms): ${stats.toString()}`)
   })
 }
