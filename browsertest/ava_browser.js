@@ -1,3 +1,4 @@
+/* global performance */
 
 let failCount = 0
 let testCount = 0
@@ -92,7 +93,13 @@ export default (testFile) => {
     }
 
     try {
-      callback(new T(name))
+      const t = new T(name)
+      const start = performance.now()
+
+      callback(t)
+
+      const end = performance.now()
+      log('info', end - start)
     } catch (e) {
       failed = true
       log('error', e)
@@ -101,7 +108,5 @@ export default (testFile) => {
     if (failed) {
       ++failCount
     }
-
-    log('info', '')
   }
 }

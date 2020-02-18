@@ -1,6 +1,8 @@
 import { merge } from '../src/js/card.js'
 import { IndexedWords } from '../src/js/word.js'
 
+/* global performance */
+
 const noImages = [
   { foo: 'one', bar: 111 },
   { foo: 'two', bar: 222 },
@@ -8,6 +10,37 @@ const noImages = [
   { foo: 'four', bar: 444 },
   { foo: 'five', bar: 555 }
 ]
+
+const Stats = () => {
+  let n = 0
+  let sum = 0
+  let sumSq = 0
+
+  const put = x => {
+    ++n
+    sum += x
+    sumSq += x * x
+  }
+
+  const toString = () =>
+    `mean=${sum / n} stdev=${Math.sqrt(sumSq / (n - 1))}`
+
+  return { put, toString }
+}
+
+/**
+ * Shuffles array in place. (From https://stackoverflow.com/a/6274381/978525)
+ * @param {Array} a items An array containing the items.
+ * @return {void}
+ */
+const shuffle = (a) => {
+  for (let i = a.length - 1; i > 0; i--) {
+    const j = Math.floor(Math.random() * (i + 1))
+    const x = a[i]
+    a[i] = a[j]
+    a[j] = x
+  }
+}
 
 export default (test) => {
   test('merge empty', t => {
@@ -149,5 +182,53 @@ export default (test) => {
     }))
 
     t.is(actual.length, 900)
+  })
+  const makeBigArray = makeArray(900)
+  const lang = 'xx'
+  const country = 'yy'
+  const images = [{}]
+  const goodData = makeBigArray(i => {
+    const query = `q${i}`
+    return { query, lang, country, images }
+  })
+  const wrongLanguage = makeBigArray(i => {
+    const query = `A${i}`
+    return { query, lang: 'AA', country, images }
+  })
+  const noImagesBig = makeBigArray(i => {
+    const query = `n${i}`
+    return { query, lang, country }
+  })
+  const data = [...wrongLanguage, ...goodData, ...noImagesBig]
+  shuffle(data)
+
+  const words = new IndexedWords(lang, country, data)
+
+  test('everything', t => {
+    const start = performance.now()
+    const actual = merge(words, [], makeBigArray(i => {
+      const phrase = `q${i}`
+      return { phrase }
+    }))
+    const end = performance.now()
+    console.log(`merge took ${end - start} ms`)
+
+    t.is(actual.length, 900)
+  })
+
+  test('everything multiple', t => {
+    const stats = Stats()
+    for (let i = 0; i < 100; ++i) {
+      const start = performance.now()
+      const actual = merge(words, [], makeBigArray(i => {
+        const phrase = `q${i}`
+        return { phrase }
+      }))
+      const end = performance.now()
+      stats.put(end - start)
+
+      t.is(actual.length, 900)
+    }
+    console.log(`merge stats (ms): ${stats.toString()}`)
   })
 }
