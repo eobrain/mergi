@@ -29,12 +29,12 @@ export default (lang, country, mergiWords) => {
     const cards = merge(words, readCards(), newCards(words))
     sort()
 
-    cards.forEach((card) => {
+    cards.forEach(card => {
       const cardEl = document.createElement('li')
       if (card.reversed) {
         cardEl.className = 'reversed'
       }
-      card.responses.forEach((r) => {
+      card.responses.forEach(r => {
         const rEl = document.createElement('div')
         const color = `hsl(${120 * r.correctness}, ${100 * decay(r.t, SIX_HOURS)}%, 50%)`
         rEl.style.background = color

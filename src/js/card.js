@@ -15,7 +15,7 @@
  * @param {Card} card one side of a flashcard
  * @return {string} lookup key for card
  */
-const key = (card) => `${card.phrase}|${card.reversed}`
+const key = card => `${card.phrase}|${card.reversed}`
 
 /**
  * Merge two arrays of cards
@@ -25,21 +25,17 @@ const key = (card) => `${card.phrase}|${card.reversed}`
  * @return {!Array<Card>} the union of the two lists
  */
 export const merge = (words, existing, added) => {
-  const result = []
   const included = {}
-
-  existing.filter((card) => words.hasImages(card)).forEach((card) => {
-    result.push(card)
-    included[key(card)] = true
-  })
-  added.filter((card) => words.hasImages(card)).forEach((card) => {
-    const k = key(card)
-    if (!included[k]) {
-      result.push(card)
+  // Concatenate arrays and filter out no-image cards
+  // and any qduplicates (cards with the same key)
+  return [...existing, ...added]
+    .filter(card => words.hasImages(card))
+    .filter(card => {
+      const k = key(card)
+      const seenAlready = included[k]
       included[k] = true
-    }
-  })
-  return result
+      return !seenAlready
+    })
 }
 
 /** @type {number} */
@@ -54,7 +50,7 @@ const FIVE_MINUTES = 1000.0 * 60 * 5
  * @param {string} s to be hashed
  * @return {number} 32-bit integer non-crypto-secure hash
  */
-const hashCode = (s) => {
+const hashCode = s => {
   let h1 = 0xdeadbeef
   let h2 = 0x41c6ce57
   for (let i = 0, ch; i < s.length; i++) {
@@ -72,7 +68,7 @@ const hashCode = (s) => {
  * @param {string} s to be hashed
  * @return {number} string hashed to a value between zero and one
  */
-const randomized = (s) => hashCode(s) / ((1 << 31) * 2.0)
+const randomized = s => hashCode(s) / ((1 << 31) * 2.0)
 
 /** @type number */
 const now = Date.now()
@@ -91,14 +87,14 @@ export const decay = (t, tao) => Math.exp((t - now) / tao)
  * @param {Card} card one side of a flashcard
  * @return {number} score
  */
-export const score = (card) => {
+export const score = card => {
   const responseCount = card.responses.length
   if (responseCount === 0) {
     return randomized(key(card))
   }
   const tLatest = card.responses[responseCount - 1].t
   return decay(tLatest, FIVE_MINUTES) + card.responses
-    .map((response) => (response.correctness - 0.5) * decay(response.t, SIX_HOURS))
+    .map(response => (response.correctness - 0.5) * decay(response.t, SIX_HOURS))
     .reduce((sum, x) => sum + x)
 }
 
@@ -107,16 +103,12 @@ export const score = (card) => {
  * both a reversed and non-reversed card for each phrase.
  * All cards start with empty responses list.
  * @param {!IndexedWords} words
- * @return {!Array<Card>} ordered list of cards
+ * @return {!Array<Card>} list of cards
  */
-export const newCards = (words) => {
-  const cards = []
-  for (let i = 0; i < 2; ++i) {
-    const reversed = (i === 1)
-    words.forEachPhrase((phrase) => {
-      const responses = []
-      cards.push({ phrase, reversed, responses })
-    })
-  }
-  return cards
+export const newCards = words => {
+  const half = reversed => words.phrases.map(phrase => {
+    const responses = []
+    return { phrase, reversed, responses }
+  })
+  return [...half(false), ...half(true)]
 }

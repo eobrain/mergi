@@ -51,14 +51,14 @@ const recognize = (path, lang) => tesseract.recognize(path, {
  * @return {Promise<boolean>} whether there are too few colors.
  */
 const downloadAndTransform = (src, toPath) => new Promise((resolve, reject) =>
-  gm(request(src, (err) => {
+  gm(request(src, err => {
     if (err) {
       console.error(`problem fetching "${src}"`)
       reject(err)
     }
   }))
     .modulate(100, 0)
-    .write(toPath, (err) => {
+    .write(toPath, err => {
       if (err) {
         console.error(`${src} COULD NOT WRITE TO ${toPath} (${err})`)
         reject(err)
@@ -114,7 +114,7 @@ export default async (src, lang) => {
   } catch (e) {
     console.error(`Problem running OCR on ${src} (${e})`)
   } finally {
-    unlink(tempName, (e) => {
+    unlink(tempName, e => {
       if (e) {
         console.log('/* unlink:', e, '*/')
       }

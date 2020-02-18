@@ -33,13 +33,13 @@ const MAX_QUERY_COUNT = 700 * 5
  * @param {function(string,string,string,string):Promise<void>} processCsvLine callback on each line
  * @return {Promise<number>} number of queries made
  */
-const processCsv = (processCsvLine) => new Promise((resolve) => {
+const processCsv = processCsvLine => new Promise(resolve => {
   const promises = []
   fs.createReadStream(DATA)
     .pipe(csv())
-    .on('data', (row) => {
-      console.info(Object.keys(row).map((k) => row[k]).join('|'))
-      LOCALES.forEach((locale) => {
+    .on('data', row => {
+      console.info(Object.keys(row).map(k => row[k]).join('|'))
+      LOCALES.forEach(locale => {
         if (promises.length > MAX_QUERY_COUNT) {
           console.info(`Bailing out. We have reached our max of ${MAX_QUERY_COUNT} queries`)
           return
@@ -79,7 +79,7 @@ const main = async () => {
 
   // Create an output fuile for each locale
   const outs = {}
-  LOCALES.forEach((locale) => {
+  LOCALES.forEach(locale => {
     const out = fs.createWriteStream(`${SRC}/words_${locale}.js`) // TODO(eob) add error handling
     out.write('/** @type {!Array<Word>} */\n')
     out.write('export const mergiWords = [\n')
@@ -104,11 +104,11 @@ const main = async () => {
     out.write(`    images: ${JSON.stringify(filteredImages)}\n`)
     out.write('  },\n')
   })
-  LOCALES.forEach((locale) => {
+  LOCALES.forEach(locale => {
     const out = outs[locale]
     out.write(']\n')
   })
 }
 
 main()
-  .catch((e) => { console.error(e) })
+  .catch(e => { console.error(e) })

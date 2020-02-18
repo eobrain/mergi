@@ -38,7 +38,7 @@ export default (lang, country, mergiWords) => {
 
     const head = () => cards[0]
 
-    const updateHeadAndSort = (correctness) => {
+    const updateHeadAndSort = correctness => {
       const t = Date.now()
       cards[0].responses.push({ t, correctness })
       sort()
@@ -80,7 +80,7 @@ export default (lang, country, mergiWords) => {
    * @param {string} id attribute
    * @return {!Element} DOM element with given ID
    */
-  const getElement = (id) => {
+  const getElement = id => {
     const element = document.getElementById(id)
     if (!element) {
       throw new Error(`Bad page. No element with id="${id}"`)
@@ -121,7 +121,7 @@ export default (lang, country, mergiWords) => {
    * @param {string} screen name of screen
    * @returns {void}
    */
-  const logScreenView = (screen) => {
+  const logScreenView = screen => {
     gtag('event', 'screen_view', { screen_name: screen })
   }
   /**
@@ -129,7 +129,7 @@ export default (lang, country, mergiWords) => {
    * @param {string} items name of items
    * @returns {void}
    */
-  const logViewItem = (items) => {
+  const logViewItem = items => {
     gtag('event', 'view_item', { items })
   }
   /**
@@ -137,7 +137,7 @@ export default (lang, country, mergiWords) => {
    * @param {number} correctness what fraction correct
    * @returns {void}
    */
-  const logResponse = (correctness) => {
+  const logResponse = correctness => {
     gtag('event', 'response', { correctness })
   }
 
@@ -165,7 +165,7 @@ export default (lang, country, mergiWords) => {
      * @param {!Element} element parent DOM element
      * @returns {void}
      */
-    const removeContent = (element) => {
+    const removeContent = element => {
       while (element.firstElementChild) {
         element.firstElementChild.remove()
       }
@@ -176,9 +176,9 @@ export default (lang, country, mergiWords) => {
      * @param {!Element} imagesEl parent DOM element for the images
      * @returns {void}
      */
-    const addImages = (imagesEl) => {
+    const addImages = imagesEl => {
       let imageCount = 0
-      words.forEachImageOf(phrase, (image) => {
+      words.forEachImageOf(phrase, image => {
         ++imageCount
         if (imageCount > MAX_IMAGE_COUNT_PER_QUERY) {
           return
@@ -205,7 +205,7 @@ export default (lang, country, mergiWords) => {
      * @param {!Element} textCardEl DOM element in which to add phrase
      * @returns {void}
      */
-    const addPhrase = (textCardEl) => {
+    const addPhrase = textCardEl => {
       const pEl = document.createElement('p')
       pEl.innerHTML = phrase
       textCardEl.append(pEl)
@@ -244,7 +244,7 @@ export default (lang, country, mergiWords) => {
       document.location.hash = `phrase,${encodeURIComponent(phrase)}`
     }
     const internalHash = document.location.hash
-    window.onhashchange = (event) => {
+    window.onhashchange = event => {
       if (document.location.hash !== internalHash) {
         order.handleUrlHash()
         ask()
@@ -289,7 +289,7 @@ export default (lang, country, mergiWords) => {
    * @param {number} correctness to what degree was the user correct
    * @return {function()}  a function that updates the card deck with the user response
    */
-  const answerFn = (correctness) => () => {
+  const answerFn = correctness => () => {
     logResponse(correctness)
     cardEl.classList.add('offscreen')
     order.updateHeadAndSort(correctness)
@@ -328,7 +328,7 @@ export default (lang, country, mergiWords) => {
    * @param {boolean} answersActive whether answer icons are active
    * @returns {void}
    */
-  const navIconsActive = (answersActive) => {
+  const navIconsActive = answersActive => {
     activeIf(correctEl, answersActive, correct)
     activeIf(mehEl, answersActive, meh)
     activeIf(wrongEl, answersActive, wrong)

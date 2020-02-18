@@ -6,7 +6,7 @@ import { mergiWords } from '../site/words.js'
 const lang = 'es'
 const country = 'mx'
 
-const handleWord = async (word) => {
+const handleWord = async word => {
   console.error('>>>>>', word.query)
   const yesses = []
   const nos = []
@@ -19,11 +19,11 @@ const handleWord = async (word) => {
     }
   }
   console.log(`<tr><td>${word.query}</td><td>`)
-  yesses.forEach((src) => {
+  yesses.forEach(src => {
     console.log(`<img src="${src}">`)
   })
   console.log('</td><td>')
-  nos.forEach((src) => {
+  nos.forEach(src => {
     console.log(`<img src="${src}">`)
   })
   console.log('</td></tr>')

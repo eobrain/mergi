@@ -15,7 +15,7 @@ export default (query, language, country, queryCount) => {
   const spreadOverMinutes = queryCount / QUERIES_PER_MINUTE
   const delay = spreadOverMinutes * 60000.0 * Math.random()
   console.log(`// ${new Date()} delay = ${delay}`)
-  return new Promise((resolve) => {
+  return new Promise(resolve => {
     setTimeout(() => {
       resolve(images)
     }, delay)
