@@ -5,7 +5,7 @@ document.body.innerHTML += `
   <ol id="deck"></ol>
 </main>
 `
-export default (test) => {
+export default test => {
   test('empty', t => {
     deck('xx', 'yy', [])
 

@@ -17,7 +17,7 @@ document.body.innerHTML += `
 </main>
 `
 
-export default (test) => {
+export default test => {
   test('empty', t => {
     main('xx', 'yy', [])
 

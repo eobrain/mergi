@@ -22,7 +22,7 @@ document.body.innerHTML += `
 <p id="summary"></p>
 `
 
-export default (testFile) => {
+export default testFile => {
   const testNameSet = {}
   return (name, callback) => {
     const logEl = document.getElementById('log')

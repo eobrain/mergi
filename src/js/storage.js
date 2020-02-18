@@ -14,7 +14,7 @@ const KEY = 'mergi-order-v4'
  * @param {!Array<Card>} cards to write
  * @returns {void}
  */
-export const writeCards = (cards) => {
+export const writeCards = cards => {
   window.localStorage.setItem(KEY, JSON.stringify(cards))
 }
 

@@ -10,7 +10,7 @@ const setup = () => {
   tableEl.innerHTML = ''
 }
 
-export default (test) => {
+export default test => {
   test('empty', t => {
     setup()
 

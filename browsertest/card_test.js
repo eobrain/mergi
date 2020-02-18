@@ -33,7 +33,7 @@ const Stats = () => {
  * @param {Array} a items An array containing the items.
  * @return {void}
  */
-const shuffle = (a) => {
+const shuffle = a => {
   for (let i = a.length - 1; i > 0; i--) {
     const j = Math.floor(Math.random() * (i + 1))
     const x = a[i]
@@ -42,7 +42,7 @@ const shuffle = (a) => {
   }
 }
 
-export default (test) => {
+export default test => {
   test('merge: empty', t => {
     const words = new IndexedWords('xx', 'yy', [])
     t.truthy(words)

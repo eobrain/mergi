@@ -1,6 +1,6 @@
 import { IndexedWords } from '../src/js/word.js'
 
-export default (test) => {
+export default test => {
   test('hasImages empty', t => {
     const words = new IndexedWords('xx', 'yy', [])
 
