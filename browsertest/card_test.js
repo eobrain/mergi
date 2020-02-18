@@ -66,4 +66,73 @@ export default (test) => {
 
     t.is(actual.length, 3)
   })
+
+  test('filtering of images', t => {
+    const words = new IndexedWords('xx', 'yy', [
+      { query: 'has image', lang: 'xx', country: 'yy', images: [{}] },
+      { query: 'also has image', lang: 'xx', country: 'yy', images: [{}] },
+      { query: 'no image', lang: 'xx', country: 'yy' },
+      { query: 'also no image', lang: 'xx', country: 'yy' }
+    ])
+    t.truthy(words)
+
+    const actual = merge(words, [
+      { phrase: 'has image' },
+      { phrase: 'no image' }
+    ], [
+      { phrase: 'also has image' },
+      { phrase: 'also no image' }
+    ])
+
+    const expected = [
+      { phrase: 'has image' },
+      { phrase: 'also has image' }
+    ]
+    t.deepEqual(actual, expected)
+  })
+
+  test('filtering of non existing', t => {
+    const words = new IndexedWords('xx', 'yy', [
+      { query: 'has image', lang: 'xx', country: 'yy', images: [{}] },
+      { query: 'also has image', lang: 'xx', country: 'yy', images: [{}] }
+    ])
+    t.truthy(words)
+
+    const actual = merge(words, [
+      { phrase: 'has image' },
+      { phrase: 'does not exist' }
+    ], [
+      { phrase: 'also has image' },
+      { phrase: 'also does not exist' }
+    ])
+
+    const expected = [
+      { phrase: 'has image' },
+      { phrase: 'also has image' }
+    ]
+    t.deepEqual(actual, expected)
+  })
+
+  test('filtering by locale', t => {
+    const words = new IndexedWords('xx', 'yy', [
+      { query: 'right locale', lang: 'xx', country: 'yy', images: [{}] },
+      { query: 'wrong country', lang: 'xx', country: 'AA', images: [{}] },
+      { query: 'wrong language', lang: 'BB', country: 'yy' },
+      { query: 'all wrong', lang: 'CC', country: 'DD' }
+    ])
+    t.truthy(words)
+
+    const actual = merge(words, [
+      { phrase: 'right locale' },
+      { phrase: 'wrong country' }
+    ], [
+      { phrase: 'wrong language' },
+      { phrase: 'all wrong' }
+    ])
+
+    const expected = [
+      { phrase: 'right locale' }
+    ]
+    t.deepEqual(actual, expected)
+  })
 }
