@@ -102,7 +102,7 @@ export const score = card => {
  * There will be twice as many cards as phrases because there will be
  * both a reversed and non-reversed card for each phrase.
  * All cards start with empty responses list.
- * @param {!IndexedWords} words
+ * @param {!IndexedWords} words indexed data
  * @return {!Array<Card>} list of cards
  */
 export const newCards = words => {

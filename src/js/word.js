@@ -13,7 +13,7 @@
  * @param {Word} word scraped
  * @return {string} the phrase to display
  */
-export const toPhrase = word => word.prefix
+export const toPhrase = (word) => word.prefix
   ? `(${word.prefix}) ${word.query}`
   : word.query
 
@@ -38,7 +38,7 @@ export class IndexedWords {
     this.images = {}
 
     // Initialize phrases and images.
-    mergiWords.forEach(word => {
+    mergiWords.forEach((word) => {
       if (word.lang === lang && word.country === country) {
         const phrase = toPhrase(word)
         this.phrases.push(phrase)
@@ -55,15 +55,19 @@ export class IndexedWords {
     return !!this.images[card.phrase]
   }
 
-  /** Iterate through all the images of a phrase
-   * @param {string} phrase to find images of
-   * @param {function(Img)} f callback
+  /** Iterate through all the phrases
+   * @param {function(string)} f callback
    * @returns {void}
+  */
+  forEachPhrase (f) {
+    this.phrases.forEach(f)
+  }
+
+  /**
+   * @param {string} phrase to find images of
+   * @returns {!Array[Img]} the images of a phrase
    */
-  forEachImageOf (phrase, f) {
-    const imagesOfPhrase = this.images[phrase]
-    if (imagesOfPhrase) {
-      imagesOfPhrase.forEach(f)
-    }
+  imagesOf (phrase) {
+    return this.images[phrase] || []
   }
 }

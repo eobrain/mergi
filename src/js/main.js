@@ -177,27 +177,26 @@ export default (lang, country, mergiWords) => {
      * @returns {void}
      */
     const addImages = imagesEl => {
-      let imageCount = 0
-      words.forEachImageOf(phrase, image => {
-        ++imageCount
-        if (imageCount > MAX_IMAGE_COUNT_PER_QUERY) {
-          return
-        }
-        const imgEl = document.createElement('img')
-        imgEl.src = image.src
-        imgEl.width = image.width
-        imgEl.height = image.height
-        imgEl.alt = `image search result ${imageCount}`
-        const aspectRatio = image.width / image.height
-        if (aspectRatio > 1.66666) {
-          imgEl.className += ' landscape'
-        } else if (aspectRatio < 0.6) {
-          imgEl.className += ' portrait'
-        } else {
-          imgEl.className += ' square'
-        }
-        imagesEl.append(imgEl)
-      })
+      const children = words.imagesOf(phrase)
+        .slice(0, MAX_IMAGE_COUNT_PER_QUERY) // truncate array
+        .map((image, i) => {
+          // map image object to img DOM element
+          const imgEl = document.createElement('img')
+          imgEl.src = image.src
+          imgEl.width = image.width
+          imgEl.height = image.height
+          imgEl.alt = `image search result ${i}`
+          const aspectRatio = image.width / image.height
+          if (aspectRatio > 1.66666) {
+            imgEl.className += ' landscape'
+          } else if (aspectRatio < 0.6) {
+            imgEl.className += ' portrait'
+          } else {
+            imgEl.className += ' square'
+          }
+          return imgEl
+        })
+      imagesEl.append(...children)
     }
 
     /**
@@ -341,7 +340,7 @@ export default (lang, country, mergiWords) => {
     ask()
 
     // Hack to prevent animation on first card shown.
-    // TODO(eob) see if this can be dine in pure CSS without JS
+    // TODO(eob) see if this can be done in pure CSS without JS
     setTimeout(() => {
       cardEl.classList.remove('initial')
     }, OFFSCREEN_TIME_MS)

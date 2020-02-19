@@ -1,5 +1,6 @@
 import { merge, newCards } from '../src/js/card.js'
 import { IndexedWords } from '../src/js/word.js'
+import { makeArray, shuffle, Stats } from './_helpers.js'
 
 /* global performance */
 
@@ -10,37 +11,6 @@ const noImages = [
   { foo: 'four', bar: 444 },
   { foo: 'five', bar: 555 }
 ]
-
-const Stats = () => {
-  let n = 0
-  let sum = 0
-  let sumSq = 0
-
-  const put = x => {
-    ++n
-    sum += x
-    sumSq += x * x
-  }
-
-  const toString = () =>
-    `mean=${sum / n} stdev=${Math.sqrt(sumSq / (n - 1))}`
-
-  return { put, toString }
-}
-
-/**
- * Shuffles array in place. (From https://stackoverflow.com/a/6274381/978525)
- * @param {Array} a items An array containing the items.
- * @return {void}
- */
-const shuffle = a => {
-  for (let i = a.length - 1; i > 0; i--) {
-    const j = Math.floor(Math.random() * (i + 1))
-    const x = a[i]
-    a[i] = a[j]
-    a[j] = x
-  }
-}
 
 export default test => {
   test('merge: empty', t => {
@@ -188,7 +158,6 @@ export default test => {
     t.deepEqual(actual, expected)
   })
 
-  const makeArray = n => x => [...Array(n)].map((_, i) => x(i))
   const makeBigArray = makeArray(900)
 
   test('merge: many', t => {
