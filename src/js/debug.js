@@ -29,10 +29,7 @@ export default (lang, country, mergiWords) => {
   const cards = merge(words, readCards(), newCards(words))
   sort()
 
-  cards.forEach(card => {
-    if (card.reversed) {
-      return
-    }
+  cards.filter(card => !card.reversed).forEach(card => {
     const imgHtml = words.imagesOf(card.phrase).reduce((html, image) =>
       html + `<img src="${image.src}" width="${image.width}" height="${image.height}">`,
     ''
