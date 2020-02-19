@@ -1,7 +1,5 @@
 import { IndexedWords } from '../src/js/word.js'
-import { makeArray, Stats } from './_helpers.js'
-
-/* global performance */
+import { makeArray } from './_helpers.js'
 
 export default test => {
   test('hasImages empty', t => {
