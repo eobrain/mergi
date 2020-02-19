@@ -33,12 +33,10 @@ export default (lang, country, mergiWords) => {
     if (card.reversed) {
       return
     }
-    let imgHtml = ''
-
-    words.forEachImageOf(card.phrase, image => {
-      imgHtml += `<img src="${image.src}" width="${image.width}" height="${image.height}">`
-    })
-    imgHtml = imgHtml || '(No images)'
+    const imgHtml = words.imagesOf(card.phrase).reduce((html, image) =>
+      html + `<img src="${image.src}" width="${image.width}" height="${image.height}">`,
+    ''
+    ) || '(No images)'
 
     const queryText = card.phrase.split(')').slice(-1)[0].trim()
     const phraseLink = `<a href="${imageSearchUrl(queryText, lang, country)}">${card.phrase}</a>`
