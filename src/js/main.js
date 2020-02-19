@@ -340,7 +340,7 @@ export default (lang, country, mergiWords) => {
     ask()
 
     // Hack to prevent animation on first card shown.
-    // TODO(eob) see if this can be dine in pure CSS without JS
+    // TODO(eob) see if this can be done in pure CSS without JS
     setTimeout(() => {
       cardEl.classList.remove('initial')
     }, OFFSCREEN_TIME_MS)
