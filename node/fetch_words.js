@@ -6,6 +6,7 @@
 
 // @ts-check
 
+import esMain from 'es-main';
 import csv from 'csv-parser'
 import fs from 'fs'
 import search from './scrape.js'
@@ -110,5 +111,7 @@ const main = async () => {
   })
 }
 
-main()
-  .catch(e => { console.error(e) })
+if (esMain(import.meta)) {
+  main()
+    .catch(e => { console.error(e) })
+}

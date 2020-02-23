@@ -34,14 +34,14 @@ export default {
     ]
   },
 
-  runtest: { deps: ['npm', 'test'] },
+  runtest: { exec: c => 'npm test' },
 
   runbrowsertest: {
     deps: 'lint',
     exec: `
-			: Open http://localhost:8887/browsertest
-			python -m SimpleHTTPServer 8887
-		`
+      : Open http://localhost:8887/browsertest
+      python -m SimpleHTTPServer 8887
+    `
   },
 
   html: {
