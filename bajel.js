@@ -1,5 +1,7 @@
 import bajelfile from './bajelfile.js'
 import fs from 'fs'
+import util from 'util'
+import { exec } from 'child_process'
 
 const timestamp = path =>
   fs.promises.stat(path)
@@ -36,41 +38,80 @@ const ago = (t) => {
 }
 
 const shellTrim = cmd => cmd.split('\n').map(s => s.trim()).join('\n')
+const execPromise = util.promisify(exec)
 
-const exec = (indent, cmd) => {
-  console.log(indent, '+', shellTrim(cmd))
+const echo = (indent, { stdout, stderr }) => {
+  if (stdout) {
+    console.log(indent, stdout)
+  }
+  if (stderr) {
+    console.error(indent, stderr)
+  }
+}
+
+const printAndExec = async (indent, cmd) => {
+  const trimmed = shellTrim(cmd)
+
+  console.log(indent, '+', trimmed)
+  try {
+    echo(indent, await execPromise(trimmed))
+    return true
+  } catch (e) {
+    echo(indent, e)
+    console.error(`FAILED with code ${e.code}: \n${e.cmd}\n`)
+    return false
+  }
 }
 
 /**
  * @param {string} indent prefix for log messages
  * @param {string} target being built
- * @returns {number} timestamp in ms of latest file change
+ * @returns {[succeeded, number]} whether succeeded and timestamp in ms of latest file change
  * */
 const recurse = async (indent, target) => {
   const targetTime = await timestamp(target)
   const task = bajelfile[target] || {}
   if (!task.exec && !task.deps && targetTime === 0) {
     console.warn(indent, `No target "${target}"`)
-    return
+    return [false]
   }
-  if (task.exec || task.deps) {
+  /* if (task.exec || task.deps) {
     console.log(indent, target, ago(targetTime))
-  }
+  } */
   const deps = task.deps || []
-  const lastDepsTime = deps.reduce(
-    async (latest, dep) => Math.max(latest, await recurse(indent + `${target}|`, dep)),
-    0)
+  let lastDepsTime = 0
+  for (let i = 0; i < deps.length; ++i) {
+    const [depSuccess, depTime] = await recurse(indent + `${target}|`, deps[i])
+    if (!depSuccess) {
+      return [depSuccess]
+    }
+    if (depTime > lastDepsTime) {
+      lastDepsTime = depTime
+    }
+  }
   if (task.exec) {
     if (targetTime > 0 && lastDepsTime < targetTime) {
-      console.log(indent, 'UP TO DATE')
+      // console.log(indent, 'UP TO DATE')
     } else {
       const source = deps.length > 0 ? deps[0] : '***no-source***'
-      exec(indent, task.exec({ source, target }))
+      const success = await printAndExec(indent, task.exec({ source, target }))
+      if (!success) {
+        return [success]
+      }
     }
   }
   const updatedTime = Math.max(lastDepsTime, await timestamp(target))
-  console.log(indent, 'updated time', ago(targetTime))
-  return updatedTime
+  // console.log(indent, 'updated time', ago(targetTime))
+  return [true, updatedTime]
 }
 
-recurse('|', start)
+const main = async () => {
+  const [success, timestamp] = await recurse('|', start)
+  if (success) {
+    console.log('Execution succeeded. Latest file:', ago(timestamp))
+  } else {
+    console.error('Execution failed')
+  }
+}
+
+main()

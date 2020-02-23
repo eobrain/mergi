@@ -6,16 +6,12 @@
 
 // @ts-check
 
-import esMain from 'es-main';
 import csv from 'csv-parser'
 import fs from 'fs'
 import search from './scrape.js'
 import hasText from './ocr.js'
 import { MAX_IMAGE_COUNT_PER_QUERY } from '../src/js/shared.js'
-
-// This must be the same as the DATA variable in Makefile.
-export const DATA = 'data/words.csv'
-// export const DATA = 'data/words_debug.csv'
+import { DATA } from './config.js'
 
 const LOCALES = [
   'es_mx',
@@ -111,7 +107,5 @@ const main = async () => {
   })
 }
 
-if (esMain(import.meta)) {
-  main()
-    .catch(e => { console.error(e) })
-}
+main()
+  .catch(e => { console.error(e) })

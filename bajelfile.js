@@ -8,7 +8,7 @@
 //      Recreates words.js by calling Google image search for many images (slow).
 // See README for more.
 
-import { DATA } from './node/fetch_words.js'
+import { DATA } from './node/config.js'
 
 const COMPILEJS = 'java -jar tools/closure/closure-compiler-v20191111.jar -O ADVANCED --externs src/js/externs.js'
 const LOCALES = ['en_ie', 'en_us', 'es_es', 'es_mx', 'fr_fr']
