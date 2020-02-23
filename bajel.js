@@ -35,6 +35,12 @@ const ago = (t) => {
   return `${day} days ago`
 }
 
+const shellTrim = cmd => cmd.split('\n').map(s => s.trim()).join('\n')
+
+const exec = (indent, cmd) => {
+  console.log(indent, '+', shellTrim(cmd))
+}
+
 /**
  * @param {string} indent prefix for log messages
  * @param {string} target being built
@@ -50,16 +56,16 @@ const recurse = async (indent, target) => {
   if (task.exec || task.deps) {
     console.log(indent, target, ago(targetTime))
   }
-  const lastDepsTime = task.deps
-    ? task.deps.reduce(
-      async (latest, dep) => Math.max(latest, await recurse(indent + `${target}|`, dep)),
-      0)
-    : 0
+  const deps = task.deps || []
+  const lastDepsTime = deps.reduce(
+    async (latest, dep) => Math.max(latest, await recurse(indent + `${target}|`, dep)),
+    0)
   if (task.exec) {
     if (targetTime > 0 && lastDepsTime < targetTime) {
       console.log(indent, 'UP TO DATE')
     } else {
-      console.log(indent, '+', task.exec({ target }))
+      const source = deps.length > 0 ? deps[0] : '***no-source***'
+      exec(indent, task.exec({ source, target }))
     }
   }
   const updatedTime = Math.max(lastDepsTime, await timestamp(target))
