@@ -13,8 +13,8 @@ import hasText from './ocr.js'
 import { MAX_IMAGE_COUNT_PER_QUERY } from '../src/js/shared.js'
 
 // This must be the same as the DATA variable in Makefile.
-const DATA = 'data/words.csv'
-// const DATA = 'data/words_debug.csv'
+export const DATA = 'data/words.csv'
+// export const DATA = 'data/words_debug.csv'
 
 const LOCALES = [
   'es_mx',
