@@ -51,7 +51,7 @@ export default {
       ...LOCALES.map(l => `site/debug_${l}.html`),
       'site/credit.html',
       'site/index.html',
-      'site/card_dev.htm',
+      'site/card_dev.html',
       'site/card_bundled.html',
       'site/info.html',
       'site/privacy.html']

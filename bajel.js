@@ -1,7 +1,6 @@
 import bajelfile from './bajelfile.js'
 import fs from 'fs'
-import util from 'util'
-import { exec } from 'child_process'
+import { spawn } from 'child_process'
 
 const timestamp = path =>
   fs.promises.stat(path)
@@ -38,30 +37,21 @@ const ago = (t) => {
 }
 
 const shellTrim = cmd => cmd.split('\n').map(s => s.trim()).join('\n')
-const execPromise = util.promisify(exec)
 
-const echo = (indent, { stdout, stderr }) => {
-  if (stdout) {
-    console.log(indent, stdout)
-  }
-  if (stderr) {
-    console.error(indent, stderr)
-  }
-}
-
-const printAndExec = async (indent, cmd) => {
+const printAndExec = (indent, cmd) => new Promise(resolve => {
   const trimmed = shellTrim(cmd)
 
   console.log(indent, '+', trimmed)
-  try {
-    echo(indent, await execPromise(trimmed))
-    return true
-  } catch (e) {
-    echo(indent, e)
-    console.error(`FAILED with code ${e.code}: \n${e.cmd}\n`)
-    return false
-  }
-}
+  const process = spawn(trimmed, [], { shell: true })
+  process.stdout.on('data', data => { console.log(data.toString()) })
+  process.stderr.on('data', data => { console.error(data.toString()) })
+  process.on('exit', code => {
+    if (code !== 0) {
+      console.error(indent, `FAILED with code ${code}: \n${trimmed}\n`)
+    }
+    resolve(code === 0)
+  })
+})
 
 /**
  * @param {string} indent prefix for log messages
@@ -96,12 +86,13 @@ const recurse = async (indent, target) => {
       const source = deps.length > 0 ? deps[0] : '***no-source***'
       const success = await printAndExec(indent, task.exec({ source, target }))
       if (!success) {
+        console.error(indent, 'FAILED', task)
         return [success]
       }
     }
   }
   const updatedTime = Math.max(lastDepsTime, await timestamp(target))
-  // console.log(indent, 'updated time', ago(targetTime))
+  // console.log(indent, 'SUCCESS, Updated time', ago(targetTime))
   return [true, updatedTime]
 }
 
@@ -110,7 +101,7 @@ const main = async () => {
   if (success) {
     console.log('Execution succeeded. Latest file:', ago(timestamp))
   } else {
-    console.error('Execution failed')
+    console.error('Execution failed.')
   }
 }
 
