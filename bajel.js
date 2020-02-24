@@ -1,5 +1,6 @@
 import bajelfile from './bajelfile.js'
 import fs from 'fs'
+import path from 'path'
 import { spawn } from 'child_process'
 
 const timestamp = path =>
@@ -96,7 +97,48 @@ const recurse = async (indent, target) => {
   return [true, updatedTime]
 }
 
+// shoutout https://medium.com/@allenhwkim/nodejs-walk-directory-f30a2d8f038f
+const walkDir = (dir, callback) => {
+  fs.readdirSync(dir).forEach(f => {
+    const dirPath = path.join(dir, f)
+    if (fs.statSync(dirPath).isDirectory()) {
+      walkDir(dirPath, callback)
+    } else {
+      callback(path.join(dir, f))
+    }
+  })
+}
+
+const expandDeps = () => {
+  const files = []
+  walkDir('.', f => { files.push(f) })
+  const added = {}
+  for (const target in bajelfile) {
+    const task = bajelfile[target]
+    const deps = task.deps || []
+    for (const dep of deps) {
+      if ((typeof dep) === 'object') { // regexp
+        for (const file of files) {
+          const match = file.match(dep)
+          if (match) {
+            const group = match[1]
+            const expandedTarget = target.replace('$1', group)
+            added[expandedTarget] = {
+              deps: deps.map(d => d == dep ? file : d),
+              exec: c => task.exec(c).replace('$1', group)
+            }
+          }
+        }
+      }
+    }
+  }
+  for (const target in added) {
+    bajelfile[target] = added[target]
+  }
+}
+
 const main = async () => {
+  expandDeps()
   const [success, timestamp] = await recurse('|', start)
   if (success) {
     console.log('Execution succeeded. Latest file:', ago(timestamp))

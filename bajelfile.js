@@ -58,7 +58,7 @@ export default {
   },
 
   'site/card_$1.html': {
-    deps: ['src/html/card.html', /src\/json\/card_(.*).json/, ...PARTIALS],
+    deps: ['src/html/card.html', /src\/json\/card_\(.*\).json/, ...PARTIALS],
     exec: c => `${MUSTACHE} src/json/card_$1.json src/html/card.html >${c.target}`
   },
   'site/deck_$1.html': {
