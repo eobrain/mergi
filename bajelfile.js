@@ -84,7 +84,7 @@ export default {
   'site/debug_en_us.html': { deps: ['src/html/debug.html', 'src/json/debug_en_us.json', ...PARTIALS] },
   'site/debug_es_es.html': { deps: ['src/html/debug.html', 'src/json/debug_es_es.json', ...PARTIALS] },
   'site/debug_es_mx.html': { deps: ['src/html/debug.html', 'src/json/debug_es_mx.json', ...PARTIALS] },
-  'site/debug_fr_fr.htm}l': { deps: ['src/html/debug.html', 'src/json/debug_fr_fr.json', ...PARTIALS] },
+  'site/debug_fr_fr.html': { deps: ['src/html/debug.html', 'src/json/debug_fr_fr.json', ...PARTIALS] },
   'site/credit.html': {
     deps: ['src/html/credit.html', 'src/json/credit.json', ...PARTIALS],
     exec: c => `${MUSTACHE} src/json/credit.json src/html/credit.html >${c.target}`
