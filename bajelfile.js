@@ -94,32 +94,32 @@ export default {
     from: /src\/js\/words_(.*).js/,
     deps: ['src/js/card_$1.js', ...CARDJS.map(x => `src/js/${x}`), 'src/js/externs.js'],
     exec: c => `
-			${COMPILEJS} --create_source_map site/app_$1_compiled.map --js_output_file ${c.target} ${c.source}
-			echo '//# sourceMappingURL=/app_$1_compiled.map' >> ${c.target}
-		`
+      ${COMPILEJS} --create_source_map site/app_$1_compiled.map --js_output_file ${c.target} ${c.source}
+      echo '//# sourceMappingURL=/app_$1_compiled.map' >> ${c.target}
+    `
   },
   'site/deck_$1_compiled.js': {
     from: /src\/js\/words_(.*).js/,
     deps: ['src/js/deck_$1.js', ...DECKJS.map(x => `src/js/${x}`), 'src/js/externs.js'],
     exec: c => `
-			${COMPILEJS} --create_source_map site/deck_$1_compiled.map --js_output_file ${c.target} ${c.source}
-			echo '//# sourceMappingURL=/deck_$1_compiled.map' >> ${c.target}
-		`
+      ${COMPILEJS} --create_source_map site/deck_$1_compiled.map --js_output_file ${c.target} ${c.source}
+      echo '//# sourceMappingURL=/deck_$1_compiled.map' >> ${c.target}
+    `
   },
   'site/debug_$1_compiled.js': {
     from: /src\/js\/words_(.*).js/,
     deps: ['src/js/debug_$1.js', ...DEBUGJS.map(x => `src/js/${x}`), 'src/js/externs.js'],
     exec: c => `
-			${COMPILEJS} --create_source_map site/debug_$1_compiled.map --js_output_file ${c.target} ${c.source}
-			echo '//# sourceMappingURL=/debug_$1_compiled.map' >> ${c.target}
-		`
+      ${COMPILEJS} --create_source_map site/debug_$1_compiled.map --js_output_file ${c.target} ${c.source}
+      echo '//# sourceMappingURL=/debug_$1_compiled.map' >> ${c.target}
+    `
   },
   'site/index_compiled.js': {
     deps: ['src/js/index.js', 'src/js/externs.js'],
     exec: c => `
-			${COMPILEJS} --create_source_map site/index_compiled.map --js_output_file ${c.target} ${c.source}
-			echo '//# sourceMappingURL=/index_compiled.map' >> ${c.target}
-		`
+      ${COMPILEJS} --create_source_map site/index_compiled.map --js_output_file ${c.target} ${c.source}
+      echo '//# sourceMappingURL=/index_compiled.map' >> ${c.target}
+    `
   },
 
   'site/$1.js': {
@@ -131,9 +131,9 @@ export default {
   'site/css/$1.css': {
     from: /src\/scss\/(.*).scss/,
     exec: c => `
-			mkdir -p site/css
-			npx node-sass --output-style compressed src/scss/$1.scss > site/css/$1.css
-		`
+      mkdir -p site/css
+      npx node-sass --output-style compressed src/scss/$1.scss > site/css/$1.css
+    `
   },
 
   modules: {
@@ -157,9 +157,9 @@ export default {
   words: {
     deps: ['lint', DATA, 'node/fetch_words.js', 'node/scrape.js'],
     exec: c => `
-			node node/fetch_words.js
-			npx standard --fix src/js/words_??_??.js
-		`
+      node node/fetch_words.js
+      npx standard --fix src/js/words_??_??.js
+    `
   },
 
   'ocr-test': { deps: ['site/ocr.html'] },
@@ -175,24 +175,24 @@ export default {
 
   'site/server.pem': {
     exec: c => `
-			cd site
-			openssl req -new -x509 -keyout server.pem -out server.pem -days 365 -nodes
-	`
+      cd site
+      openssl req -new -x509 -keyout server.pem -out server.pem -days 365 -nodes
+  `
   },
 
   serve: {
     deps: ['compiled'],
     exec: c => `
-			: visit https://localhost:8888
-			cd site && python -m SimpleHTTPServer 8888
-		`
+      : visit https://localhost:8888
+      cd site && python -m SimpleHTTPServer 8888
+    `
   },
 
   'serve-ssl': {
     deps: ['site/server.pem', 'site/serve.py', 'compiled'],
     exec: `
-			: visit https://localhost:4443
-			cd site && python serve.py
-		`
+      : visit https://localhost:4443
+      cd site && python serve.py
+    `
   }
 }
