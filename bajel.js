@@ -112,28 +112,36 @@ const walkDir = (dir, callback) => {
 const expandDeps = () => {
   const files = []
   walkDir('.', f => { files.push(f) })
-  const added = {}
+  const toAdd = {}
+  const toRemove = []
   for (const target in bajelfile) {
     const task = bajelfile[target]
     const deps = task.deps || []
+    let expanded = false
     for (const dep of deps) {
       if ((typeof dep) === 'object') { // regexp
         for (const file of files) {
           const match = file.match(dep)
           if (match) {
+            expanded = true
             const group = match[1]
-            const expandedTarget = target.replace('$1', group)
-            added[expandedTarget] = {
-              deps: deps.map(d => d == dep ? file : d),
-              exec: c => task.exec(c).replace('$1', group)
+            const expand = s => s.replace('$1', group)
+            const expandedTarget = expand(target)
+            toAdd[expandedTarget] = {
+              deps: deps.map(d => d === dep ? file : d),
+              exec: c => expand(task.exec(c))
             }
           }
         }
       }
     }
+    if (expanded) {
+      toRemove.push(target)
+    }
   }
-  for (const target in added) {
-    bajelfile[target] = added[target]
+  toRemove.forEach(target => { delete bajelfile[target] })
+  for (const target in toAdd) {
+    bajelfile[target] = toAdd[target]
   }
 }
 

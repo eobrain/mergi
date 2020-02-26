@@ -9,6 +9,7 @@
 // See README for more.
 
 import { DATA } from './node/config.js'
+import { basename } from 'path'
 
 const COMPILEJS = 'java -jar tools/closure/closure-compiler-v20191111.jar -O ADVANCED --externs src/js/externs.js'
 const LOCALES = ['en_ie', 'en_us', 'es_es', 'es_mx', 'fr_fr']
@@ -111,21 +112,21 @@ export default {
   },
 
   'site/card_$1_compiled.js': {
-    deps: [/src\/js\/words_(.*).js/, 'src/js / card_$1.js', ...CARDJS.map(x => `src/js/${x}`), 'src / js / externs.js'],
+    deps: [/src\/js\/words_(.*).js/, 'src/js/card_$1.js', ...CARDJS.map(x => `src/js/${x}`), 'src / js / externs.js'],
     exec: c => `
 			${COMPILEJS} --create_source_map site/app_$1_compiled.map --js_output_file ${c.target} ${c.source}
 			echo '//# sourceMappingURL=/app_$1_compiled.map' >> ${c.target}
 		`
   },
   'site/deck_$1_compiled.js': {
-    deps: [/src\/js\/words_(.*).js/, 'src/js / deck_$1.js', ...DECKJS.map(x => `src/js/${x}`), 'src / js / externs.js'],
+    deps: [/src\/js\/words_(.*).js/, 'src/js/deck_$1.js', ...DECKJS.map(x => `src/js/${x}`), 'src / js / externs.js'],
     exec: c => `
 			${COMPILEJS} --create_source_map site/deck_$1_compiled.map --js_output_file ${c.target} ${c.source}
 			echo '//# sourceMappingURL=/deck_$1_compiled.map' >> ${c.target}
 		`
   },
   'site/debug_$1_compiled.js': {
-    deps: [/src\/js\/words_(.*).js/, 'src/js / debug_$1.js', ...DEBUGJS.map(x => `src/js/${x}`), 'src / js / externs.js'],
+    deps: [/src\/js\/words_(.*).js/, 'src/js/debug_$1.js', ...DEBUGJS.map(x => `src/js/${x}`), 'src / js / externs.js'],
     exec: c => `
 			${COMPILEJS} --create_source_map site/debug_$1_compiled.map --js_output_file ${c.target} ${c.source}
 			echo '//# sourceMappingURL=/debug_$1_compiled.map' >> ${c.target}
@@ -188,7 +189,7 @@ export default {
   'site/$1.js': {
     deps: [/src\/js\/(.*).js/],
     exec: c =>
-      `npx terser --module --ecma 6 --compress --mangle --source-map "base='site',url='${c.notdir(c.target)}.map'" --output ${c.target} -- ${c.source}`
+      `npx terser --module --ecma 6 --compress --mangle --source-map "base='site',url='${basename(c.target)}.map'" --output ${c.target} -- ${c.source}`
   },
 
   'site/css/$1.css': {
