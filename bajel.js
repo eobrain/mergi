@@ -2,15 +2,28 @@ import bajelfile from './bajelfile.js'
 import fs from 'fs'
 import path from 'path'
 import { spawn } from 'child_process'
+import getopts from 'getopts'
+
+const options = getopts(process.argv.slice(2), {
+  boolean: ['n'],
+  alias: {
+    n: ['just-print', 'dry-run', 'recon'],
+    stopEarly: true
+  }
+})
+if (options.help) {
+  console.log('usage: bajel [-n] [target]')
+  process.exit(0)
+}
+const dryRun = options.n
+const start = options._.length > 0
+  ? options._[0]
+  : Object.keys(bajelfile)[0]
 
 const timestamp = path =>
   fs.promises.stat(path)
     .then(s => s.mtimeMs)
     .catch(e => 0)
-
-const start = process.argv.length > 2
-  ? process.argv[2]
-  : Object.keys(bajelfile)[0]
 
 const ago = (t) => {
   if (t === 0) {
@@ -38,40 +51,39 @@ const ago = (t) => {
 
 const shellTrim = cmd => cmd.split('\n').map(s => s.trim()).join('\n')
 
-const printAndExec = (indent, cmd) => new Promise(resolve => {
+const printAndExec = cmd => new Promise(resolve => {
   const trimmed = shellTrim(cmd)
-
-  console.log(indent, '+', trimmed)
+  console.log(trimmed)
+  if (dryRun) {
+    resolve(true)
+    return
+  }
   const process = spawn(trimmed, [], { shell: true })
   process.stdout.on('data', data => { console.log(data.toString()) })
   process.stderr.on('data', data => { console.error(data.toString()) })
   process.on('exit', code => {
     if (code !== 0) {
-      console.error(indent, `FAILED with code ${code}: \n${trimmed}\n`)
+      console.error(`FAILED with code ${code}: \n${trimmed}\n`)
     }
     resolve(code === 0)
   })
 })
 
 /**
- * @param {string} indent prefix for log messages
  * @param {string} target being built
  * @returns {[succeeded, number]} whether succeeded and timestamp in ms of latest file change
  * */
-const recurse = async (indent, target) => {
+const recurse = async target => {
   const targetTime = await timestamp(target)
   const task = bajelfile[target] || {}
   if (!task.exec && !task.deps && targetTime === 0) {
-    console.warn(indent, `No target "${target}"`)
+    console.warn(`No target "${target}"`)
     return [false]
   }
-  /* if (task.exec || task.deps) {
-    console.log(indent, target, ago(targetTime))
-  } */
   const deps = task.deps || []
   let lastDepsTime = 0
   for (let i = 0; i < deps.length; ++i) {
-    const [depSuccess, depTime] = await recurse(indent + `${target}|`, deps[i])
+    const [depSuccess, depTime] = await recurse(deps[i])
     if (!depSuccess) {
       return [depSuccess]
     }
@@ -80,19 +92,16 @@ const recurse = async (indent, target) => {
     }
   }
   if (task.exec) {
-    if (targetTime > 0 && lastDepsTime < targetTime) {
-      // console.log(indent, 'UP TO DATE')
-    } else {
+    if (targetTime === 0 || targetTime < lastDepsTime) {
       const source = deps.length > 0 ? deps[0] : '***no-source***'
-      const success = await printAndExec(indent, task.exec({ source, target }))
+      const success = await printAndExec(task.exec({ source, target }))
       if (!success) {
-        console.error(indent, 'FAILED', task)
+        console.error('FAILED', task)
         return [success]
       }
     }
   }
   const updatedTime = Math.max(lastDepsTime, await timestamp(target))
-  // console.log(indent, 'SUCCESS, Updated time', ago(targetTime))
   return [true, updatedTime]
 }
 
@@ -140,12 +149,21 @@ const expandDeps = () => {
 
 const main = async () => {
   expandDeps()
-  const [success, timestamp] = await recurse('|', start)
-  if (success) {
-    console.log('Execution succeeded. Latest file:', ago(timestamp))
-  } else {
+  const [success, timestamp] = await recurse(start)
+
+  if (!success) {
     console.error('Execution failed.')
+    process.exit(1)
   }
+  if (dryRun) {
+    console.log('Dry run finished.')
+    process.exit(0)
+  }
+  console.log('Execution succeeded.')
+  if (timestamp) {
+    console.log('Latest file modified ', ago(timestamp))
+  }
+  process.exit(0)
 }
 
 main()
