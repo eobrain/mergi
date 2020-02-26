@@ -12,29 +12,28 @@ const start = process.argv.length > 2
   ? process.argv[2]
   : Object.keys(bajelfile)[0]
 
-const now = Date.now()
 const ago = (t) => {
   if (t === 0) {
     return 'missing'
   }
-  const ms = now - t
+  const ms = Date.now() - t
   if (ms < 1000) {
-    return `${ms}ms ago`
+    return `${ms.toPrecision(3)}ms ago`
   }
   const s = ms / 1000
   if (s < 60) {
-    return `${s}s ago`
+    return `${s.toPrecision(3)}s ago`
   }
   const min = s / 60
   if (min < 60) {
-    return `${min} min ago`
+    return `${min.toPrecision(3)} min ago`
   }
   const hour = min / 60
   if (hour < 24) {
-    return `${hour} hours ago`
+    return `${hour.toPrecision(3)} hours ago`
   }
   const day = hour / 24
-  return `${day} days ago`
+  return `${day.toPrecision(3)} days ago`
 }
 
 const shellTrim = cmd => cmd.split('\n').map(s => s.trim()).join('\n')
@@ -116,27 +115,21 @@ const expandDeps = () => {
   const toRemove = []
   for (const target in bajelfile) {
     const task = bajelfile[target]
+    if (!task.from) {
+      continue
+    }
     const deps = task.deps || []
-    let expanded = false
-    for (const dep of deps) {
-      if ((typeof dep) === 'object') { // regexp
-        for (const file of files) {
-          const match = file.match(dep)
-          if (match) {
-            expanded = true
-            const group = match[1]
-            const expand = s => s.replace('$1', group)
-            const expandedTarget = expand(target)
-            toAdd[expandedTarget] = {
-              deps: deps.map(d => d === dep ? file : d),
-              exec: c => expand(task.exec(c))
-            }
-          }
+    for (const file of files) {
+      const match = file.match(task.from)
+      if (match) {
+        const group = match[1]
+        const expand = s => s.split('$1').join(group)
+        toRemove.push(target)
+        toAdd[expand(target)] = {
+          deps: [file, ...deps.map(expand)],
+          exec: c => expand(task.exec(c))
         }
       }
-    }
-    if (expanded) {
-      toRemove.push(target)
     }
   }
   toRemove.forEach(target => { delete bajelfile[target] })

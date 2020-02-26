@@ -59,15 +59,18 @@ export default {
   },
 
   'site/card_$1.html': {
-    deps: ['src/html/card.html', /src\/json\/card_\(.*\).json/, ...PARTIALS],
+    from: /src\/json\/card_\(.*\).json/,
+    deps: ['src/html/card.html', ...PARTIALS],
     exec: c => `${MUSTACHE} src/json/card_$1.json src/html/card.html >${c.target}`
   },
   'site/deck_$1.html': {
-    deps: ['src/html/deck.html', /src\/json\/deck_(.*).json/, ...PARTIALS],
+    from: /src\/json\/deck_(.*).json/,
+    deps: ['src/html/deck.html', ...PARTIALS],
     exec: c => `${MUSTACHE} src/json/deck_$1.json src/html/deck.html >${c.target}`
   },
   'site/debug_$1.html': {
-    deps: ['src/html/debug.html', /src\/json\/debug_(.*).json/, ...PARTIALS],
+    from: /src\/json\/debug_(.*).json/,
+    deps: ['src/html/debug.html', ...PARTIALS],
     exec: c => `${MUSTACHE} src/json/debug_$1.json src/html/debug.html >${c.target}`
   },
 
@@ -112,21 +115,24 @@ export default {
   },
 
   'site/card_$1_compiled.js': {
-    deps: [/src\/js\/words_(.*).js/, 'src/js/card_$1.js', ...CARDJS.map(x => `src/js/${x}`), 'src / js / externs.js'],
+    from: /src\/js\/words_(.*).js/,
+    deps: ['src/js/card_$1.js', ...CARDJS.map(x => `src/js/${x}`), 'src/js/externs.js'],
     exec: c => `
 			${COMPILEJS} --create_source_map site/app_$1_compiled.map --js_output_file ${c.target} ${c.source}
 			echo '//# sourceMappingURL=/app_$1_compiled.map' >> ${c.target}
 		`
   },
   'site/deck_$1_compiled.js': {
-    deps: [/src\/js\/words_(.*).js/, 'src/js/deck_$1.js', ...DECKJS.map(x => `src/js/${x}`), 'src / js / externs.js'],
+    from: /src\/js\/words_(.*).js/,
+    deps: ['src/js/deck_$1.js', ...DECKJS.map(x => `src/js/${x}`), 'src/js/externs.js'],
     exec: c => `
 			${COMPILEJS} --create_source_map site/deck_$1_compiled.map --js_output_file ${c.target} ${c.source}
 			echo '//# sourceMappingURL=/deck_$1_compiled.map' >> ${c.target}
 		`
   },
   'site/debug_$1_compiled.js': {
-    deps: [/src\/js\/words_(.*).js/, 'src/js/debug_$1.js', ...DEBUGJS.map(x => `src/js/${x}`), 'src / js / externs.js'],
+    from: /src\/js\/words_(.*).js/,
+    deps: ['src/js/debug_$1.js', ...DEBUGJS.map(x => `src/js/${x}`), 'src/js/externs.js'],
     exec: c => `
 			${COMPILEJS} --create_source_map site/debug_$1_compiled.map --js_output_file ${c.target} ${c.source}
 			echo '//# sourceMappingURL=/debug_$1_compiled.map' >> ${c.target}
@@ -187,13 +193,13 @@ export default {
   },
 
   'site/$1.js': {
-    deps: [/src\/js\/(.*).js/],
+    from: /src\/js\/(.*).js/,
     exec: c =>
       `npx terser --module --ecma 6 --compress --mangle --source-map "base='site',url='${basename(c.target)}.map'" --output ${c.target} -- ${c.source}`
   },
 
   'site/css/$1.css': {
-    deps: [/src\/scss\/(.*).scss/],
+    from: /src\/scss\/(.*).scss/,
     exec: c => `
 			mkdir -p site/css
 			npx node-sass --output-style compressed src/scss/$1.scss > site/css/$1.css
