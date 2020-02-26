@@ -59,7 +59,7 @@ export default {
   },
 
   'site/card_$1.html': {
-    from: /src\/json\/card_\(.*\).json/,
+    from: /src\/json\/card_(.*).json/,
     deps: ['src/html/card.html', ...PARTIALS],
     exec: c => `${MUSTACHE} src/json/card_$1.json src/html/card.html >${c.target}`
   },
@@ -73,22 +73,6 @@ export default {
     deps: ['src/html/debug.html', ...PARTIALS],
     exec: c => `${MUSTACHE} src/json/debug_$1.json src/html/debug.html >${c.target}`
   },
-
-  'site/card_en_ie.html': { deps: ['src/html/card.html', 'src/json/card_en_ie.json', ...PARTIALS] },
-  'site/card_en_us.html': { deps: ['src/html/card.html', 'src/json/card_en_us.json', ...PARTIALS] },
-  'site/card_es_es.html': { deps: ['src/html/card.html', 'src/json/card_es_es.json', ...PARTIALS] },
-  'site/card_es_mx.html': { deps: ['src/html/card.html', 'src/json/card_es_mx.json', ...PARTIALS] },
-  'site/card_fr_fr.html': { deps: ['src/html/card.html', 'src/json/card_fr_fr.json', ...PARTIALS] },
-  'site/deck_en_ie.html': { deps: ['src/html/deck.html', 'src/json/deck_en_ie.json', ...PARTIALS] },
-  'site/deck_en_us.html': { deps: ['src/html/deck.html', 'src/json/deck_en_us.json', ...PARTIALS] },
-  'site/deck_es_es.html': { deps: ['src/html/deck.html', 'src/json/deck_es_es.json', ...PARTIALS] },
-  'site/deck_es_mx.html': { deps: ['src/html/deck.html', 'src/json/deck_es_mx.json', ...PARTIALS] },
-  'site/deck_fr_fr.html': { deps: ['src/html/deck.html', 'src/json/deck_fr_fr.json', ...PARTIALS] },
-  'site/debug_en_ie.html': { deps: ['src/html/debug.html', 'src/json/debug_en_ie.json', ...PARTIALS] },
-  'site/debug_en_us.html': { deps: ['src/html/debug.html', 'src/json/debug_en_us.json', ...PARTIALS] },
-  'site/debug_es_es.html': { deps: ['src/html/debug.html', 'src/json/debug_es_es.json', ...PARTIALS] },
-  'site/debug_es_mx.html': { deps: ['src/html/debug.html', 'src/json/debug_es_mx.json', ...PARTIALS] },
-  'site/debug_fr_fr.html': { deps: ['src/html/debug.html', 'src/json/debug_fr_fr.json', ...PARTIALS] },
   'site/credit.html': {
     deps: ['src/html/credit.html', 'src/json/credit.json', ...PARTIALS],
     exec: c => `${MUSTACHE} src/json/credit.json src/html/credit.html >${c.target}`
@@ -96,14 +80,6 @@ export default {
   'site/index.html': {
     deps: ['src/html/index.html', 'src/json/index.json', ...PARTIALS],
     exec: c => `${MUSTACHE} src/json/index.json src/html/index.html >${c.target}`
-  },
-  'site/card_dev.html': {
-    deps: ['src/html/card.html', 'src/json/card_dev.json', ...PARTIALS],
-    exec: c => `${MUSTACHE} src/json/card_dev.json src/html/card.html >${c.target}`
-  },
-  'site/card_bundled.html': {
-    deps: ['src/html/card.html', 'src/json/card_bundled.json', ...PARTIALS],
-    exec: c => `${MUSTACHE} src/json/card_bundled.json src/html/card.html >${c.target}`
   },
   'site/info.html': {
     deps: ['src/html/info.html', 'src/json/info.json', ...PARTIALS],
@@ -146,52 +122,6 @@ export default {
 		`
   },
 
-  'site/card_en_ie_compiled.js': {
-    deps: ['src/js/words_en_ie.js', 'src/js/card_en_ie.js', ...CARDJS.map(x => `src/js/${x}`), 'src/js/externs.js']
-  },
-  'site/card_en_us_compiled.js': {
-    deps: ['src/js/words_en_us.js', 'src/js/card_en_us.js', ...CARDJS.map(x => `src/js/${x}`), 'src/js/externs.js']
-  },
-  'site/card_es_es_compiled.js': {
-    deps: ['src/js/words_es_es.js', 'src/js/card_es_es.js', ...CARDJS.map(x => `src/js/${x}`), 'src/js/externs.js']
-  },
-  'site/card_es_mx_compiled.js': {
-    deps: ['src/js/words_es_mx.js', 'src/js/card_es_mx.js', ...CARDJS.map(x => `src/js/${x}`), 'src/js/externs.js']
-  },
-  'site/card_fr_fr_compiled.js': {
-    deps: ['src/js/words_fr_fr.js', 'src/js/card_fr_fr.js', ...CARDJS.map(x => `src/js/${x}`), 'src/js/externs.js']
-  },
-  'site/deck_en_ie_compiled.js': {
-    deps: ['src/js/words_en_ie.js', 'src/js/deck_en_ie.js', ...DECKJS.map(x => `src/js/${x}`), 'src/js/externs.js']
-  },
-  'site/deck_en_us_compiled.js': {
-    deps: ['src/js/words_en_us.js', 'src/js/deck_en_us.js', ...DECKJS.map(x => `src/js/${x}`), 'src/js/externs.js']
-  },
-  'site/deck_es_es_compiled.js': {
-    deps: ['src/js/words_es_es.js', 'src/js/deck_es_es.js', ...DECKJS.map(x => `src/js/${x}`), 'src/js/externs.js']
-  },
-  'site/deck_es_mx_compiled.js': {
-    deps: ['src/js/words_es_mx.js', 'src/js/deck_es_mx.js', ...DECKJS.map(x => `src/js/${x}`), 'src/js/externs.js']
-  },
-  'site/deck_fr_fr_compiled.js': {
-    deps: ['src/js/words_fr_fr.js', 'src/js/deck_fr_fr.js', ...DECKJS.map(x => `src/js/${x}`), 'src/js/externs.js']
-  },
-  'site/debug_en_ie_compiled.js': {
-    deps: ['src/js/words_en_ie.js', 'src/js/debug_en_ie.js', ...DEBUGJS.map(x => `src/js/${x}`), 'src/js/externs.js']
-  },
-  'site/debug_en_us_compiled.js': {
-    deps: ['src/js/words_en_us.js', 'src/js/debug_en_us.js', ...DEBUGJS.map(x => `src/js/${x}`), 'src/js/externs.js']
-  },
-  'site/debug_es_es_compiled.js': {
-    deps: ['src/js/words_es_es.js', 'src/js/debug_es_es.js', ...DEBUGJS.map(x => `src/js/${x}`), 'src/js/externs.js']
-  },
-  'site/debug_es_mx_compiled.js': {
-    deps: ['src/js/words_es_mx.js', 'src/js/debug_es_mx.js', ...DEBUGJS.map(x => `src/js/${x}`), 'src/js/externs.js']
-  },
-  'site/debug_fr_fr_compiled.js': {
-    deps: ['src/js/words_fr_fr.js', 'src/js/debug_fr_fr.js', ...DEBUGJS.map(x => `src/js/${x}`), 'src/js/externs.js']
-  },
-
   'site/$1.js': {
     from: /src\/js\/(.*).js/,
     exec: c =>
@@ -205,9 +135,6 @@ export default {
 			npx node-sass --output-style compressed src/scss/$1.scss > site/css/$1.css
 		`
   },
-
-  'site/css/app.css': { deps: ['src/scss/app.scss', 'src/scss/_def.scss'] },
-  'site/css/common.css': { deps: ['src/scss/common.scss', 'src/scss/_def.scss'] },
 
   modules: {
     deps: [

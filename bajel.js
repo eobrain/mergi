@@ -122,17 +122,20 @@ const expandDeps = () => {
   walkDir('.', f => { files.push(f) })
   const toAdd = {}
   const toRemove = []
+  let expansionHappened = false
   for (const target in bajelfile) {
     const task = bajelfile[target]
     if (!task.from) {
       continue
     }
     const deps = task.deps || []
-    for (const file of files) {
+    let matchHappened
+    for (const file of [...files, ...Object.keys(bajelfile)]) {
       const match = file.match(task.from)
       if (match) {
         const group = match[1]
         const expand = s => s.split('$1').join(group)
+        matchHappened = expansionHappened = true
         toRemove.push(target)
         toAdd[expand(target)] = {
           deps: [file, ...deps.map(expand)],
@@ -140,15 +143,24 @@ const expandDeps = () => {
         }
       }
     }
+    if (!matchHappened) {
+      console.warn(`No match for  ${target}: ${task.from}`)
+    }
   }
   toRemove.forEach(target => { delete bajelfile[target] })
   for (const target in toAdd) {
+    if (bajelfile[target]) {
+      console.warn('Duplicate targets')
+      console.warn(target, ':', bajelfile[target])
+      console.warn(target, ':', toAdd[target])
+    }
     bajelfile[target] = toAdd[target]
   }
+  return expansionHappened
 }
 
 const main = async () => {
-  expandDeps()
+  while (expandDeps()) {}
   const [success, timestamp] = await recurse(start)
 
   if (!success) {
