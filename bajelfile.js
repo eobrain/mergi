@@ -21,178 +21,156 @@ const DECKJS = ['deck.js', 'shared.js', 'search_url.js', 'card.js', 'storage.js'
 const DEBUGJS = ['debug.js', 'shared.js', 'search_url.js', 'card.js', 'storage.js', 'word.js']
 
 export default {
-  compiled: {
-    deps: [
-      'lint',
-      'runtest',
-      'html',
-      'modules',
-      ...STYLE.map(s => `site/css/${s}.css`),
-      ...LOCALES.map(l => `site/card_${l}_compiled.js`),
-      ...LOCALES.map(l => `site/deck_${l}_compiled.js`),
-      ...LOCALES.map(l => `site/debug_${l}_compiled.js`),
-      'site/index_compiled.js'
-    ]
-  },
+  compiled: [
+    'lint',
+    'runtest',
+    'html',
+    'modules',
+    ...STYLE.map(s => `site/css/${s}.css`),
+    ...LOCALES.map(l => `site/card_${l}_compiled.js`),
+    ...LOCALES.map(l => `site/deck_${l}_compiled.js`),
+    ...LOCALES.map(l => `site/debug_${l}_compiled.js`),
+    'site/index_compiled.js'
+  ],
 
-  runtest: { exec: c => 'npm test' },
+  runtest: [c => 'npm test'],
 
-  runbrowsertest: {
-    deps: 'lint',
-    exec: `
-      : Open http://localhost:8887/browsertest
-      python -m SimpleHTTPServer 8887
-    `
-  },
+  runbrowsertest: ['lint',
+    c => console.log('Open http://localhost:8887/browsertest'),
+    c => 'python -m SimpleHTTPServer 8887'
+  ],
 
-  html: {
-    deps: [
-      ...LOCALES.map(l => `site/card_${l}.html`),
-      ...LOCALES.map(l => `site/deck_${l}.html`),
-      ...LOCALES.map(l => `site/debug_${l}.html`),
-      'site/credit.html',
-      'site/index.html',
-      'site/card_dev.html',
-      'site/card_bundled.html',
-      'site/info.html',
-      'site/privacy.html']
-  },
+  html: [
+    ...LOCALES.map(l => `site/card_${l}.html`),
+    ...LOCALES.map(l => `site/deck_${l}.html`),
+    ...LOCALES.map(l => `site/debug_${l}.html`),
+    'site/credit.html',
+    'site/index.html',
+    'site/card_dev.html',
+    'site/card_bundled.html',
+    'site/info.html',
+    'site/privacy.html'
+  ],
 
-  'site/card_$1.html': {
-    from: /src\/json\/card_(.*).json/,
-    deps: ['src/html/card.html', ...PARTIALS],
-    exec: c => `${MUSTACHE} src/json/card_$1.json src/html/card.html >${c.target}`
-  },
-  'site/deck_$1.html': {
-    from: /src\/json\/deck_(.*).json/,
-    deps: ['src/html/deck.html', ...PARTIALS],
-    exec: c => `${MUSTACHE} src/json/deck_$1.json src/html/deck.html >${c.target}`
-  },
-  'site/debug_$1.html': {
-    from: /src\/json\/debug_(.*).json/,
-    deps: ['src/html/debug.html', ...PARTIALS],
-    exec: c => `${MUSTACHE} src/json/debug_$1.json src/html/debug.html >${c.target}`
-  },
-  'site/credit.html': {
-    deps: ['src/html/credit.html', 'src/json/credit.json', ...PARTIALS],
-    exec: c => `${MUSTACHE} src/json/credit.json src/html/credit.html >${c.target}`
-  },
-  'site/index.html': {
-    deps: ['src/html/index.html', 'src/json/index.json', ...PARTIALS],
-    exec: c => `${MUSTACHE} src/json/index.json src/html/index.html >${c.target}`
-  },
-  'site/info.html': {
-    deps: ['src/html/info.html', 'src/json/info.json', ...PARTIALS],
-    exec: c => `${MUSTACHE} src/json/info.json src/html/info.html >${c.target}`
-  },
-  'site/privacy.html': {
-    deps: ['src/html/privacy.html', 'src/json/privacy.json', ...PARTIALS],
-    exec: c => `${MUSTACHE} src/json/privacy.json src/html/privacy.html >${c.target}`
-  },
+  'site/card_$1.html': [/src\/json\/card_(.*).json/, 'src/html/card.html', ...PARTIALS,
+    c => `${MUSTACHE} src/json/card_$1.json src/html/card.html >${c.target}`
+  ],
+  'site/deck_$1.html': [/src\/json\/deck_(.*).json/, 'src/html/deck.html', ...PARTIALS,
+    c => `${MUSTACHE} src/json/deck_$1.json src/html/deck.html >${c.target}`
+  ],
+  'site/debug_$1.html': [/src\/json\/debug_(.*).json/, 'src/html/debug.html', ...PARTIALS,
+    c => `${MUSTACHE} src/json/debug_$1.json src/html/debug.html >${c.target}`
+  ],
+  'site/credit.html': ['src/json/credit.json', 'src/html/credit.html', ...PARTIALS,
+    c => `${MUSTACHE} src/json/credit.json src/html/credit.html >${c.target}`
+  ],
+  'site/index.html': ['src/json/index.json', 'src/html/index.html', ...PARTIALS,
+    c => `${MUSTACHE} src/json/index.json src/html/index.html >${c.target}`
+  ],
+  'site/info.html': ['src/json/info.json', 'src/html/info.html', ...PARTIALS,
+    c => `${MUSTACHE} src/json/info.json src/html/info.html >${c.target}`
+  ],
+  'site/privacy.html': ['src/html/privacy.html', 'src/json/privacy.json', ...PARTIALS,
+    c => `${MUSTACHE} src/json/privacy.json src/html/privacy.html >${c.target}`
+  ],
 
-  'site/card_$1_compiled.js': {
-    from: /src\/js\/words_(.*).js/,
-    deps: ['src/js/card_$1.js', ...CARDJS.map(x => `src/js/${x}`), 'src/js/externs.js'],
-    exec: c => `
+  'site/card_$1_compiled.js': [
+    /src\/js\/words_(.*).js/,
+    'src/js/card_$1.js',
+    ...CARDJS.map(x => `src/js/${x}`),
+    'src/js/externs.js',
+    c => `
       ${COMPILEJS} --create_source_map site/app_$1_compiled.map --js_output_file ${c.target} ${c.source}
       echo '//# sourceMappingURL=/app_$1_compiled.map' >> ${c.target}
     `
-  },
-  'site/deck_$1_compiled.js': {
-    from: /src\/js\/words_(.*).js/,
-    deps: ['src/js/deck_$1.js', ...DECKJS.map(x => `src/js/${x}`), 'src/js/externs.js'],
-    exec: c => `
+  ],
+  'site/deck_$1_compiled.js': [
+    /src\/js\/words_(.*).js/,
+    'src/js/deck_$1.js',
+    ...DECKJS.map(x => `src/js/${x}`), 'src/js/externs.js',
+    c => `
       ${COMPILEJS} --create_source_map site/deck_$1_compiled.map --js_output_file ${c.target} ${c.source}
       echo '//# sourceMappingURL=/deck_$1_compiled.map' >> ${c.target}
     `
-  },
-  'site/debug_$1_compiled.js': {
-    from: /src\/js\/words_(.*).js/,
-    deps: ['src/js/debug_$1.js', ...DEBUGJS.map(x => `src/js/${x}`), 'src/js/externs.js'],
-    exec: c => `
+  ],
+  'site/debug_$1_compiled.js': [
+    /src\/js\/words_(.*).js/,
+    'src/js/debug_$1.js', ...DEBUGJS.map(x => `src/js/${x}`), 'src/js/externs.js',
+    c => `
       ${COMPILEJS} --create_source_map site/debug_$1_compiled.map --js_output_file ${c.target} ${c.source}
       echo '//# sourceMappingURL=/debug_$1_compiled.map' >> ${c.target}
     `
-  },
-  'site/index_compiled.js': {
-    deps: ['src/js/index.js', 'src/js/externs.js'],
-    exec: c => `
+  ],
+  'site/index_compiled.js': ['src/js/index.js', 'src/js/externs.js',
+    c => `
       ${COMPILEJS} --create_source_map site/index_compiled.map --js_output_file ${c.target} ${c.source}
       echo '//# sourceMappingURL=/index_compiled.map' >> ${c.target}
     `
-  },
+  ],
 
-  'site/$1.js': {
-    from: /src\/js\/(.*).js/,
-    exec: c =>
+  'site/$1.js': [/src\/js\/(.*).js/,
+    c =>
       `npx terser --module --ecma 6 --compress --mangle --source-map "base='site',url='${basename(c.target)}.map'" --output ${c.target} -- ${c.source}`
-  },
+  ],
 
-  'site/css/$1.css': {
-    from: /src\/scss\/(.*).scss/,
-    exec: c => `
+  'site/css/$1.css': [/src\/scss\/(.*).scss/,
+    c => `
       mkdir -p site/css
       npx node-sass --output-style compressed src/scss/$1.scss > site/css/$1.css
     `
-  },
+  ],
 
-  modules: {
-    deps: [
-      ...LOCALES.map(l => `site/words_${l}.js`),
-      ...LOCALES.map(l => `site/card_${l}.js`),
-      ...LOCALES.map(l => `site/deck_${l}.js`),
-      ...LOCALES.map(l => `site/debug_${l}.js`),
-      'site/service-worker.js',
-      'site/index.js',
-      'site/card.js',
-      'site/storage.js',
-      'site/word.js',
-      'site/debug.js',
-      'site/deck.js',
-      'site/main.js',
-      'site/search_url.js',
-      'site/shared.js']
-  },
+  modules: [
+    ...LOCALES.map(l => `site/words_${l}.js`),
+    ...LOCALES.map(l => `site/card_${l}.js`),
+    ...LOCALES.map(l => `site/deck_${l}.js`),
+    ...LOCALES.map(l => `site/debug_${l}.js`),
+    'site/service-worker.js',
+    'site/index.js',
+    'site/card.js',
+    'site/storage.js',
+    'site/word.js',
+    'site/debug.js',
+    'site/deck.js',
+    'site/main.js',
+    'site/search_url.js',
+    'site/shared.js'],
 
-  words: {
-    deps: ['lint', DATA, 'node/fetch_words.js', 'node/scrape.js'],
-    exec: c => `
+  words: ['lint', DATA, 'node/fetch_words.js', 'node/scrape.js',
+    c => `
       node node/fetch_words.js
       npx standard --fix src/js/words_??_??.js
     `
-  },
+  ],
 
-  'ocr-test': { deps: ['site/ocr.html'] },
+  'ocr-test': ['site/ocr.html'],
 
-  'site/ocr.html': {
-    deps: ['site/words_es_mx.js', 'node/ocr.js', 'node/ocr_test.js'],
-    exec: c => `node node/ocr_test.js > ${c.target}`
-  },
+  'site/ocr.html': ['site/words_es_mx.js', 'node/ocr.js', 'node/ocr_test.js',
+    c => `node node/ocr_test.js > ${c.target}`
+  ],
 
-  lint: { exec: c => 'npx standard node/*.js src/js/*.js' },
+  lint: [
+    c => 'npx standard node/*.js src/js/*.js'],
 
-  clean: { exec: c => 'rm -f site/*.js site/*.map site/*.html site/css/*' },
+  clean: [
+    c => 'rm -f site/*.js site/*.map site/*.html site/css/*'],
 
-  'site/server.pem': {
-    exec: c => `
+  'site/server.pem': [
+    c => `
       cd site
       openssl req -new -x509 -keyout server.pem -out server.pem -days 365 -nodes
   `
-  },
+  ],
 
-  serve: {
-    deps: ['compiled'],
-    exec: c => `
+  serve: ['compiled',
+    c => `
       : visit https://localhost:8888
       cd site && python -m SimpleHTTPServer 8888
-    `
-  },
+    `],
 
-  'serve-ssl': {
-    deps: ['site/server.pem', 'site/serve.py', 'compiled'],
-    exec: `
+  'serve-ssl': ['site/server.pem', 'site/serve.py', 'compiled',
+    c => `
       : visit https://localhost:4443
       cd site && python serve.py
-    `
-  }
+    `]
 }
