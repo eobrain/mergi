@@ -1,15 +1,16 @@
 // This is the build file for the Kartoj.
 // USAGE:
-//   npm jake
+//   node build.js
 //      Builds all the HTML, JS, and CSS using checked in words.js
-//   npm jake serves
+//   node build.js serves
 //      Serves the site on http://localhost:8888
-//   npm jake words
+//   node build.js words
 //      Recreates words.js by calling Google image search for many images (slow).
 // See README for more.
 
 import { DATA } from './node/config.js'
 import { basename } from 'path'
+import build from '../bajel/index.js'
 
 const COMPILEJS = 'java -jar tools/closure/closure-compiler-v20191111.jar -O ADVANCED --externs src/js/externs.js'
 const LOCALES = ['en_ie', 'en_us', 'es_es', 'es_mx', 'fr_fr']
@@ -20,7 +21,7 @@ const CARDJS = ['search_url.js', 'main.js', 'shared.js', 'search_url.js', 'card.
 const DECKJS = ['deck.js', 'shared.js', 'search_url.js', 'card.js', 'storage.js', 'word.js']
 const DEBUGJS = ['debug.js', 'shared.js', 'search_url.js', 'card.js', 'storage.js', 'word.js']
 
-export default {
+build({
   compiled: [
     'lint',
     'runtest',
@@ -173,4 +174,4 @@ export default {
       : visit https://localhost:4443
       cd site && python serve.py
     `]
-}
+})
