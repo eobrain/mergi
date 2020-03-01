@@ -53,14 +53,14 @@ build({
     'site/privacy.html'
   ],
 
-  'site/card_$1.html': [/src\/json\/card_(.*).json/, 'src/html/card.html', ...PARTIALS,
-    c => `${MUSTACHE} src/json/card_$1.json src/html/card.html >${c.target}`
+  'site/card_%.html': ['src/json/card_%.json', 'src/html/card.html', ...PARTIALS,
+    c => `${MUSTACHE} src/json/card_%.json src/html/card.html >${c.target}`
   ],
-  'site/deck_$1.html': [/src\/json\/deck_(.*).json/, 'src/html/deck.html', ...PARTIALS,
-    c => `${MUSTACHE} src/json/deck_$1.json src/html/deck.html >${c.target}`
+  'site/deck_%.html': ['src/json/deck_%.json', 'src/html/deck.html', ...PARTIALS,
+    c => `${MUSTACHE} src/json/deck_%.json src/html/deck.html >${c.target}`
   ],
-  'site/debug_$1.html': [/src\/json\/debug_(.*).json/, 'src/html/debug.html', ...PARTIALS,
-    c => `${MUSTACHE} src/json/debug_$1.json src/html/debug.html >${c.target}`
+  'site/debug_%.html': ['src/json/debug_%.json', 'src/html/debug.html', ...PARTIALS,
+    c => `${MUSTACHE} src/json/debug_%.json src/html/debug.html >${c.target}`
   ],
   'site/credit.html': ['src/json/credit.json', 'src/html/credit.html', ...PARTIALS,
     c => `${MUSTACHE} src/json/credit.json src/html/credit.html >${c.target}`
@@ -75,31 +75,31 @@ build({
     c => `${MUSTACHE} src/json/privacy.json src/html/privacy.html >${c.target}`
   ],
 
-  'site/card_$1_compiled.js': [
-    /src\/js\/words_(.*).js/,
-    'src/js/card_$1.js',
+  'site/card_%_compiled.js': [
+    'src/js/words_%.js',
+    'src/js/card_%.js',
     ...CARDJS.map(x => `src/js/${x}`),
     'src/js/externs.js',
     c => `
-      ${COMPILEJS} --create_source_map site/app_$1_compiled.map --js_output_file ${c.target} ${c.source}
-      echo '//# sourceMappingURL=/app_$1_compiled.map' >> ${c.target}
+      ${COMPILEJS} --create_source_map site/app_%_compiled.map --js_output_file ${c.target} ${c.source}
+      echo '//# sourceMappingURL=/app_%_compiled.map' >> ${c.target}
     `
   ],
-  'site/deck_$1_compiled.js': [
-    /src\/js\/words_(.*).js/,
-    'src/js/deck_$1.js',
+  'site/deck_%_compiled.js': [
+    'src/js/words_%.js',
+    'src/js/deck_%.js',
     ...DECKJS.map(x => `src/js/${x}`), 'src/js/externs.js',
     c => `
-      ${COMPILEJS} --create_source_map site/deck_$1_compiled.map --js_output_file ${c.target} ${c.source}
-      echo '//# sourceMappingURL=/deck_$1_compiled.map' >> ${c.target}
+      ${COMPILEJS} --create_source_map site/deck_%_compiled.map --js_output_file ${c.target} ${c.source}
+      echo '//# sourceMappingURL=/deck_%_compiled.map' >> ${c.target}
     `
   ],
-  'site/debug_$1_compiled.js': [
-    /src\/js\/words_(.*).js/,
-    'src/js/debug_$1.js', ...DEBUGJS.map(x => `src/js/${x}`), 'src/js/externs.js',
+  'site/debug_%_compiled.js': [
+    'src/js/words_%.js',
+    'src/js/debug_%.js', ...DEBUGJS.map(x => `src/js/${x}`), 'src/js/externs.js',
     c => `
-      ${COMPILEJS} --create_source_map site/debug_$1_compiled.map --js_output_file ${c.target} ${c.source}
-      echo '//# sourceMappingURL=/debug_$1_compiled.map' >> ${c.target}
+      ${COMPILEJS} --create_source_map site/debug_%_compiled.map --js_output_file ${c.target} ${c.source}
+      echo '//# sourceMappingURL=/debug_%_compiled.map' >> ${c.target}
     `
   ],
   'site/index_compiled.js': ['src/js/index.js', 'src/js/externs.js',
@@ -109,15 +109,15 @@ build({
     `
   ],
 
-  'site/$1.js': [/src\/js\/(.*).js/,
+  'site/%.js': ['src/js/%.js',
     c =>
       `npx terser --module --ecma 6 --compress --mangle --source-map "base='site',url='${basename(c.target)}.map'" --output ${c.target} -- ${c.source}`
   ],
 
-  'site/css/$1.css': [/src\/scss\/(.*).scss/,
+  'site/css/%.css': ['src/scss/%.scss',
     c => `
       mkdir -p site/css
-      npx node-sass --output-style compressed src/scss/$1.scss > site/css/$1.css
+      npx node-sass --output-style compressed src/scss/%.scss > site/css/%.css
     `
   ],
 
