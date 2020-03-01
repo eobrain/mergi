@@ -10,7 +10,7 @@
 
 import { DATA } from './node/config.js'
 import { basename } from 'path'
-import build from '../bajel/index.js'
+import build from 'bajel'
 
 const COMPILEJS = 'java -jar tools/closure/closure-compiler-v20191111.jar -O ADVANCED --externs src/js/externs.js'
 const LOCALES = ['en_ie', 'en_us', 'es_es', 'es_mx', 'fr_fr']
