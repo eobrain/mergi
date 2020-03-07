@@ -23,27 +23,17 @@ const COMMONJS = ['search_url.js', 'shared.js', 'card.js', 'storage.js', 'word.j
 const CARDJS = [...COMMONJS, 'main.js']
 const DECKJS = [...COMMONJS, 'deck.js']
 const DEBUGJS = [...COMMONJS, 'debug.js']
-
-const BROWSERJS = [
-  ...COMMONJS,
-  'service-worker.js',
-  'index.js',
-  'debug.js',
-  'deck.js',
-  'main.js']
+const BROWSERJS = [...COMMONJS, 'service-worker.js', 'index.js', 'debug.js', 'deck.js', 'main.js']
 
 const targets = (...xs) => f => Object.fromEntries(xs.map(f))
 
 const mustache = (page, localePage) => [
-  `src/json/${localePage}.json`,
-  `src/html/${page}.html`,
-  ...PARTIALS,
+  `src/json/${localePage}.json`, `src/html/${page}.html`, ...PARTIALS,
   c => [MUSTACHE, `src/json/${localePage}.json src/html/${page}.html >`, c.target]
 ]
 
 const compilejs = (module, js) => [
-  ...js.map(x => `src/js/${x}`),
-  'src/js/externs.js',
+  ...js.map(x => `src/js/${x}`), 'src/js/externs.js',
   c => [COMPILEJS,
     `--create_source_map site/${module}_compiled.map --js_output_file`,
     c.target,
@@ -66,11 +56,9 @@ build({
 
   runtest: [c => 'npm test'],
 
-  runbrowsertest: [
-    'lint',
+  runbrowsertest: ['lint',
     c => ': Open http://localhost:8887/browsertest',
-    c => 'python -m SimpleHTTPServer 8887'
-  ],
+    c => 'python -m SimpleHTTPServer 8887'],
 
   html: [
     ...LOCALES.map(l => `site/card_${l}.html`),
@@ -96,46 +84,31 @@ build({
   'site/debug_%_compiled.js': compilejs('debug_%s', ['words_%.js', 'debug_%.js', ...DEBUGJS]),
   'site/index_compiled.js': compilejs('card', ['index.js']),
 
-  'site/%.js': [
-    'src/js/%.js',
+  'site/%.js': ['src/js/%.js',
     c => [
       `npx terser --module --ecma 6 --compress --mangle --source-map "base='site',url='${basename(c.target)}.map'" --output`,
       c.target, '--', c.source
-    ]
-  ],
+    ]],
 
-  'site/css/%.css': [
-    'src/scss/%.scss',
-    c => `
-      mkdir -p site/css
-      npx node-sass --output-style compressed src/scss/%.scss > site/css/%.css
-    `
-  ],
+  'site/css/%.css': ['src/scss/%.scss',
+    c => 'mkdir -p site/css',
+    c => 'npx node-sass --output-style compressed src/scss/%.scss > site/css/%.css'],
 
   modules: [
     ...LOCALES.map(l => `site/words_${l}.js`),
     ...LOCALES.map(l => `site/card_${l}.js`),
     ...LOCALES.map(l => `site/deck_${l}.js`),
     ...LOCALES.map(l => `site/debug_${l}.js`),
-    ...BROWSERJS.map(j => `site/${j}`)],
-
-  words: [
-    'lint',
-    DATA,
-    'node/fetch_words.js',
-    'node/scrape.js',
-    c => `
-      node node/fetch_words.js
-      npx standard --fix src/js/words_??_??.js
-    `
+    ...BROWSERJS.map(j => `site/${j}`)
   ],
 
-  'ocr-test': ['site/ocr.html'],
+  words: ['lint', DATA, 'node/fetch_words.js', 'node/scrape.js',
+    c => 'node node/fetch_words.js',
+    c => 'npx standard --fix src/js/words_??_??.js'],
 
-  'site/ocr.html': [
-    'site/words_es_mx.js',
-    'node/ocr.js',
-    'node/ocr_test.js',
+  ocr_test: ['site/ocr.html'],
+
+  'site/ocr.html': ['site/words_es_mx.js', 'node/ocr.js', 'node/ocr_test.js',
     c => ['node node/ocr_test.js >', c.target]
   ],
 
@@ -148,23 +121,13 @@ build({
   'site/server.pem': [
     c => `
       cd site
-      openssl req -new -x509 -keyout server.pem -out server.pem -days 365 -nodes
-  `
-  ],
+      openssl req -new -x509 -keyout server.pem -out server.pem -days 365 -nodes`],
 
-  serve: [
-    'compiled',
-    c => `
-      : visit https://localhost:8888
-      cd site && python -m SimpleHTTPServer 8888
-    `],
+  serve: ['compiled',
+    c => ': visit https://localhost:8888',
+    c => 'cd site && python -m SimpleHTTPServer 8888'],
 
-  'serve-ssl': [
-    'site/server.pem',
-    'site/serve.py',
-    'compiled',
-    c => `
-      : visit https://localhost:4443
-      cd site && python serve.py
-    `]
+  serve_ssl: ['site/server.pem', 'site/serve.py', 'compiled',
+    c => ': visit https://localhost:4443',
+    c => 'cd site && python serve.py']
 })
