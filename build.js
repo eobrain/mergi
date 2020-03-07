@@ -19,9 +19,20 @@ const LOCALES = ['en_ie', 'en_us', 'es_es', 'es_mx', 'fr_fr']
 const STYLE = ['app', 'common', 'debug', 'deck', 'index', 'info', 'normalize']
 const MUSTACHE = 'npx mustache -p src/html/footer.mustache -p src/html/head.mustache -p src/html/header.mustache'
 const PARTIALS = ['src/html/head.mustache', 'src/html/footer.mustache', 'src/html/header.mustache']
-const CARDJS = ['search_url.js', 'main.js', 'shared.js', 'search_url.js', 'card.js', 'storage.js', 'word.js']
-const DECKJS = ['deck.js', 'shared.js', 'search_url.js', 'card.js', 'storage.js', 'word.js']
-const DEBUGJS = ['debug.js', 'shared.js', 'search_url.js', 'card.js', 'storage.js', 'word.js']
+const COMMONJS = ['search_url.js', 'shared.js', 'card.js', 'storage.js', 'word.js']
+const CARDJS = [...COMMONJS, 'main.js']
+const DECKJS = [...COMMONJS, 'deck.js']
+const DEBUGJS = [...COMMONJS, 'debug.js']
+
+const BROWSERJS = [
+  ...COMMONJS,
+  'service-worker.js',
+  'index.js',
+  'debug.js',
+  'deck.js',
+  'main.js']
+
+const targets = (...xs) => f => Object.fromEntries(xs.map(f))
 
 const mustache = (page, localePage) => [
   `src/json/${localePage}.json`,
@@ -73,13 +84,12 @@ build({
     'site/privacy.html'
   ],
 
-  'site/card_%.html': mustache('card', 'card_%'),
-  'site/deck_%.html': mustache('deck', 'deck_%'),
-  'site/debug_%.html': mustache('debug', 'debug_%'),
-  'site/info.html': mustache('info', 'info'),
-  'site/index.html': mustache('index', 'index'),
-  'site/credit.html': mustache('credit', 'credit'),
-  'site/privacy.html': mustache('privacy', 'privacy'),
+  ...targets('card', 'deck', 'debug')(p => [
+    `site/${p}_%.html`, mustache(p, `${p}_%`)
+  ]),
+  ...targets('info', 'index', 'credit', 'privacy')(p => [
+    `site/${p}.html`, mustache(p, 'info')
+  ]),
 
   'site/card_%_compiled.js': compilejs('card_%s', ['words_%.js', 'card_%.js', ...CARDJS]),
   'site/deck_%_compiled.js': compilejs('deck_%s', ['words_%.js', 'deck_%.js', ...DECKJS]),
@@ -107,16 +117,7 @@ build({
     ...LOCALES.map(l => `site/card_${l}.js`),
     ...LOCALES.map(l => `site/deck_${l}.js`),
     ...LOCALES.map(l => `site/debug_${l}.js`),
-    'site/service-worker.js',
-    'site/index.js',
-    'site/card.js',
-    'site/storage.js',
-    'site/word.js',
-    'site/debug.js',
-    'site/deck.js',
-    'site/main.js',
-    'site/search_url.js',
-    'site/shared.js'],
+    ...BROWSERJS.map(j => `site/${j}`)],
 
   words: [
     'lint',
