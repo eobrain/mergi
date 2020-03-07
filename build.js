@@ -25,21 +25,25 @@ const DECKJS = [...COMMONJS, 'deck.js']
 const DEBUGJS = [...COMMONJS, 'debug.js']
 const BROWSERJS = [...COMMONJS, 'service-worker.js', 'index.js', 'debug.js', 'deck.js', 'main.js']
 
-const targets = (...xs) => f => Object.fromEntries(xs.map(f))
-
-const mustache = (page, localePage) => [
+const mustache = (page, localePage) => ({
+  [`site/${localePage}.html`]: [
   `src/json/${localePage}.json`, `src/html/${page}.html`, ...PARTIALS,
   c => [MUSTACHE, `src/json/${localePage}.json src/html/${page}.html >`, c.target]
-]
+  ]
+})
 
-const compilejs = (module, js) => [
-  ...js.map(x => `src/js/${x}`), 'src/js/externs.js',
-  c => [COMPILEJS,
+const compilejs = (module, js) => (
+  {
+    [`site/${module}_compiled.js`]: [
+      ...js.map(x => `src/js/${x}`), 'src/js/externs.js',
+      c => [COMPILEJS,
     `--create_source_map site/${module}_compiled.map --js_output_file`,
     c.target,
     c.source],
-  c => ['echo', `'//# sourceMappingURL=/${module}_compiled.map'`, '>>', c.target]
-]
+      c => ['echo', `'//# sourceMappingURL=/${module}_compiled.map'`, '>>', c.target]
+    ]
+  }
+)
 
 build({
   compiled: [
@@ -72,17 +76,18 @@ build({
     'site/privacy.html'
   ],
 
-  ...targets('card', 'deck', 'debug')(p => [
-    `site/${p}_%.html`, mustache(p, `${p}_%`)
-  ]),
-  ...targets('info', 'index', 'credit', 'privacy')(p => [
-    `site/${p}.html`, mustache(p, 'info')
-  ]),
+  ...mustache('card', 'card_%'),
+  ...mustache('deck', 'deck_%'),
+  ...mustache('debug', 'debug_%'),
+  ...mustache('info', 'info'),
+  ...mustache('index', 'index'),
+  ...mustache('credit', 'credit'),
+  ...mustache('privacy', 'privacy'),
 
-  'site/card_%_compiled.js': compilejs('card_%s', ['words_%.js', 'card_%.js', ...CARDJS]),
-  'site/deck_%_compiled.js': compilejs('deck_%s', ['words_%.js', 'deck_%.js', ...DECKJS]),
-  'site/debug_%_compiled.js': compilejs('debug_%s', ['words_%.js', 'debug_%.js', ...DEBUGJS]),
-  'site/index_compiled.js': compilejs('card', ['index.js']),
+  ...compilejs('card_%', ['words_%.js', 'card_%.js', ...CARDJS]),
+  ...compilejs('deck_%', ['words_%.js', 'deck_%.js', ...DECKJS]),
+  ...compilejs('debug_%', ['words_%.js', 'debug_%.js', ...DEBUGJS]),
+  ...compilejs('index', ['index.js']),
 
   'site/%.js': ['src/js/%.js',
     c => [
