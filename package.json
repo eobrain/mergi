@@ -19,7 +19,7 @@
     "gm": "^1.23.1",
     "googleapis": "^43.0.0",
     "htmlparser2": "^4.0.0",
-    "node-sass": "^4.13.1",
+    "node-sass": "^4.14.1",
     "node-tesseract-ocr": "^1.0.0",
     "request": "^2.88.0",
     "temp": "^0.9.1",
@@ -32,7 +32,7 @@
   "type": "module",
   "devDependencies": {
     "ava": "^3.3.0",
-    "bajel": "0.3.0",
+    "bajel": "0.5.0",
     "browser-env": "^3.3.0",
     "eslint": "^6.8.0",
     "mustache": "^3.1.0",
