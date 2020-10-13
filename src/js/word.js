@@ -63,9 +63,9 @@ export class IndexedWords {
     this.phrases.forEach(f)
   }
 
-  /**
+  /** Images of a phrase
    * @param {string} phrase to find images of
-   * @returns {!Array[Img]} the images of a phrase
+   * @returns {!Array<Img>} the images
    */
   imagesOf (phrase) {
     return this.images[phrase] || []
