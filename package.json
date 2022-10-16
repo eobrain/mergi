@@ -23,7 +23,7 @@
     "node-tesseract-ocr": "^1.0.0",
     "request": "^2.88.0",
     "temp": "^0.9.1",
-    "terser": "^4.4.3"
+    "terser": "^4.8.1"
   },
   "repository": {
     "type": "git",
