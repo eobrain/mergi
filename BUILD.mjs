@@ -146,7 +146,7 @@ export default {
     deps: ['compiled'],
     exec: `
       : visit http://localhost:8888
-      cd site && python -m SimpleHTTPServer 8888
+      cd site && npx ws --port 8888
     `
   },
 

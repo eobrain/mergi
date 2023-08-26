@@ -41,6 +41,15 @@ The app uses images fetched from Google Search and stored in the file `words.js`
 
 ### First Time
 
+If you don't have a Java runtime installed (type `java` on the command-line to check), you will need to [download it][7] and install. Installation will depend on your operating system but for Linux and Chrome OS it can be something like:
+
+```sh
+cd
+tar -xzf ~/Downloads/jre-8u381-linux-x64.tar.gz
+PATH="$HOME/jre1.8.0_381/bin:$PATH"
+echo 'PATH="$HOME/jre1.8.0_381/bin:$PATH"' >> $HOME/.profile
+```
+
 As a prerequisite you need nvm and nodejs installed. If you are using [nvm][5] (recommended), run teh follwoing to use the same version used by the maintainers of this project:
 
 ```sh
@@ -58,7 +67,7 @@ npm install
 > Try running the above several times if it fails. (As of January 2020, `npm install` sometimes fails because of an [intermittent bug][6])
 
 
-Also if you will be doing `make words` below you will need to do
+Also if you will be doing `npx bajel words` below you will need to do
 
 ```sh
 sudo apt-get install graphicsmagick tesseract-ocr tesseract-ocr-eng tesseract-ocr-spa  tesseract-ocr-fra
@@ -72,7 +81,7 @@ An ubuntu and other Debian flavors of Linux (including Chrome OS), or the equicv
 If you have modified `data/words.csv` you can run
 
 ```sh
-make words
+npx bajel words
 ```
 
 to regenerate the `words.js` file by calling Google Image search and text
@@ -95,7 +104,7 @@ optimized, portable JavaScript that we distribute, and to generate the HTML from
 You can then preview the site by doing
 
 ```sh
-make serve
+npx bajel serve
 ```
 
 and viewing http://localhost:8888/ (preferably using dev-tools to turn on mobile emulation).
@@ -120,3 +129,4 @@ http://www.eclipse.org/legal/epl-v10.html
 [4]: https://app.netlify.com/sites/hungry-rosalind-0028da/deploys
 [5]: https://github.com/nvm-sh/nvm
 [6]: https://github.com/nodejs/node/issues/30581
+[7]: https://www.java.com/en/download/
