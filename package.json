@@ -18,10 +18,11 @@
     "csv-parser": "^2.3.1",
     "gm": "^1.23.1",
     "googleapis": "^126.0.1",
-    "htmlparser2": "^4.0.0",
+    "htmlparser2": "^9.0.0",
     "local-web-server": "^5.3.0",
     "node-sass": "^9.0.0",
     "node-tesseract-ocr": "^1.0.0",
+    "passprint": "^0.0.1",
     "request": "^2.88.0",
     "temp": "^0.9.1",
     "terser": "^4.8.1"

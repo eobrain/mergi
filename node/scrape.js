@@ -1,9 +1,10 @@
 // @ts-check
 
 import imageSearchUrl from '../src/js/search_url.js'
-import htmlparser2 from 'htmlparser2'
+import * as htmlparser2 from 'htmlparser2'
 import fetch from 'node-fetch'
 import sleep from './sleep.js'
+// import { pp } from 'passprint'
 
 const QUERIES_PER_MINUTE = 60.0
 
@@ -21,12 +22,14 @@ export default async (query, language, country, ofTotalQueries) => {
     {
       onopentag (name, attribs) {
         if (name === 'img') {
-          const imageUrl = attribs.src
+          const imageUrl = attribs['data-src']
           if (imageUrl && imageUrl.startsWith('http')) {
             const src = imageUrl.replace(/^https?:/, '')
             const width = Number(attribs.width)
             const height = Number(attribs.height)
-            images.push({ width, height, src })
+            if (Number.isInteger(width) && Number.isInteger(height)) {
+              images.push({ width, height, src })
+            }
           }
         }
       }
@@ -34,7 +37,11 @@ export default async (query, language, country, ofTotalQueries) => {
   )
   const spreadOverMinutes = ofTotalQueries / QUERIES_PER_MINUTE
   await sleep(spreadOverMinutes * 60000.0 * Math.random())
-  const response = await fetch(url)
+  const response = await fetch(url, {
+    headers: {
+      'User-Agent': 'Mozilla/5.0 (Linux; Android 6.0; Nexus 5 Build/MRA58N) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/115.0.0.0 Mobile Safari/537.36'
+    }
+  })
   const data = await response.text()
   parser.write(data)
   parser.end()

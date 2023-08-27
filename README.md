@@ -50,13 +50,7 @@ PATH="$HOME/jre1.8.0_381/bin:$PATH"
 echo 'PATH="$HOME/jre1.8.0_381/bin:$PATH"' >> $HOME/.profile
 ```
 
-If you don't have ImageMagick installed (type `convert` on the command-line to check), for Linux or Chrome OS you can install from the package manager, doing something like the following:
-
-```sh
-sudo apt-get install imagemagick
-```
-
-As a prerequisite you need nvm and nodejs installed. If you are using [nvm][5] (recommended), run teh follwoing to use the same version used by the maintainers of this project:
+As a prerequisite you need nvm and nodejs installed. If you are using [nvm][5] (recommended), run teh following to use the same version used by the maintainers of this project:
 
 ```sh
 nvm use
