@@ -154,7 +154,7 @@ export default {
     deps: ['site/server.pem', 'site/serve.py', 'compiled'],
     exec: `
       : visit https://localhost:4443
-      cd site && python serve.py
+      cd site && ws --https
     `
   }
 }

@@ -12,12 +12,17 @@ import search from './scrape.js'
 import hasText from './ocr.js'
 import { MAX_IMAGE_COUNT_PER_QUERY } from '../src/js/shared.js'
 import { DATA } from './config.js'
+import { pp } from 'passprint'
+
+// On momre powerful machines, use promises to get more concurrency
+const USE_CONCURRENCY = false
+const USE_OKR = false
 
 const LOCALES = [
-  'es_mx',
-  'es_es',
-  'en_ie',
-  'en_us',
+  // 'es_mx',
+  // 'es_es',
+  // 'en_ie',
+  // 'en_us',
   'fr_fr'
 ]
 const SRC = 'src/js'
@@ -34,9 +39,10 @@ const processCsv = processCsvLine => new Promise(resolve => {
   const promises = []
   fs.createReadStream(DATA)
     .pipe(csv())
-    .on('data', row => {
+    .on('data', async row => {
       console.info(Object.keys(row).map(k => row[k]).join('|'))
-      LOCALES.forEach(locale => {
+      for (const locale of LOCALES) {
+        pp(locale)
         if (promises.length > MAX_QUERY_COUNT) {
           console.info(`Bailing out. We have reached our max of ${MAX_QUERY_COUNT} queries`)
           return
@@ -45,9 +51,13 @@ const processCsv = processCsvLine => new Promise(resolve => {
         if (row[lang + '_word']) {
           const prefix = row[lang + '_prefix']
           const query = row[lang + '_word']
-          promises.push(processCsvLine(prefix, query, lang, country))
+          const promise = processCsvLine(prefix, query, lang, country)
+          promises.push(promise)
+          if (!USE_CONCURRENCY) {
+            await promise
+          }
         }
-      })
+      }
     })
     .on('end', () => {
       Promise.all(promises).then(() => resolve(promises.length))
@@ -65,14 +75,14 @@ const main = async () => {
     const result = []
     for (let i = 0; i < images.length && result.length < MAX_IMAGE_COUNT_PER_QUERY; ++i) {
       const image = images[i]
-      if (!(await hasText(`https:${image.src}`, lang))) {
+      if (!USE_OKR || !(await hasText(`https:${image.src}`, lang))) {
         result.push(image)
       }
     }
     return result
   }
 
-  const queryCount = await processCsv(async (a, b, c, d) => {})
+  const queryCount = pp(await processCsv(async (a, b, c, d) => {}))
 
   // Create an output fuile for each locale
   const outs = {}
