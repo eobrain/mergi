@@ -105,7 +105,7 @@ export default async (src, lang) => {
   }
 
   try {
-    const text = (await recognizeLimited(tempName, lang)).trim()
+    const text = (await recognizeLimited(tempName, lang)).trim().replace(/\s+/gm, ' ')
     const has = text.length > MAX_TEXT_LEN
     if (has) {
       console.error(`"${text}"`)
