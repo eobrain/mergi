@@ -135,25 +135,9 @@ export default {
 
   clean: { exec: 'rm -f site/*.js site/*.map site/*.html site/css/*' },
 
-  'site/server.pem': {
-    exec: `
-      cd site
-      openssl req -new -x509 -keyout server.pem -out server.pem -days 365 -nodes
-    `
-  },
-
   serve: {
     deps: ['compiled'],
     exec: `
-      : visit http://localhost:8888
-      cd site && npx ws --port 8888
-    `
-  },
-
-  serve_ssl: {
-    deps: ['site/server.pem', 'site/serve.py', 'compiled'],
-    exec: `
-      : visit https://localhost:4443
       cd site && ws --https
     `
   }
