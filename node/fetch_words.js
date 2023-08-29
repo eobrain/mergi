@@ -17,6 +17,8 @@ import { pp } from 'passprint'
 // On momre powerful machines, use promises to get more concurrency
 const USE_CONCURRENCY = false
 const USE_OKR = false
+const MIN_WIDTH = 50
+const MIN_HEIGHT = 50
 
 const LOCALES = [
   // 'es_mx',
@@ -75,9 +77,13 @@ const main = async () => {
     const result = []
     for (let i = 0; i < images.length && result.length < MAX_IMAGE_COUNT_PER_QUERY; ++i) {
       const image = images[i]
-      if (!USE_OKR || !(await hasText(`https:${image.src}`, lang))) {
-        result.push(image)
+      if (image.width < MIN_WIDTH || image.height < MIN_HEIGHT) {
+        continue
       }
+      if (USE_OKR && (await hasText(`https:${image.src}`, lang))) {
+        continue
+      }
+      result.push(image)
     }
     return result
   }
