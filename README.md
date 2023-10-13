@@ -95,7 +95,7 @@ minutes or more.
 If you have changed any JavaScript or templates you can run
 
 ```sh
-make
+npx bajel
 ```
 
 to use the closure compiler to transpile the `src/js` JavaScript into the
